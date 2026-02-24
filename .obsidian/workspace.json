@@ -11,10 +11,14 @@
             "id": "d90247a022da474c",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "关系图谱"
+              "type": "markdown",
+              "state": {
+                "file": "1-concepts/知识库元认知.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "知识库元认知"
             }
           }
         ]
@@ -90,6 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "1-concepts/知识库元认知.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -99,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "反向链接"
+              "title": "知识库元认知 的反向链接列表"
             }
           },
           {
@@ -108,11 +113,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "1-concepts/知识库元认知.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "出链"
+              "title": "知识库元认知 的出链列表"
             }
           },
           {
@@ -150,12 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
+                "file": "1-concepts/知识库元认知.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "大纲"
+              "title": "知识库元认知 的大纲"
             }
           }
         ]
@@ -178,15 +185,16 @@
   },
   "active": "d90247a022da474c",
   "lastOpenFiles": [
+    "3-projects/Nested Learning复现计划.md",
+    "1-concepts/知识库元认知.md",
+    "1-concepts/超级个体公式.md",
     "CLAUDE.md",
     "3-projects/脑干实验ABC对照.md",
-    "3-projects/Nested Learning复现计划.md",
     "3-projects/人工脑干原型实验.md",
     "1-concepts/自由能原理.md",
     "1-concepts/目标真空假说.md",
     "1-concepts/关联记忆.md",
     "1-concepts/多层有损压缩.md",
-    "1-concepts/超级个体公式.md",
     "2-explorations/Nested Learning 学习指南：从理解到复现Hope.md",
     "2-explorations/AI没有脑干.md",
     "2-explorations/人工脑干：从目标真空到RL+LLM双系统架构.md",
