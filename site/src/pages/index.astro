@@ -1,0 +1,104 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import KnowledgeGraph from "../components/KnowledgeGraph";
+import NoteCard from "../components/NoteCard.astro";
+import { getGraphPayload } from "../lib/graph-data";
+import { getHomepageData } from "../lib/site-data";
+import { getKnowledgeBaseData } from "../lib/site-store";
+import { SECTION_DEFINITIONS } from "../lib/sections";
+import { withBasePath } from "../lib/url";
+
+const data = await getKnowledgeBaseData();
+const home = getHomepageData(data);
+const defaultGraph = getGraphPayload(data);
+const fullGraph = getGraphPayload(data, { includeProjects: true });
+const sectionOptions = SECTION_DEFINITIONS.map((section) => ({
+  key: section.key,
+  label: section.label
+}));
+---
+
+<BaseLayout title="Cognitive Network">
+  <section class="hero-card">
+    <span class="eyebrow">Overview</span>
+    <h1>输出驱动的个人认知网络</h1>
+    <p>
+      这个站点公开展示知识库中的概念卡片、探索文章、参考资料与 inbox 片段。它不是信息仓库，而是一张不断生长的推理网络：
+      文章、引用、反链与图谱会跟随 Markdown 内容一起更新。
+    </p>
+  </section>
+
+  <div class="home-grid">
+    <section class="section-block">
+      <h2>总览</h2>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <span>全部笔记</span>
+          <strong>{home.stats.totalNotes}</strong>
+        </div>
+        <div class="stat-card">
+          <span>公开索引</span>
+          <strong>{home.stats.publicNotes}</strong>
+        </div>
+        <div class="stat-card">
+          <span>概念卡片</span>
+          <strong>{home.stats.concepts}</strong>
+        </div>
+        <div class="stat-card">
+          <span>探索文章</span>
+          <strong>{home.stats.explorations}</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block">
+      <h2>入口</h2>
+      <div class="section-links">
+        {home.sectionEntries.map((section) => (
+          <a href={withBasePath(`/${section.routeSegment}/`)}>
+            <strong>{section.label}</strong>
+            <span>{section.count} 篇公开笔记</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="section-block">
+      <h2>Recent Updates</h2>
+      <div class="note-grid">
+        {home.recentUpdates.map((note) => (
+          <NoteCard note={note} />
+        ))}
+      </div>
+    </section>
+
+    <section class="section-block">
+      <h2>Featured Threads</h2>
+      <div class="note-grid">
+        {home.featuredThreads.map((note) => (
+          <NoteCard note={note} />
+        ))}
+      </div>
+    </section>
+
+    <section class="graph-teaser">
+      <span class="eyebrow">Graph</span>
+      <h2>图结构浏览</h2>
+      <p>
+        默认图谱只展示公开索引内容，不把 `3-projects` 混进首页视野。进入全屏图谱后，你可以拖拽、缩放，并点击节点进入详情页。
+      </p>
+      <KnowledgeGraph
+        client:load
+        defaultGraph={defaultGraph}
+        fullGraph={fullGraph}
+        sectionOptions={sectionOptions}
+        allowProjectToggle={false}
+        showFilters={false}
+        height={380}
+      />
+      <div style="margin-top: 1rem;">
+      <a class="button-link" href={withBasePath("/graph/")}>打开图谱</a>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

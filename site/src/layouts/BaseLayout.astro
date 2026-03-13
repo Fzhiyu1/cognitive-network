@@ -1,0 +1,61 @@
+---
+import "../styles/global.css";
+
+import { withBasePath } from "../lib/url";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = "输出驱动的个人认知网络。记录的不是信息，而是思考过程与思考产物。"
+} = Astro.props;
+
+const navigation = [
+  { href: "/", label: "总览" },
+  { href: "/graph/", label: "图谱" },
+  { href: "/concepts/", label: "概念" },
+  { href: "/explorations/", label: "探索" },
+  { href: "/references/", label: "引用" },
+  { href: "/inbox/", label: "Inbox" }
+];
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href={withBasePath("/favicon.svg")} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <div class="page-shell">
+      <div class="page-aurora page-aurora-left"></div>
+      <div class="page-aurora page-aurora-right"></div>
+
+      <header class="site-header">
+        <a class="brand" href={withBasePath("/")}>
+          <span class="brand-mark">CN</span>
+          <span class="brand-copy">
+            <strong>Cognitive Network</strong>
+            <small>Public Knowledge Base</small>
+          </span>
+        </a>
+
+        <nav class="site-nav">
+          {navigation.map((item) => (
+            <a href={withBasePath(item.href)}>{item.label}</a>
+          ))}
+        </nav>
+      </header>
+
+      <main class="site-main">
+        <slot />
+      </main>
+    </div>
+  </body>
+</html>

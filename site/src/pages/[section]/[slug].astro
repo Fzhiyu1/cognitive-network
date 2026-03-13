@@ -1,0 +1,49 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import NoteMeta from "../../components/NoteMeta.astro";
+import RelatedNotes from "../../components/RelatedNotes.astro";
+import { renderMarkdown } from "../../lib/render-markdown";
+import { getKnowledgeBaseData } from "../../lib/site-store";
+
+export async function getStaticPaths() {
+  const data = await getKnowledgeBaseData();
+
+  return data.notes.map((note) => ({
+    params: {
+      section: note.section.routeSegment,
+      slug: note.slug
+    },
+    props: {
+      noteTitle: note.title
+    }
+  }));
+}
+
+const data = await getKnowledgeBaseData();
+const { noteTitle } = Astro.props;
+const note = data.noteByTitle.get(noteTitle);
+
+if (!note) {
+  throw new Error(`Unknown note: ${noteTitle}`);
+}
+
+const renderedBody = renderMarkdown(note.body, data.noteByTitle);
+---
+
+<BaseLayout title={`${note.title} | Cognitive Network`} description={note.summary}>
+  <div class="detail-grid">
+    <article class:list={["note-shell", note.sectionKey === "projects" && "project-note"]}>
+      <span class="eyebrow">{note.section.label}</span>
+      <h1>{note.title}</h1>
+      <p class="lead">{note.summary || "这篇笔记还没有摘要。"} </p>
+      <NoteMeta note={note} />
+      <div class="note-body" set:html={renderedBody}></div>
+    </article>
+
+    <aside class="panel-grid">
+      <RelatedNotes title="文内出链" notes={note.outgoingLinks} />
+      <RelatedNotes title="反向链接" notes={note.backlinks} />
+      <RelatedNotes title="相关笔记" notes={note.relatedNotes} />
+    </aside>
+  </div>
+</BaseLayout>

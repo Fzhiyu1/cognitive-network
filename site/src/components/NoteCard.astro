@@ -1,0 +1,32 @@
+---
+import type { Note } from "../lib/knowledge-base";
+import { getSectionLabel } from "../lib/knowledge-base";
+import { withBasePath } from "../lib/url";
+
+interface Props {
+  note: Note;
+}
+
+const { note } = Astro.props;
+---
+
+<article class="note-card">
+  <div class="note-card-topline">
+    <span>{getSectionLabel(note.sectionKey)}</span>
+    <time datetime={note.modifiedTime}>{new Date(note.modifiedTime).toLocaleDateString("zh-CN")}</time>
+  </div>
+
+  <h3>
+    <a href={withBasePath(note.url)}>{note.title}</a>
+  </h3>
+
+  <p>{note.summary || "这篇笔记暂时还没有摘要。"} </p>
+
+  {note.tags.length > 0 && (
+    <ul class="tag-list">
+      {note.tags.slice(0, 4).map((tag) => (
+        <li>{tag}</li>
+      ))}
+    </ul>
+  )}
+</article>

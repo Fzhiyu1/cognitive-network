@@ -1,0 +1,26 @@
+---
+import type { LinkedNote } from "../lib/knowledge-base";
+import { withBasePath } from "../lib/url";
+
+interface Props {
+  title: string;
+  notes: LinkedNote[];
+}
+
+const { title, notes } = Astro.props;
+---
+
+{
+  notes.length > 0 && (
+    <section class="link-panel">
+      <h2>{title}</h2>
+      <ul>
+        {notes.map((note) => (
+          <li>
+            <a href={withBasePath(note.url)}>{note.title}</a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}

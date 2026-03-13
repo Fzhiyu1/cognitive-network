@@ -1,0 +1,36 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import NoteCard from "../../components/NoteCard.astro";
+import SectionHero from "../../components/SectionHero.astro";
+import { getSectionIndexData } from "../../lib/site-data";
+import { getKnowledgeBaseData } from "../../lib/site-store";
+import { SECTION_DEFINITIONS } from "../../lib/sections";
+
+export async function getStaticPaths() {
+  await getKnowledgeBaseData();
+
+  return SECTION_DEFINITIONS.filter((section) => section.isPublicIndex).map((section) => ({
+    params: { section: section.routeSegment }
+  }));
+}
+
+const data = await getKnowledgeBaseData();
+const { section } = Astro.params;
+const pageData = getSectionIndexData(data, section as typeof SECTION_DEFINITIONS[number]["key"]);
+---
+
+<BaseLayout title={`${pageData.section.label} | Cognitive Network`}>
+  <SectionHero
+    eyebrow={pageData.section.label}
+    title={`${pageData.section.label} Archive`}
+    description={`这里收录 ${pageData.section.label.toLowerCase()} 的公开索引页。项目笔记不会出现在这里。`}
+  />
+
+  <section class="section-block">
+    <div class="note-grid">
+      {pageData.notes.map((note) => (
+        <NoteCard note={note} />
+      ))}
+    </div>
+  </section>
+</BaseLayout>

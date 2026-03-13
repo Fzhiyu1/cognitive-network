@@ -1,0 +1,27 @@
+{
+  "name": "cognitive-network-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@astrojs/react": "5.0.0",
+    "astro": "6.0.4",
+    "graphology": "0.26.0",
+    "gray-matter": "4.0.3",
+    "markdown-it": "14.1.1",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "sigma": "3.0.2"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "14.1.2",
+    "@types/node": "25.5.0",
+    "typescript": "5.9.3",
+    "vitest": "4.1.0"
+  }
+}

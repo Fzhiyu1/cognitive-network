@@ -1,0 +1,16 @@
+---
+import type { Note } from "../lib/knowledge-base";
+import { getSectionLabel } from "../lib/knowledge-base";
+
+interface Props {
+  note: Note;
+}
+
+const { note } = Astro.props;
+---
+
+<div class="note-meta">
+  <span>{getSectionLabel(note.sectionKey)}</span>
+  <span>{new Date(note.modifiedTime).toLocaleDateString("zh-CN")}</span>
+  {note.isIndexedPublicly ? <span>公开索引</span> : <span>仅直链可见</span>}
+</div>

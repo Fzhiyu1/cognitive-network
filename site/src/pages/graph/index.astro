@@ -1,0 +1,34 @@
+---
+import KnowledgeGraph from "../../components/KnowledgeGraph";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getGraphPayload } from "../../lib/graph-data";
+import { getKnowledgeBaseData } from "../../lib/site-store";
+import { SECTION_DEFINITIONS } from "../../lib/sections";
+
+const data = await getKnowledgeBaseData();
+const defaultGraph = getGraphPayload(data);
+const fullGraph = getGraphPayload(data, { includeProjects: true });
+const sectionOptions = SECTION_DEFINITIONS.map((section) => ({
+  key: section.key,
+  label: section.label
+}));
+---
+
+<BaseLayout title="Knowledge Graph | Cognitive Network">
+  <section class="section-hero">
+    <span class="eyebrow">Graph</span>
+    <h1>知识图谱</h1>
+    <p>
+      默认视图只展示公开索引内容。你可以拖拽、缩放、过滤不同分区，并在需要时显式把 `3-projects`
+      合并进来。
+    </p>
+  </section>
+
+  <KnowledgeGraph
+    client:load
+    defaultGraph={defaultGraph}
+    fullGraph={fullGraph}
+    sectionOptions={sectionOptions}
+    initialIncludeProjects={false}
+  />
+</BaseLayout>
