@@ -6,14 +6,15 @@ interface Options {
 }
 
 export default ((opts?: Options) => {
-  const Footer: QuartzComponent = ({ displayClass, cfg }: QuartzComponentProps) => {
+  const Footer: QuartzComponent = ({ displayClass }: QuartzComponentProps) => {
     const year = new Date().getFullYear()
     const links = opts?.links ?? []
     return (
       <footer class={`${displayClass ?? ""}`}>
-        <p>
-          {cfg.pageTitle} © {year}
-        </p>
+        <div class="footer-copy">
+          <p class="footer-signature">Cognitive Network // Oracle Terminal © {year}</p>
+          <p class="footer-protocol">PUBLIC SHELL ACTIVE // 输出驱动认知网络</p>
+        </div>
         <ul>
           {Object.entries(links).map(([text, link]) => (
             <li>
