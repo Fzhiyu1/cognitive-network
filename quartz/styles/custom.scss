@@ -187,7 +187,7 @@ footer {
   padding-bottom: 1.15rem;
 
   &::before {
-    content: "PUBLIC SHELL";
+    content: "PUBLIC NOTES";
     display: block;
     margin-bottom: 0.45rem;
     color: var(--secondary);
@@ -367,19 +367,19 @@ footer {
 }
 
 .graph::before {
-  content: "ECHO MAP";
+  content: "GRAPH";
 }
 
 .toc::before {
-  content: "RITE";
+  content: "CONTENTS";
 }
 
 .backlinks::before {
-  content: "CHAIN";
+  content: "LINKS";
 }
 
 .recent-notes::before {
-  content: "SIGNAL";
+  content: "UPDATES";
 }
 
 .explorer-content {
@@ -654,11 +654,11 @@ article.home-page {
 
   h2 {
     margin: 0;
-    font-size: clamp(2.2rem, 4.6vw, 3.7rem);
+    font-size: clamp(2rem, 4vw, 3.3rem);
     line-height: 1.02;
     letter-spacing: -0.05em;
     color: var(--dark);
-    text-shadow: 0 0 24px rgba(185, 147, 255, 0.18);
+    text-shadow: 0 0 16px rgba(185, 147, 255, 0.12);
   }
 
   p {

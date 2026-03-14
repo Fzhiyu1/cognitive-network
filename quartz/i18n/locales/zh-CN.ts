@@ -22,7 +22,7 @@ export default {
       quote: "引用",
     },
     backlinks: {
-      title: "回响链路",
+      title: "相关链接",
       noBacklinksFound: "无法找到反向链接",
     },
     themeToggle: {
@@ -30,19 +30,19 @@ export default {
       darkMode: "暗色模式",
     },
     readerMode: {
-      title: "静默模式",
+      title: "阅读模式",
     },
     explorer: {
-      title: "探索",
+      title: "导航",
     },
     footer: {
       createdWith: "Created with",
     },
     graph: {
-      title: "回响星图",
+      title: "关系图谱",
     },
     recentNotes: {
-      title: "最新回响",
+      title: "最近更新",
       seeRemainingMore: ({ remaining }) => `查看更多${remaining}篇笔记 →`,
     },
     transcludes: {
@@ -50,11 +50,11 @@ export default {
       linkToOriginal: "指向原始笔记的链接",
     },
     search: {
-      title: "检索终端",
-      searchBarPlaceholder: "输入真名、命题或线索",
+      title: "搜索",
+      searchBarPlaceholder: "搜索主题、概念或线索",
     },
     tableOfContents: {
-      title: "仪轨目录",
+      title: "目录",
     },
     contentMeta: {
       readingTime: ({ minutes }) => `${minutes}分钟阅读`,
@@ -68,7 +68,7 @@ export default {
     error: {
       title: "无法找到",
       notFound: "私有笔记或笔记不存在。",
-      home: "返回原点",
+      home: "返回首页",
     },
     folderContent: {
       folder: "文件夹",

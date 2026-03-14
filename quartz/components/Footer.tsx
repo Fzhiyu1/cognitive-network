@@ -12,8 +12,8 @@ export default ((opts?: Options) => {
     return (
       <footer class={`${displayClass ?? ""}`}>
         <div class="footer-copy">
-          <p class="footer-signature">Cognitive Network // Oracle Terminal © {year}</p>
-          <p class="footer-protocol">PUBLIC SHELL ACTIVE // 输出驱动认知网络</p>
+          <p class="footer-signature">Cognitive Network © {year}</p>
+          <p class="footer-protocol">公开知识网络 / 输出驱动整理</p>
         </div>
         <ul>
           {Object.entries(links).map(([text, link]) => (

@@ -68,7 +68,7 @@ export default ((opts?: Partial<GraphOptions>) => {
         <h3>{i18n(cfg.locale).components.graph.title}</h3>
         <div class="graph-outer">
           <div class="graph-container" data-cfg={JSON.stringify(localGraph)}></div>
-          <button class="global-graph-icon" aria-label="展开全域星图" title="展开全域星图">
+          <button class="global-graph-icon" aria-label="展开全局图谱" title="展开全局图谱">
             <svg
               version="1.1"
               xmlns="http://www.w3.org/2000/svg"

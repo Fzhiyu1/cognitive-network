@@ -41,18 +41,18 @@ const explorerFilterFn: ExplorerOptions["filterFn"] = (node) => {
 
 const explorerMapFn: ExplorerOptions["mapFn"] = (node) => {
   if (node.slugSegment === "concepts") {
-    node.displayName = "概念矩阵"
+    node.displayName = "概念"
   } else if (node.slugSegment === "explorations") {
-    node.displayName = "推演卷宗"
+    node.displayName = "探索"
   } else if (node.slugSegment === "references") {
-    node.displayName = "外部证词"
+    node.displayName = "引用"
   } else if (node.slugSegment === "index" && node.slug === "index") {
-    node.displayName = "原点"
+    node.displayName = "首页"
   }
 }
 
 const explorer = Component.Explorer({
-  title: "终端索引",
+  title: "导航",
   folderDefaultState: "open",
   folderClickBehavior: "collapse",
   useSavedState: true,
@@ -61,7 +61,7 @@ const explorer = Component.Explorer({
 })
 
 const recentNotes = Component.RecentNotes({
-  title: "最新回响",
+  title: "最近更新",
   limit: 8,
   showTags: true,
   filter: (file) => file.slug !== "index" && !file.slug?.startsWith("projects/"),
@@ -87,7 +87,7 @@ export const sharedPageComponents: SharedLayout = {
 export const defaultContentPageLayout: PageLayout = {
   beforeBody: [
     Component.ConditionalRender({
-      component: Component.Breadcrumbs({ rootName: "原点" }),
+      component: Component.Breadcrumbs({ rootName: "首页" }),
       condition: ({ fileData }) => fileData.slug !== "index",
     }),
     Component.ArticleTitle(),
@@ -124,7 +124,7 @@ export const defaultContentPageLayout: PageLayout = {
 
 export const defaultListPageLayout: PageLayout = {
   beforeBody: [
-    Component.Breadcrumbs({ rootName: "原点" }),
+    Component.Breadcrumbs({ rootName: "首页" }),
     Component.ArticleTitle(),
     Component.ContentMeta(),
   ],
