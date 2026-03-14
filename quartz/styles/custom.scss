@@ -1,3 +1,360 @@
 @use "./base.scss";
 
-// put your custom CSS here!
+article.home-page {
+  position: relative;
+  display: grid;
+  gap: 2.5rem;
+  padding-bottom: 0.5rem;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset: auto;
+    pointer-events: none;
+    border-radius: 999px;
+    filter: blur(80px);
+    opacity: 0.45;
+    z-index: 0;
+  }
+
+  &::before {
+    top: -2rem;
+    right: 8%;
+    width: 14rem;
+    height: 14rem;
+    background: rgba(185, 147, 255, 0.18);
+  }
+
+  &::after {
+    top: 22rem;
+    left: -3rem;
+    width: 12rem;
+    height: 12rem;
+    background: rgba(255, 134, 227, 0.12);
+  }
+
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+.home-hero,
+.home-section {
+  position: relative;
+}
+
+.home-badge,
+.home-kicker,
+.home-card-index,
+.home-signal-label,
+.home-flow-number {
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.home-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid rgba(185, 147, 255, 0.25);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at top, rgba(255, 134, 227, 0.14), transparent 60%),
+    rgba(11, 8, 23, 0.76);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.03), 0 12px 40px rgba(0, 0, 0, 0.22);
+  color: var(--secondary);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.home-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(18rem, 0.95fr);
+  gap: 1.4rem;
+  margin-top: 1rem;
+}
+
+.home-hero-copy,
+.home-signal,
+.home-card,
+.home-thread,
+.home-flow-step,
+.home-principle {
+  border: 1px solid rgba(185, 147, 255, 0.16);
+  background:
+    linear-gradient(180deg, rgba(18, 13, 34, 0.92), rgba(11, 8, 22, 0.84)),
+    linear-gradient(135deg, rgba(185, 147, 255, 0.08), transparent 55%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    0 24px 80px rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(12px);
+}
+
+.home-hero-copy {
+  padding: 1.6rem;
+  border-radius: 1.6rem;
+  overflow: hidden;
+
+  h2 {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 3.4rem);
+    line-height: 1.02;
+    letter-spacing: -0.04em;
+    color: var(--dark);
+  }
+
+  p {
+    margin: 1rem 0 0;
+    max-width: 44rem;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--darkgray);
+  }
+}
+
+.home-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  margin-top: 1.4rem;
+}
+
+.home-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.9rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(185, 147, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--dark);
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    border-color: rgba(255, 134, 227, 0.42);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 28px rgba(185, 147, 255, 0.16);
+  }
+}
+
+.home-action.primary {
+  background:
+    linear-gradient(135deg, rgba(185, 147, 255, 0.3), rgba(255, 134, 227, 0.22)),
+    rgba(255, 255, 255, 0.04);
+  box-shadow: 0 14px 36px rgba(185, 147, 255, 0.18);
+}
+
+.home-signal {
+  padding: 1.35rem;
+  border-radius: 1.4rem;
+}
+
+.home-signal-label,
+.home-kicker {
+  margin: 0 0 0.55rem;
+  color: var(--secondary);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.home-signal-grid,
+.home-card-grid,
+.home-thread-grid,
+.home-flow-grid,
+.home-principle-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.home-signal-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.home-signal-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.85rem 0.7rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  text-align: center;
+}
+
+.home-signal-value {
+  color: var(--dark);
+  font-size: 1.55rem;
+  font-weight: 800;
+}
+
+.home-signal-key {
+  color: var(--gray);
+  font-size: 0.78rem;
+}
+
+.home-signal-list {
+  margin: 1rem 0 0;
+  padding-left: 1.1rem;
+  color: var(--darkgray);
+
+  li + li {
+    margin-top: 0.65rem;
+  }
+}
+
+.home-section-head {
+  margin-bottom: 1rem;
+
+  h2 {
+    margin: 0;
+    font-size: clamp(1.4rem, 2vw, 2rem);
+    line-height: 1.16;
+    color: var(--dark);
+  }
+}
+
+.home-card-grid,
+.home-thread-grid,
+.home-principle-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.home-card,
+.home-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  min-height: 14rem;
+  padding: 1.25rem;
+  border-radius: 1.35rem;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 134, 227, 0.36);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.04),
+      0 30px 90px rgba(0, 0, 0, 0.28);
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 1.15rem;
+
+    a {
+      color: var(--dark);
+      text-decoration: none;
+    }
+  }
+
+  p {
+    margin: 0;
+    color: var(--darkgray);
+    line-height: 1.72;
+  }
+}
+
+.home-card-index {
+  color: var(--tertiary);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.home-card-link {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin-top: auto;
+  color: var(--secondary);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.home-flow-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.home-flow-step,
+.home-principle {
+  padding: 1.15rem 1.1rem;
+  border-radius: 1.2rem;
+
+  h3 {
+    margin: 0.45rem 0 0.55rem;
+    color: var(--dark);
+    font-size: 1rem;
+  }
+
+  p {
+    margin: 0;
+    color: var(--darkgray);
+    line-height: 1.72;
+  }
+}
+
+.home-flow-number {
+  color: var(--tertiary);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.home-reading-flow,
+.home-principles {
+  padding-top: 0.2rem;
+}
+
+footer {
+  p {
+    color: var(--gray);
+  }
+}
+
+@media all and (max-width: 1200px) {
+  .home-hero-grid,
+  .home-card-grid,
+  .home-thread-grid,
+  .home-flow-grid,
+  .home-principle-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-signal-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media all and (max-width: 800px) {
+  .home-hero-copy,
+  .home-signal,
+  .home-card,
+  .home-thread,
+  .home-flow-step,
+  .home-principle {
+    padding: 1rem;
+  }
+
+  .home-actions {
+    flex-direction: column;
+  }
+
+  .home-action {
+    width: 100%;
+  }
+
+  .home-signal-grid {
+    grid-template-columns: 1fr;
+  }
+}
