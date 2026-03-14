@@ -10,9 +10,9 @@ interface Props {
 const { note } = Astro.props;
 ---
 
-<article class="note-card">
+<article class="note-card" data-section={note.sectionKey}>
   <div class="note-card-topline">
-    <span>{getSectionLabel(note.sectionKey)}</span>
+    <span class="note-card__section">{getSectionLabel(note.sectionKey)}</span>
     <time datetime={note.modifiedTime}>{new Date(note.modifiedTime).toLocaleDateString("zh-CN")}</time>
   </div>
 
@@ -20,7 +20,7 @@ const { note } = Astro.props;
     <a href={withBasePath(note.url)}>{note.title}</a>
   </h3>
 
-  <p>{note.summary || "这篇笔记暂时还没有摘要。"} </p>
+  <p>{note.summary || "这篇笔记暂时还没有摘要。"}</p>
 
   {note.tags.length > 0 && (
     <ul class="tag-list">
@@ -29,4 +29,9 @@ const { note } = Astro.props;
       ))}
     </ul>
   )}
+
+  <div class="note-card__footer">
+    <span>{note.backlinks.length + note.outgoingLinks.length} 个连接</span>
+    <span class="note-card__arrow">进入节点</span>
+  </div>
 </article>

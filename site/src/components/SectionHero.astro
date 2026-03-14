@@ -3,13 +3,31 @@ interface Props {
   eyebrow: string;
   title: string;
   description: string;
+  asideEyebrow?: string;
+  asideTitle?: string;
+  asideDescription?: string;
 }
 
-const { eyebrow, title, description } = Astro.props;
+const {
+  eyebrow,
+  title,
+  description,
+  asideEyebrow = "public surface",
+  asideTitle = "公开同步",
+  asideDescription = "内容、引用与图谱节点会随 Markdown 更新同步刷新。"
+} = Astro.props;
 ---
 
 <section class="section-hero">
-  <span class="eyebrow">{eyebrow}</span>
-  <h1>{title}</h1>
-  <p>{description}</p>
+  <div class="section-hero__copy">
+    <span class="eyebrow">{eyebrow}</span>
+    <h1>{title}</h1>
+    <p class="section-hero__description">{description}</p>
+  </div>
+
+  <div class="section-hero__chip">
+    <span>{asideEyebrow}</span>
+    <strong class="section-hero__metric">{asideTitle}</strong>
+    <small class="section-hero__caption">{asideDescription}</small>
+  </div>
 </section>

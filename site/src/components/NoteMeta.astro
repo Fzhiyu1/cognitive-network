@@ -9,8 +9,10 @@ interface Props {
 const { note } = Astro.props;
 ---
 
-<div class="note-meta">
-  <span>{getSectionLabel(note.sectionKey)}</span>
-  <span>{new Date(note.modifiedTime).toLocaleDateString("zh-CN")}</span>
-  {note.isIndexedPublicly ? <span>公开索引</span> : <span>仅直链可见</span>}
-</div>
+<ul class="note-meta" role="list">
+  <li class="note-meta__item" data-section={note.sectionKey}>
+    {getSectionLabel(note.sectionKey)}
+  </li>
+  <li class="note-meta__item">{new Date(note.modifiedTime).toLocaleDateString("zh-CN")}</li>
+  <li class="note-meta__item">{note.isIndexedPublicly ? "公开索引" : "仅直链可见"}</li>
+</ul>

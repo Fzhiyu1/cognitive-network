@@ -22,11 +22,21 @@ const pageData = getSectionIndexData(data, section as typeof SECTION_DEFINITIONS
 <BaseLayout title={`${pageData.section.label} | Cognitive Network`}>
   <SectionHero
     eyebrow={pageData.section.label}
-    title={`${pageData.section.label} Archive`}
-    description={`这里收录 ${pageData.section.label.toLowerCase()} 的公开索引页。项目笔记不会出现在这里。`}
+    title={`${pageData.section.label} Signal Archive`}
+    description={`这里收录 ${pageData.section.label.toLowerCase()} 的公开索引页。项目笔记不会出现在这里，但对应详情仍可通过直链访问。`}
+    asideEyebrow="archive mode"
+    asideTitle={`${pageData.notes.length} 条记录`}
+    asideDescription="该分区的公开索引会持续反映 Markdown 的最新状态与链接关系。"
   />
 
-  <section class="section-block">
+  <section class="section-block section-block--dense">
+    <div class="section-block__header">
+      <div>
+        <span class="eyebrow eyebrow--soft">Archive</span>
+        <h2>{pageData.notes.length} 条公开记录</h2>
+      </div>
+      <p>这些条目会同步反映知识库中当前可公开索引的内容状态与连接结构。</p>
+    </div>
     <div class="note-grid">
       {pageData.notes.map((note) => (
         <NoteCard note={note} />

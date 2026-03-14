@@ -1,5 +1,6 @@
 ---
 import type { LinkedNote } from "../lib/knowledge-base";
+import { getSectionLabel } from "../lib/knowledge-base";
 import { withBasePath } from "../lib/url";
 
 interface Props {
@@ -13,11 +14,17 @@ const { title, notes } = Astro.props;
 {
   notes.length > 0 && (
     <section class="link-panel">
-      <h2>{title}</h2>
+      <div class="link-panel__topline">
+        <h2>{title}</h2>
+        <span>{notes.length}</span>
+      </div>
       <ul>
         {notes.map((note) => (
           <li>
-            <a href={withBasePath(note.url)}>{note.title}</a>
+            <a class="related-note" data-section={note.sectionKey} href={withBasePath(note.url)}>
+              <span class="related-note__section">{getSectionLabel(note.sectionKey)}</span>
+              <strong>{note.title}</strong>
+            </a>
           </li>
         ))}
       </ul>
