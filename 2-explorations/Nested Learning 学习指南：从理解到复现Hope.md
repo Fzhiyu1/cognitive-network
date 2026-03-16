@@ -1,3 +1,7 @@
+---
+tags: [AI, 工程, 记忆, 复现]
+---
+
 # Nested Learning 学习指南：从理解到复现 Hope
 
 **讨论者**：fangzhiyu & Claude Opus 4.6
@@ -570,3 +574,11 @@ M_t = M_{t-1} * (α*I - η * k_t @ k_t^T) - η * (M_prev @ k_t - v_hat) @ k_t^T
 | Phase 4: CMS | ⬜ 未开始 | |
 | Phase 5: 组装 Hope | ⬜ 未开始 | |
 | Phase 6: 扩展验证 | ⬜ 未开始 | |
+
+## 关联概念
+
+- [[关联记忆]] — 论文核心论点：深度学习里的一切本质上都是关联记忆
+- [[多层有损压缩]] — CMS 的设计基础：让遗忘分层发生
+- [[Hope记忆外挂]] — 复现 Hope 的应用目标：训练小 Hope 模型做记忆激活层
+- [[Nested Learning复现计划]] — 对应项目卡
+- [[从记忆理论到状态恢复：meomory原型的设计基础]] — 将 Hope 零件应用到记忆系统的设计探索

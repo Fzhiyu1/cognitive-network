@@ -1,3 +1,7 @@
+---
+tags: [AI, 认知科学, 工程, 实验]
+---
+
 # 人工脑干：从目标真空到RL+LLM双系统架构
 
 **讨论者**：fangzhiyu & Claude Opus 4.6
