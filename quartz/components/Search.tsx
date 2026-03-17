@@ -17,6 +17,7 @@ export default ((userOpts?: Partial<SearchOptions>) => {
   const Search: QuartzComponent = ({ displayClass, cfg }: QuartzComponentProps) => {
     const opts = { ...defaultOptions, ...userOpts }
     const searchPlaceholder = i18n(cfg.locale).components.search.searchBarPlaceholder
+    const searchButtonLabel = cfg.locale?.startsWith("zh") ? "搜索主题 / 线索" : searchPlaceholder
     return (
       <div class={classNames(displayClass, "search")}>
         <button class="search-button">
@@ -27,7 +28,8 @@ export default ((userOpts?: Partial<SearchOptions>) => {
               <circle cx="8" cy="8" r="7" />
             </g>
           </svg>
-          <p>{i18n(cfg.locale).components.search.title}</p>
+          <p>{searchButtonLabel}</p>
+          <span class="search-shortcut">⌘K</span>
         </button>
         <div class="search-container">
           <div class="search-space">

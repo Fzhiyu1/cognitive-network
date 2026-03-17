@@ -1,6 +1,144 @@
 @use "./base.scss";
 
 :root {
+  --shell-border: color-mix(in srgb, var(--secondary) 18%, rgba(255, 255, 255, 0));
+  --shell-border-soft: color-mix(in srgb, var(--secondary) 10%, rgba(255, 255, 255, 0));
+  --shell-surface:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(241, 234, 250, 0.92)),
+    linear-gradient(135deg, rgba(123, 87, 255, 0.12), transparent 60%);
+  --shell-surface-alt:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(235, 228, 247, 0.95)),
+    linear-gradient(135deg, rgba(219, 91, 217, 0.12), transparent 64%);
+  --shell-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.78),
+    0 16px 42px rgba(78, 55, 124, 0.12),
+    0 36px 110px rgba(98, 72, 154, 0.12);
+  --shell-panel-sheen: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.42),
+    rgba(255, 255, 255, 0) 28%,
+    rgba(123, 87, 255, 0.04) 100%
+  );
+  --shell-button-surface:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(239, 232, 248, 0.92));
+  --shell-button-hover-surface:
+    linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(233, 224, 246, 0.98));
+  --shell-chip-surface: rgba(123, 87, 255, 0.08);
+  --shell-chip-border: rgba(123, 87, 255, 0.12);
+  --shell-hover-surface: rgba(123, 87, 255, 0.11);
+  --shell-focus-line: linear-gradient(
+    90deg,
+    rgba(123, 87, 255, 0) 0%,
+    rgba(123, 87, 255, 0.18) 34%,
+    rgba(219, 91, 217, 0.92) 50%,
+    rgba(123, 87, 255, 0.18) 66%,
+    rgba(123, 87, 255, 0) 100%
+  );
+  --shell-active-glow:
+    0 0 0 1px rgba(123, 87, 255, 0.16),
+    0 0 0 6px rgba(123, 87, 255, 0.05),
+    0 20px 48px rgba(78, 55, 124, 0.18);
+  --shell-search-overlay:
+    radial-gradient(54rem 24rem at 50% 8%, rgba(255, 255, 255, 0.24), transparent 72%),
+    linear-gradient(180deg, rgba(244, 238, 249, 0.84), rgba(233, 225, 245, 0.92));
+  --shell-search-shell:
+    radial-gradient(circle at top, rgba(123, 87, 255, 0.14), transparent 44%),
+    linear-gradient(180deg, rgb(250, 247, 255), rgb(233, 226, 245));
+  --shell-search-pane:
+    linear-gradient(180deg, rgb(255, 255, 255), rgb(239, 233, 249));
+  --shell-graph-surface:
+    radial-gradient(circle at top, rgba(123, 87, 255, 0.18), transparent 42%),
+    linear-gradient(180deg, rgba(250, 247, 255, 0.95), rgba(229, 222, 243, 0.92));
+  --shell-graph-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    0 18px 48px rgba(78, 55, 124, 0.14),
+    0 42px 120px rgba(98, 72, 154, 0.14);
+  --shell-graph-backdrop: rgba(238, 232, 247, 0.74);
+  --shell-graph-modal-surface:
+    radial-gradient(circle at top, rgba(123, 87, 255, 0.18), transparent 38%),
+    linear-gradient(180deg, rgba(249, 246, 255, 0.98), rgba(231, 224, 245, 0.94));
+  --shell-graph-modal-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.78),
+    0 28px 90px rgba(78, 55, 124, 0.18);
+  --shell-graph-icon-surface: rgba(255, 255, 255, 0.72);
+  --shell-graph-link-idle: rgba(128, 108, 168, 0.22);
+  --shell-graph-link-active: rgba(215, 79, 218, 0.92);
+  --shell-graph-node-ring: rgba(215, 79, 218, 0.94);
+  --shell-graph-tag-fill: rgba(255, 255, 255, 0.9);
+  --shell-graph-tag-stroke: rgba(215, 79, 218, 0.7);
+  --shell-page-html:
+    radial-gradient(circle at top, rgba(185, 147, 255, 0.16), transparent 34%),
+    radial-gradient(circle at bottom left, rgba(255, 134, 227, 0.12), transparent 28%),
+    linear-gradient(180deg, #f1ebf9, #ece5f6 56%, #f5f0fb);
+  --shell-page-body:
+    radial-gradient(circle at 16% 12%, rgba(185, 147, 255, 0.18), transparent 24%),
+    radial-gradient(circle at 82% 0%, rgba(255, 134, 227, 0.16), transparent 26%),
+    radial-gradient(circle at 38% 48%, rgba(185, 147, 255, 0.12), transparent 28%),
+    radial-gradient(circle at 56% 72%, rgba(185, 147, 255, 0.12), transparent 24%),
+    radial-gradient(circle at 24% 96%, rgba(255, 134, 227, 0.08), transparent 26%),
+    linear-gradient(180deg, #f4eefb, #ece4f5 42%, #eee6f6 72%, #f5effb 100%);
+  --shell-page-starfield:
+    radial-gradient(circle at 10% 18%, rgba(255, 255, 255, 0.62) 0 1.1px, transparent 1.8px),
+    radial-gradient(circle at 21% 66%, rgba(185, 147, 255, 0.34) 0 1.2px, transparent 1.9px),
+    radial-gradient(circle at 37% 24%, rgba(255, 134, 227, 0.3) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 58% 72%, rgba(255, 255, 255, 0.5) 0 1.1px, transparent 1.8px),
+    radial-gradient(circle at 74% 16%, rgba(185, 147, 255, 0.36) 0 1.2px, transparent 1.9px),
+    radial-gradient(circle at 88% 42%, rgba(255, 134, 227, 0.26) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 92% 76%, rgba(255, 255, 255, 0.5) 0 1.1px, transparent 1.8px);
+  --shell-page-orbit:
+    radial-gradient(circle at 78% 18%, transparent 0 31%, rgba(185, 147, 255, 0.12) 31.3%, transparent 32.1%),
+    radial-gradient(circle at 18% 84%, transparent 0 22%, rgba(255, 134, 227, 0.12) 22.3%, transparent 23.1%),
+    conic-gradient(from 222deg at 68% 24%, rgba(255, 255, 255, 0) 0deg, rgba(185, 147, 255, 0.16) 72deg, rgba(255, 255, 255, 0) 128deg),
+    radial-gradient(circle at 54% 48%, rgba(255, 255, 255, 0.06), transparent 46%);
+  --shell-page-aurora:
+    radial-gradient(90rem 50rem at 25% 20%, rgba(185, 147, 255, 0.32), transparent 68%),
+    radial-gradient(80rem 42rem at 75% 30%, rgba(255, 134, 227, 0.24), transparent 66%);
+  --shell-page-nebula:
+    radial-gradient(70rem 36rem at 30% 60%, rgba(185, 147, 255, 0.18), transparent 72%),
+    radial-gradient(60rem 32rem at 70% 80%, rgba(255, 134, 227, 0.14), transparent 70%);
+  --shell-page-depth-glow:
+    radial-gradient(circle at 50% 48%, rgba(185, 147, 255, 0.18), transparent 60%),
+    radial-gradient(circle at 72% 36%, rgba(255, 134, 227, 0.12), transparent 56%);
+  --shell-page-prism:
+    linear-gradient(118deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0) 18%),
+    linear-gradient(302deg, rgba(185, 147, 255, 0.09), rgba(255, 255, 255, 0) 24%),
+    conic-gradient(
+      from 228deg at 74% 18%,
+      rgba(255, 255, 255, 0) 0deg,
+      rgba(185, 147, 255, 0.08) 44deg,
+      rgba(255, 134, 227, 0.06) 76deg,
+      rgba(255, 255, 255, 0) 116deg
+    );
+  --shell-home-hero-aura:
+    radial-gradient(46rem 18rem at 34% 10%, rgba(185, 147, 255, 0.16), transparent 72%),
+    radial-gradient(34rem 16rem at 78% 14%, rgba(255, 134, 227, 0.12), transparent 74%),
+    radial-gradient(16rem 7rem at 66% 18%, rgba(255, 255, 255, 0.12), transparent 62%);
+  --shell-home-hero-rim:
+    radial-gradient(circle at 78% 18%, transparent 0 27.6%, rgba(185, 147, 255, 0.12) 28%, transparent 28.8%),
+    radial-gradient(circle at 78% 18%, transparent 0 32.2%, rgba(255, 134, 227, 0.08) 32.6%, transparent 33.3%),
+    radial-gradient(20rem 9rem at 84% 18%, rgba(255, 255, 255, 0.08), transparent 74%);
+  --shell-page-vignette:
+    radial-gradient(circle at center, rgba(255, 255, 255, 0) 42%, rgba(214, 206, 232, 0.46) 100%);
+  --shell-page-dot-matrix:
+    radial-gradient(circle at 1.2px 1.2px, rgba(123, 87, 255, 0.22) 0 1.2px, transparent 1.95px),
+    radial-gradient(circle at 1px 1px, rgba(185, 147, 255, 0.18) 0 0.95px, transparent 1.7px);
+  --shell-page-dot-matrix-fine:
+    radial-gradient(circle at 0.8px 0.8px, rgba(219, 91, 217, 0.16) 0 0.9px, transparent 1.46px),
+    radial-gradient(circle at 0.7px 0.7px, rgba(255, 255, 255, 0.18) 0 0.7px, transparent 1.35px);
+  --shell-page-dot-bloom:
+    radial-gradient(36rem 18rem at 82% 16%, rgba(185, 147, 255, 0.16), transparent 72%),
+    radial-gradient(28rem 18rem at 14% 78%, rgba(255, 134, 227, 0.12), transparent 72%),
+    radial-gradient(18rem 12rem at 68% 24%, rgba(185, 147, 255, 0.12), transparent 70%),
+    radial-gradient(22rem 11rem at 64% 42%, rgba(255, 255, 255, 0.08), transparent 76%);
+  --shell-badge-surface:
+    radial-gradient(circle at top, rgba(219, 91, 217, 0.14), transparent 60%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(241, 235, 252, 0.95));
+  --shell-badge-shadow:
+    0 0 0 1px rgba(123, 87, 255, 0.08),
+    0 12px 40px rgba(78, 55, 124, 0.12);
+}
+
+:root[saved-theme="dark"] {
   --shell-border: color-mix(in srgb, var(--secondary) 24%, rgba(255, 255, 255, 0));
   --shell-border-soft: color-mix(in srgb, var(--secondary) 14%, rgba(255, 255, 255, 0));
   --shell-surface:
@@ -12,6 +150,129 @@
   --shell-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.04),
     0 24px 80px rgba(0, 0, 0, 0.28);
+  --shell-panel-sheen: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.03),
+    rgba(255, 255, 255, 0) 28%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+  --shell-button-surface: rgba(255, 255, 255, 0.03);
+  --shell-button-hover-surface: rgba(255, 255, 255, 0.08);
+  --shell-chip-surface: rgba(255, 255, 255, 0.03);
+  --shell-chip-border: rgba(255, 255, 255, 0.04);
+  --shell-hover-surface: rgba(255, 255, 255, 0.04);
+  --shell-focus-line: linear-gradient(
+    90deg,
+    rgba(185, 147, 255, 0) 0%,
+    rgba(185, 147, 255, 0.2) 34%,
+    rgba(255, 134, 227, 0.95) 50%,
+    rgba(185, 147, 255, 0.2) 66%,
+    rgba(185, 147, 255, 0) 100%
+  );
+  --shell-active-glow:
+    0 0 0 1px rgba(185, 147, 255, 0.22),
+    0 0 0 6px rgba(185, 147, 255, 0.06),
+    0 24px 70px rgba(0, 0, 0, 0.3);
+  --shell-search-overlay:
+    radial-gradient(60rem 26rem at 50% 8%, rgba(185, 147, 255, 0.1), transparent 72%),
+    linear-gradient(180deg, rgb(4, 2, 12), rgb(5, 3, 13));
+  --shell-search-shell:
+    radial-gradient(circle at top, rgba(185, 147, 255, 0.12), transparent 44%),
+    linear-gradient(180deg, rgb(15, 10, 30), rgb(7, 5, 18));
+  --shell-search-pane:
+    linear-gradient(180deg, rgb(18, 13, 35), rgb(9, 6, 20));
+  --shell-graph-surface:
+    radial-gradient(circle at top, rgba(185, 147, 255, 0.16), transparent 42%),
+    linear-gradient(180deg, rgba(12, 9, 24, 0.94), rgba(6, 4, 15, 0.9));
+  --shell-graph-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 18px 48px rgba(0, 0, 0, 0.25);
+  --shell-graph-backdrop: rgba(5, 3, 14, 0.72);
+  --shell-graph-modal-surface:
+    radial-gradient(circle at top, rgba(185, 147, 255, 0.14), transparent 38%),
+    linear-gradient(180deg, rgba(14, 10, 27, 0.96), rgba(7, 4, 16, 0.94));
+  --shell-graph-modal-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 28px 90px rgba(0, 0, 0, 0.42);
+  --shell-graph-icon-surface: rgba(255, 255, 255, 0.04);
+  --shell-graph-link-idle: rgba(210, 198, 237, 0.12);
+  --shell-graph-link-active: rgba(255, 146, 236, 0.94);
+  --shell-graph-node-ring: rgba(255, 146, 236, 0.95);
+  --shell-graph-tag-fill: rgba(19, 16, 34, 0.94);
+  --shell-graph-tag-stroke: rgba(255, 146, 236, 0.72);
+  --shell-page-html:
+    radial-gradient(circle at top, rgba(185, 147, 255, 0.1), transparent 34%),
+    radial-gradient(circle at bottom left, rgba(255, 134, 227, 0.07), transparent 28%),
+    linear-gradient(180deg, #120a22, #080411 56%, #04020b);
+  --shell-page-body:
+    radial-gradient(circle at 18% 10%, rgba(185, 147, 255, 0.12), transparent 23%),
+    radial-gradient(circle at 84% 2%, rgba(255, 134, 227, 0.08), transparent 25%),
+    radial-gradient(circle at 38% 42%, rgba(92, 65, 172, 0.1), transparent 28%),
+    radial-gradient(circle at 58% 66%, rgba(102, 72, 171, 0.12), transparent 28%),
+    radial-gradient(circle at 78% 84%, rgba(255, 146, 236, 0.08), transparent 22%),
+    radial-gradient(circle at 20% 104%, rgba(88, 66, 168, 0.08), transparent 28%),
+    linear-gradient(180deg, #10091f, #080411 38%, #070410 66%, #06030d 100%);
+  --shell-page-starfield:
+    radial-gradient(circle at 8% 14%, rgba(255, 255, 255, 0.72) 0 1.1px, transparent 1.8px),
+    radial-gradient(circle at 17% 68%, rgba(185, 147, 255, 0.5) 0 1.2px, transparent 1.9px),
+    radial-gradient(circle at 32% 22%, rgba(255, 146, 236, 0.44) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 47% 78%, rgba(255, 255, 255, 0.58) 0 1.1px, transparent 1.8px),
+    radial-gradient(circle at 64% 12%, rgba(185, 147, 255, 0.52) 0 1.2px, transparent 1.9px),
+    radial-gradient(circle at 81% 28%, rgba(255, 146, 236, 0.42) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 90% 62%, rgba(255, 255, 255, 0.54) 0 1.1px, transparent 1.8px),
+    radial-gradient(circle at 74% 84%, rgba(185, 147, 255, 0.46) 0 1px, transparent 1.7px);
+  --shell-page-orbit:
+    radial-gradient(circle at 80% 18%, transparent 0 30%, rgba(185, 147, 255, 0.13) 30.3%, transparent 31.1%),
+    radial-gradient(circle at 16% 82%, transparent 0 23%, rgba(255, 146, 236, 0.12) 23.3%, transparent 24.1%),
+    conic-gradient(from 220deg at 72% 22%, rgba(255, 255, 255, 0) 0deg, rgba(185, 147, 255, 0.16) 68deg, rgba(255, 255, 255, 0) 124deg),
+    radial-gradient(circle at 46% 42%, rgba(255, 255, 255, 0.04), transparent 48%);
+  --shell-page-aurora:
+    radial-gradient(100rem 55rem at 20% 25%, rgba(185, 147, 255, 0.36), transparent 68%),
+    radial-gradient(85rem 45rem at 80% 35%, rgba(255, 146, 236, 0.28), transparent 66%);
+  --shell-page-nebula:
+    radial-gradient(75rem 38rem at 25% 55%, rgba(185, 147, 255, 0.2), transparent 72%),
+    radial-gradient(65rem 34rem at 70% 75%, rgba(255, 146, 236, 0.16), transparent 70%);
+  --shell-page-depth-glow:
+    radial-gradient(circle at 50% 50%, rgba(185, 147, 255, 0.14), transparent 60%),
+    radial-gradient(circle at 74% 34%, rgba(255, 146, 236, 0.1), transparent 56%),
+    radial-gradient(circle at 22% 72%, rgba(123, 91, 220, 0.08), transparent 58%);
+  --shell-page-prism:
+    linear-gradient(118deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0) 18%),
+    linear-gradient(302deg, rgba(185, 147, 255, 0.08), rgba(255, 255, 255, 0) 24%),
+    conic-gradient(
+      from 228deg at 74% 18%,
+      rgba(255, 255, 255, 0) 0deg,
+      rgba(185, 147, 255, 0.08) 44deg,
+      rgba(255, 146, 236, 0.06) 76deg,
+      rgba(255, 255, 255, 0) 116deg
+    );
+  --shell-home-hero-aura:
+    radial-gradient(54rem 20rem at 34% 8%, rgba(185, 147, 255, 0.16), transparent 72%),
+    radial-gradient(38rem 18rem at 80% 16%, rgba(255, 146, 236, 0.1), transparent 74%),
+    radial-gradient(16rem 7rem at 70% 16%, rgba(255, 255, 255, 0.08), transparent 62%);
+  --shell-home-hero-rim:
+    radial-gradient(circle at 78% 20%, transparent 0 27.4%, rgba(185, 147, 255, 0.14) 27.8%, transparent 28.6%),
+    radial-gradient(circle at 78% 20%, transparent 0 32.4%, rgba(255, 146, 236, 0.08) 32.8%, transparent 33.6%),
+    radial-gradient(22rem 10rem at 84% 22%, rgba(255, 255, 255, 0.05), transparent 74%);
+  --shell-page-vignette:
+    radial-gradient(circle at center, rgba(9, 6, 19, 0) 42%, rgba(3, 2, 10, 0.52) 100%);
+  --shell-page-dot-matrix:
+    radial-gradient(circle at 1.4px 1.4px, rgba(255, 146, 236, 0.24) 0 1.15px, transparent 1.9px),
+    radial-gradient(circle at 1px 1px, rgba(185, 147, 255, 0.16) 0 0.95px, transparent 1.7px);
+  --shell-page-dot-matrix-fine:
+    radial-gradient(circle at 0.9px 0.9px, rgba(185, 147, 255, 0.18) 0 0.9px, transparent 1.46px),
+    radial-gradient(circle at 0.75px 0.75px, rgba(255, 255, 255, 0.14) 0 0.72px, transparent 1.35px);
+  --shell-page-dot-bloom:
+    radial-gradient(40rem 20rem at 82% 16%, rgba(185, 147, 255, 0.14), transparent 72%),
+    radial-gradient(30rem 18rem at 12% 78%, rgba(255, 146, 236, 0.1), transparent 72%),
+    radial-gradient(18rem 11rem at 66% 26%, rgba(185, 147, 255, 0.12), transparent 70%),
+    radial-gradient(24rem 11rem at 68% 40%, rgba(255, 255, 255, 0.05), transparent 76%);
+  --shell-badge-surface:
+    radial-gradient(circle at top, rgba(255, 134, 227, 0.14), transparent 60%),
+    rgba(11, 8, 23, 0.78);
+  --shell-badge-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.03),
+    0 12px 40px rgba(0, 0, 0, 0.22);
 }
 
 @keyframes shell-pulse {
@@ -27,16 +288,6 @@
   }
 }
 
-@keyframes shell-drift {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-
-  to {
-    transform: translate3d(0, 28px, 0);
-  }
-}
-
 @keyframes shell-float {
   0%,
   100% {
@@ -48,20 +299,39 @@
   }
 }
 
+@keyframes shell-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes shell-beacon {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.72;
+  }
+
+  50% {
+    transform: scale(1.25);
+    opacity: 1;
+  }
+}
+
 html {
-  background:
-    radial-gradient(circle at top, rgba(185, 147, 255, 0.1), transparent 38%),
-    radial-gradient(circle at bottom left, rgba(255, 134, 227, 0.08), transparent 30%),
-    var(--light);
+  background: var(--shell-page-html);
 }
 
 body {
   position: relative;
   min-height: 100vh;
-  background:
-    radial-gradient(circle at 16% 12%, rgba(185, 147, 255, 0.13), transparent 26%),
-    radial-gradient(circle at 82% 0%, rgba(255, 134, 227, 0.12), transparent 28%),
-    linear-gradient(180deg, color-mix(in srgb, var(--light) 96%, black 4%), var(--light));
+  background: var(--shell-page-body);
 
   &::before,
   &::after {
@@ -73,36 +343,20 @@ body {
   }
 
   &::before {
-    background:
-      linear-gradient(
-        90deg,
-        transparent 0,
-        transparent calc(50% - 1px),
-        rgba(185, 147, 255, 0.08) 50%,
-        transparent calc(50% + 1px),
-        transparent 100%
-      ),
-      linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.02),
-        rgba(255, 255, 255, 0) 24%,
-        rgba(255, 255, 255, 0.02) 100%
-      );
-    opacity: 0.55;
+    background: var(--shell-page-starfield), var(--shell-page-orbit), var(--shell-page-prism);
+    background-repeat: no-repeat;
+    background-size: cover;
+    opacity: 0.88;
+    animation: starfield-pulse 14s ease-in-out infinite alternate;
   }
 
   &::after {
-    background:
-      repeating-linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.026) 0,
-        rgba(255, 255, 255, 0.026) 1px,
-        transparent 1px,
-        transparent 5px
-      );
-    mix-blend-mode: screen;
-    opacity: 0.14;
-    animation: shell-drift 18s linear infinite;
+    inset: -160px;
+    background: var(--shell-page-aurora), var(--shell-page-nebula);
+    background-repeat: no-repeat;
+    background-size: cover;
+    opacity: 0.8;
+    animation: aurora-drift 10s ease-in-out infinite alternate;
   }
 }
 
@@ -117,11 +371,40 @@ body {
     inset: 0;
     pointer-events: none;
     z-index: 0;
-    background-image:
-      linear-gradient(rgba(185, 147, 255, 0.045) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(185, 147, 255, 0.045) 1px, transparent 1px);
-    background-size: 64px 64px;
-    opacity: 0.13;
+    background:
+      var(--shell-page-dot-bloom),
+      var(--shell-page-dot-matrix-fine),
+      var(--shell-page-dot-matrix);
+    background-repeat:
+      no-repeat, no-repeat, no-repeat, no-repeat,
+      repeat, repeat,
+      repeat, repeat;
+    background-size:
+      cover, cover, cover, cover,
+      10px 10px, 8px 8px,
+      22px 22px, 18px 18px;
+    background-position:
+      center, center, center, center,
+      0 0, 4px 3px,
+      0 0, 10px 8px;
+    opacity: 0.38;
+    mask-image:
+      radial-gradient(44rem 24rem at 82% 16%, rgba(0, 0, 0, 0.96), transparent 74%),
+      radial-gradient(24rem 18rem at 66% 24%, rgba(0, 0, 0, 0.72), transparent 74%),
+      radial-gradient(32rem 22rem at 14% 78%, rgba(0, 0, 0, 0.68), transparent 72%),
+      linear-gradient(180deg, rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0.16) 56%, transparent 100%);
+  }
+
+  &::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background: var(--shell-page-vignette);
+    background-repeat: no-repeat;
+    background-size: cover;
+    opacity: 0.78;
   }
 
   > #quartz-body {
@@ -151,13 +434,13 @@ body {
 }
 
 .page-title,
-.left.sidebar > .flex-component,
 .explorer,
 .graph,
 .toc,
 .backlinks,
 .recent-notes,
 footer {
+  position: relative;
   border: 1px solid var(--shell-border-soft);
   border-radius: 1.45rem;
   background: var(--shell-surface);
@@ -166,7 +449,6 @@ footer {
 }
 
 .page-title,
-.left.sidebar > .flex-component,
 .explorer,
 .graph,
 .toc,
@@ -178,6 +460,39 @@ footer {
 .left.sidebar,
 .right.sidebar {
   gap: 1rem;
+}
+
+
+.page-title,
+.explorer,
+.graph,
+.toc,
+.backlinks,
+.recent-notes,
+footer,
+.home-hero-copy,
+.home-signal,
+.home-card,
+.home-thread,
+.home-flow-step,
+.home-principle {
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0.72rem;
+    border-radius: inherit;
+    background:
+      linear-gradient(var(--secondary), var(--secondary)) top left / 1.1rem 1px no-repeat,
+      linear-gradient(var(--secondary), var(--secondary)) top left / 1px 1.1rem no-repeat,
+      linear-gradient(var(--secondary), var(--secondary)) top right / 1.1rem 1px no-repeat,
+      linear-gradient(var(--secondary), var(--secondary)) top right / 1px 1.1rem no-repeat,
+      linear-gradient(var(--secondary), var(--secondary)) bottom left / 1.1rem 1px no-repeat,
+      linear-gradient(var(--secondary), var(--secondary)) bottom left / 1px 1.1rem no-repeat,
+      linear-gradient(var(--secondary), var(--secondary)) bottom right / 1.1rem 1px no-repeat,
+      linear-gradient(var(--secondary), var(--secondary)) bottom right / 1px 1.1rem no-repeat;
+    opacity: 0.18;
+    pointer-events: none;
+  }
 }
 
 .page-title {
@@ -207,6 +522,11 @@ footer {
     text-wrap: balance;
     text-shadow: 0 0 20px rgba(185, 147, 255, 0.2);
   }
+
+  &::after {
+    inset: 0.65rem;
+    opacity: 0.32;
+  }
 }
 
 .breadcrumb-container {
@@ -218,7 +538,7 @@ footer {
     padding: 0.2rem 0.55rem;
     border: 1px solid var(--shell-border-soft);
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--shell-chip-surface);
 
     p,
     a {
@@ -255,57 +575,558 @@ footer {
   .internal.tag-link {
     border: 1px solid var(--shell-border-soft);
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--shell-chip-surface);
     padding: 0.1rem 0.55rem;
   }
 }
 
 .left.sidebar > .flex-component {
-  gap: 0.65rem;
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap !important;
+  gap: 0.75rem !important;
   align-items: center;
+
+  // 搜索栏卡片（第一个 wrapper div）
+  > div:first-child {
+    flex: 0 1 auto;
+    min-width: 0;
+    border: 1px solid var(--shell-border-soft);
+    border-radius: 1.45rem;
+    background: var(--shell-surface);
+    box-shadow: var(--shell-shadow);
+    overflow: hidden;
+    padding: 0.15rem 0.2rem;
+
+    .search {
+      max-width: 10rem;
+    }
+  }
+
+  // 按钮 wrapper div：居中在伪元素卡片内
+  > div:nth-child(2) {
+    position: relative;
+    z-index: 1;
+    flex: 0 0 auto;
+    margin-right: -0.75rem; // 抵消 flex gap
+  }
+
+  > div:nth-child(3) {
+    position: relative;
+    z-index: 1;
+    flex: 0 0 auto;
+  }
+
+  // 按钮组卡片背景
+  &::before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 5rem;
+    height: calc(100% - 0.1rem);
+    border: 1px solid var(--shell-border-soft);
+    border-radius: 1.45rem;
+    background: var(--shell-surface);
+    box-shadow: var(--shell-shadow);
+    pointer-events: none;
+  }
+
+  .search {
+    min-width: 0;
+    width: 100%;
+
+    .search-button {
+      min-height: 2rem;
+      border: none;
+      border-radius: 0.85rem;
+      background: transparent;
+      box-shadow: none;
+
+      &::before {
+        display: none;
+      }
+
+      &:hover,
+      &:focus-visible {
+        transform: none;
+        border: none;
+        background: rgba(255, 255, 255, 0.06);
+        box-shadow: none;
+      }
+    }
+  }
+
+  .darkmode {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.85rem;
+    height: 1.85rem;
+    border: none;
+    border-radius: 0.5rem;
+    background: transparent;
+    box-shadow: none;
+    margin-left: 0.45rem;
+    margin-right: 0.2rem;
+  }
+
+  .readermode {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.85rem;
+    height: 1.85rem;
+    border: none;
+    border-radius: 0.5rem;
+    background: transparent;
+    box-shadow: none;
+    margin-left: 0.2rem;
+    margin-right: 0.45rem;
+    transition: background 180ms ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    &::before {
+      display: none;
+    }
+  }
 }
 
 .search {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
   max-width: none;
 
   > .search-button {
-    min-height: 2.7rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    width: 100%;
+    min-width: 0;
+    min-height: 3rem;
+    padding: 0 0.75rem 0 0.78rem;
     border: 1px solid var(--shell-border);
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--shell-button-surface);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 10px 24px rgba(0, 0, 0, 0.14);
+    overflow: hidden;
+    transition:
+      transform 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease,
+      background 180ms ease;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 12% 50%, color-mix(in srgb, var(--tertiary) 16%, rgba(255, 255, 255, 0)), transparent 22%),
+        linear-gradient(90deg, color-mix(in srgb, var(--secondary) 12%, rgba(255, 255, 255, 0)), transparent 58%);
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    &:hover,
+    &:focus-visible {
+      transform: translateY(-1px);
+      border-color: color-mix(in srgb, var(--tertiary) 44%, rgba(255, 255, 255, 0));
+      background: var(--shell-button-hover-surface);
+      box-shadow: var(--shell-active-glow);
+    }
+
+    > svg {
+      width: 1rem;
+      min-width: 1rem;
+      margin: 0;
+
+      .search-path {
+        stroke: color-mix(in srgb, var(--tertiary) 58%, var(--secondary));
+      }
+    }
 
     > p {
-      color: var(--gray);
+      margin: 0;
+      flex: 1;
+      min-width: 0;
+      color: color-mix(in srgb, var(--dark) 76%, var(--gray));
+      font-family: var(--bodyFont);
+      font-size: 0.82rem;
+      letter-spacing: 0.01em;
+      line-height: 1;
+      text-align: left;
+      text-transform: none;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      position: relative;
+      z-index: 1;
+    }
+
+    > .search-shortcut {
+      display: none;
+      position: relative;
+      z-index: 1;
+      flex-shrink: 0;
+      padding: 0.22rem 0.48rem;
+      border: 1px solid color-mix(in srgb, var(--secondary) 20%, rgba(255, 255, 255, 0));
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--shell-chip-surface) 92%, rgba(255, 255, 255, 0));
+      color: var(--secondary);
       font-family: var(--codeFont);
-      font-size: 0.76rem;
+      font-size: 0.68rem;
+      font-weight: 700;
       letter-spacing: 0.08em;
-      text-transform: uppercase;
+      line-height: 1;
     }
   }
 
   > .search-container {
-    backdrop-filter: blur(18px);
-    background: rgba(7, 4, 16, 0.62);
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding: clamp(2.4rem, 8vh, 5rem) 2rem 2rem;
+    overflow-y: auto;
+    backdrop-filter: blur(32px) saturate(1.08);
+    background: var(--shell-search-overlay);
+    isolation: isolate;
+
+    &.active {
+      display: flex;
+    }
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(44rem 18rem at 50% 0%, color-mix(in srgb, var(--secondary) 16%, rgba(255, 255, 255, 0)), transparent 70%),
+        radial-gradient(30rem 18rem at 14% 74%, color-mix(in srgb, var(--tertiary) 10%, rgba(255, 255, 255, 0)), transparent 76%),
+        radial-gradient(circle at 1.1px 1.1px, color-mix(in srgb, var(--secondary) 24%, rgba(255, 255, 255, 0)) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 0.7px 0.7px, color-mix(in srgb, var(--tertiary) 18%, rgba(255, 255, 255, 0)) 0 0.85px, transparent 1.4px);
+      background-repeat:
+        no-repeat,
+        no-repeat,
+        repeat,
+        repeat;
+      background-size:
+        cover,
+        cover,
+        18px 18px,
+        12px 12px;
+      background-position:
+        center,
+        center,
+        0 0,
+        8px 6px;
+      opacity: 0.78;
+      pointer-events: none;
+      mask-image:
+        linear-gradient(180deg, rgba(0, 0, 0, 0.92), rgba(0, 0, 0, 0.9) 24%, rgba(0, 0, 0, 0.82) 74%, transparent 100%),
+        radial-gradient(32rem 20rem at 76% 22%, rgba(0, 0, 0, 0.9), transparent 78%);
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(3, 2, 10, 0.55);
+      pointer-events: none;
+    }
 
     > .search-space {
+      position: relative;
+      z-index: 1;
+      width: min(70rem, calc(100vw - 4rem));
+      margin-top: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
       > * {
         border: 1px solid var(--shell-border);
-        border-radius: 1.3rem;
-        background: var(--shell-surface-alt);
-        box-shadow: var(--shell-shadow);
+        border-radius: 1.4rem;
+        background: var(--shell-search-shell);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.06),
+          0 18px 48px rgba(0, 0, 0, 0.2);
       }
 
       > input {
-        min-height: 3.3rem;
+        min-height: 4.15rem;
+        padding: 0 1.4rem;
+        font-size: 1.02rem;
+        letter-spacing: 0.015em;
+        color: var(--dark);
+        background:
+          radial-gradient(circle at 18% 0%, color-mix(in srgb, var(--secondary) 12%, rgba(255, 255, 255, 0)), transparent 46%),
+          radial-gradient(circle at 82% 50%, color-mix(in srgb, var(--tertiary) 10%, rgba(255, 255, 255, 0)), transparent 22%),
+          var(--shell-search-shell);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.06),
+          0 18px 36px rgba(0, 0, 0, 0.16);
+        caret-color: var(--tertiary);
+
+        &::placeholder {
+          color: color-mix(in srgb, var(--gray) 78%, rgba(255, 255, 255, 0));
+        }
+
+        &:focus {
+          border-color: color-mix(in srgb, var(--tertiary) 48%, rgba(255, 255, 255, 0));
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.08),
+            0 0 0 1px color-mix(in srgb, var(--tertiary) 26%, rgba(255, 255, 255, 0)),
+            0 18px 46px rgba(0, 0, 0, 0.2);
+        }
       }
 
       > .search-layout {
+        display: flex;
         border: 1px solid var(--shell-border-soft);
+        overflow: hidden;
+        background: var(--shell-search-shell);
+        min-height: min(68vh, 42rem);
+        opacity: 0;
+        transform: translateY(16px);
+        pointer-events: none;
+        transition:
+          opacity 180ms ease,
+          transform 180ms ease,
+          box-shadow 180ms ease;
+
+        &.display-results,
+        &.idle-state {
+          opacity: 1;
+          transform: translateY(0);
+          pointer-events: auto;
+        }
+
+        &.idle-state {
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.06),
+            0 24px 60px rgba(0, 0, 0, 0.18);
+        }
+
+        > div {
+          height: min(68vh, 42rem);
+          background: var(--shell-search-pane);
+        }
 
         .result-card:hover,
         .result-card:focus,
         .result-card.focus {
-          background: rgba(255, 255, 255, 0.04);
+          background: color-mix(in srgb, var(--tertiary) 14%, rgba(255, 255, 255, 0));
+          color: var(--dark);
+        }
+
+        > .results-container {
+          background: var(--shell-search-pane);
+          border-right: 1px solid var(--shell-border-soft);
+          display: flex;
+          flex-direction: column;
+
+          &.idle {
+            padding: 1.25rem;
+            justify-content: center;
+          }
+        }
+
+        > .preview-container {
+          background: var(--shell-search-pane);
+          padding: 1.35rem 1.5rem;
+          isolation: isolate;
+          overflow: hidden;
+
+          &.idle {
+            align-items: stretch;
+          }
+        }
+
+        .result-card {
+          border-bottom-color: var(--shell-border-soft);
+          color: var(--dark);
+          background: transparent;
+
+          > h3 {
+            color: var(--dark);
+            line-height: 1.2;
+          }
+
+          > p {
+            color: var(--gray);
+          }
+
+          &.no-match {
+            margin: auto 0;
+            border-radius: 1.1rem;
+            border: 1px solid var(--shell-border-soft);
+            background:
+              radial-gradient(circle at top, color-mix(in srgb, var(--secondary) 10%, rgba(255, 255, 255, 0)), transparent 56%),
+              var(--shell-search-pane);
+          }
+        }
+
+        .search-idle-panel,
+        .preview-shell {
+          max-width: 100%;
+          width: min(46rem, 100%);
+          padding: 1.35rem 1.4rem 1.75rem;
+          border: 1px solid var(--shell-border-soft);
+          border-radius: 1.2rem;
+          background:
+            radial-gradient(circle at top, color-mix(in srgb, var(--secondary) 10%, rgba(255, 255, 255, 0)), transparent 48%),
+            var(--shell-search-pane);
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.05),
+            0 16px 40px rgba(0, 0, 0, 0.16);
+          overflow: hidden;
+        }
+
+        .search-idle-panel {
+          width: 100%;
+        }
+
+        .search-idle-kicker,
+        .preview-shell-kicker {
+          margin: 0 0 0.65rem;
+          color: var(--secondary);
+          font-family: var(--codeFont);
+          font-size: 0.72rem;
+          font-weight: 700;
+          letter-spacing: 0.16em;
+          text-transform: uppercase;
+        }
+
+        .search-idle-panel > h3,
+        .preview-shell-title {
+          margin: 0;
+          color: var(--dark);
+          font-size: clamp(1.3rem, 2vw, 2rem);
+          line-height: 1.02;
+          text-wrap: balance;
+        }
+
+        .search-idle-list,
+        .preview-shell-breadcrumbs,
+        .preview-shell-tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.55rem;
+          list-style: none;
+          padding: 0;
+          margin: 1rem 0 0;
+        }
+
+        .search-idle-list {
+          flex-direction: column;
+          gap: 0.75rem;
+
+          li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            padding: 0.8rem 0.95rem;
+            border: 1px solid var(--shell-border-soft);
+            border-radius: 0.95rem;
+            background: color-mix(in srgb, var(--shell-chip-surface) 88%, rgba(255, 255, 255, 0));
+            color: var(--dark);
+          }
+
+          span {
+            color: var(--gray);
+          }
+
+          code {
+            padding: 0.2rem 0.45rem;
+            border-radius: 999px;
+            border: 1px solid color-mix(in srgb, var(--secondary) 18%, rgba(255, 255, 255, 0));
+            background: color-mix(in srgb, var(--shell-chip-surface) 96%, rgba(255, 255, 255, 0));
+            color: var(--secondary);
+            font-family: var(--codeFont);
+            font-size: 0.72rem;
+          }
+        }
+
+        .preview-shell {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          height: 100%;
+        }
+
+        .preview-shell-header {
+          display: flex;
+          flex-direction: column;
+          gap: 0.65rem;
+        }
+
+        .preview-shell-meta {
+          margin: 0;
+          color: var(--gray);
+          font-family: var(--codeFont);
+          font-size: 0.74rem;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+        }
+
+        .preview-shell-breadcrumbs li,
+        .preview-shell-tags li {
+          padding: 0.22rem 0.55rem;
+          border: 1px solid var(--shell-border-soft);
+          border-radius: 999px;
+          background: color-mix(in srgb, var(--shell-chip-surface) 88%, rgba(255, 255, 255, 0));
+          color: var(--secondary);
+          font-family: var(--codeFont);
+          font-size: 0.72rem;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+        }
+
+        .preview-shell-body {
+          display: flex;
+          flex-direction: column;
+          gap: 0.9rem;
+          overflow-y: auto;
+          padding-right: 0.2rem;
+        }
+
+        .preview-shell-block,
+        .preview-shell-empty {
+          margin: 0;
+          color: color-mix(in srgb, var(--dark) 92%, var(--gray));
+          font-size: 0.96rem;
+          line-height: 1.72;
+        }
+
+        .preview-shell-block[data-kind="heading"] {
+          color: var(--dark);
+          font-size: 1.1rem;
+          font-weight: 700;
+          line-height: 1.3;
+        }
+
+        .preview-shell-block[data-kind="quote"] {
+          padding-left: 1rem;
+          border-left: 1px solid color-mix(in srgb, var(--secondary) 32%, rgba(255, 255, 255, 0));
+          color: color-mix(in srgb, var(--dark) 80%, var(--gray));
+        }
+
+        .highlight {
+          border-radius: 0.45rem;
+          background: color-mix(in srgb, var(--tertiary) 28%, rgba(255, 255, 255, 0));
+          color: var(--dark);
+          box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tertiary) 22%, rgba(255, 255, 255, 0));
         }
       }
     }
@@ -321,16 +1142,18 @@ footer {
   height: 2.7rem;
   border: 1px solid var(--shell-border);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--shell-button-surface);
   transition:
     transform 180ms ease,
     border-color 180ms ease,
-    box-shadow 180ms ease;
+    box-shadow 180ms ease,
+    background 180ms ease;
 
   &:hover {
     transform: translateY(-1px);
     border-color: color-mix(in srgb, var(--tertiary) 38%, rgba(255, 255, 255, 0));
-    box-shadow: 0 12px 28px rgba(185, 147, 255, 0.18);
+    background: var(--shell-button-hover-surface);
+    box-shadow: var(--shell-active-glow);
   }
 }
 
@@ -346,6 +1169,13 @@ footer {
   > button h3 {
     color: var(--dark);
   }
+}
+
+.explorer::after,
+.toc::after,
+.backlinks::after,
+.recent-notes::after {
+  opacity: 0.22;
 }
 
 .explorer::before,
@@ -394,7 +1224,7 @@ footer {
       opacity 180ms ease;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.03);
+      background: var(--shell-hover-surface);
       opacity: 1;
     }
   }
@@ -410,30 +1240,58 @@ footer {
     margin: 0;
   }
 
+  &::after {
+    inset: 0.78rem;
+    opacity: 0.42;
+  }
+
   > .graph-outer {
-    height: 270px;
+    position: relative;
+    height: 308px;
     margin: 0.75rem 0 0;
     border-radius: 1.25rem;
     border: 1px solid var(--shell-border);
-    background:
-      radial-gradient(circle at top, rgba(185, 147, 255, 0.16), transparent 42%),
-      linear-gradient(180deg, rgba(12, 9, 24, 0.94), rgba(6, 4, 15, 0.9));
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.05),
-      0 18px 48px rgba(0, 0, 0, 0.25);
+    background: var(--shell-graph-surface);
+    box-shadow: var(--shell-graph-shadow);
+    overflow: hidden;
 
     &::before {
       content: "";
       position: absolute;
       inset: 0;
-      background:
-        linear-gradient(
-          180deg,
-          rgba(255, 255, 255, 0.025) 0,
-          rgba(255, 255, 255, 0) 32%,
-          rgba(255, 255, 255, 0.02) 100%
-        );
+      background: var(--shell-panel-sheen);
       pointer-events: none;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 74% 18%, rgba(255, 134, 227, 0.16), transparent 26%),
+        linear-gradient(135deg, rgba(185, 147, 255, 0.12), transparent 62%);
+      opacity: 0.92;
+      pointer-events: none;
+    }
+
+    > .graph-container-shell {
+      position: relative;
+      height: 100%;
+      border-radius: inherit;
+      overflow: hidden;
+    }
+
+    .graph-container {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+
+    canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
     }
 
     > .global-graph-icon {
@@ -443,31 +1301,146 @@ footer {
       height: 2rem;
       border: 1px solid var(--shell-border);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.04);
+      background: var(--shell-graph-icon-surface);
       color: var(--dark);
       opacity: 0.88;
+      z-index: 5;
 
       &:hover {
-        background: rgba(255, 255, 255, 0.08);
+        background: var(--shell-button-hover-surface);
       }
     }
   }
 
   > .global-graph-outer {
     backdrop-filter: blur(18px);
-    background: rgba(5, 3, 14, 0.72);
+    background: var(--shell-graph-backdrop);
 
-    > .global-graph-container {
+    > .global-graph-shell {
+      position: fixed;
+      inset: 50% auto auto 50%;
+      width: 80vw;
+      height: 80vh;
+      transform: translate(-50%, -50%);
       border: 1px solid var(--shell-border);
       border-radius: 1.6rem;
-      background:
-        radial-gradient(circle at top, rgba(185, 147, 255, 0.14), transparent 38%),
-        linear-gradient(180deg, rgba(14, 10, 27, 0.96), rgba(7, 4, 16, 0.94));
-      box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.05),
-        0 28px 90px rgba(0, 0, 0, 0.42);
+      background: var(--shell-graph-modal-surface);
+      box-shadow: var(--shell-graph-modal-shadow);
+      overflow: hidden;
+
+      > .global-graph-container {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+      }
+
+      canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
     }
   }
+}
+
+.graph-container-shell,
+.global-graph-shell {
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  &::before {
+    z-index: 2;
+    background-image:
+      linear-gradient(rgba(185, 147, 255, 0.075) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(185, 147, 255, 0.075) 1px, transparent 1px);
+    background-size: 34px 34px;
+    opacity: 0.18;
+  }
+
+  &::after {
+    inset: 0.7rem;
+    z-index: 2;
+    border: 1px solid color-mix(in srgb, var(--secondary) 18%, rgba(255, 255, 255, 0));
+    border-radius: inherit;
+    opacity: 0.18;
+    transition:
+      opacity 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  &[data-graph-focus="active"]::after {
+    opacity: 0.48;
+    border-color: color-mix(in srgb, var(--tertiary) 42%, rgba(255, 255, 255, 0));
+    box-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--secondary) 22%, rgba(255, 255, 255, 0)),
+      0 0 24px color-mix(in srgb, var(--tertiary) 20%, rgba(255, 255, 255, 0));
+  }
+}
+
+.graph-shell-meta {
+  position: absolute;
+  top: 0.85rem;
+  left: 0.85rem;
+  right: 3.35rem;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  pointer-events: none;
+}
+
+.graph-shell-meta-global {
+  right: 0.95rem;
+}
+
+.graph-shell-stats,
+.graph-shell-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.graph-shell-stat,
+.graph-shell-legend span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.55rem;
+  padding: 0.22rem 0.52rem;
+  border: 1px solid var(--shell-border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--shell-graph-icon-surface) 92%, rgba(255, 255, 255, 0));
+  color: var(--dark);
+  font-family: var(--codeFont);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--secondary) 12%, rgba(255, 255, 255, 0));
+  transition:
+    border-color 180ms ease,
+    color 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.graph-shell-legend span {
+  color: var(--gray);
+}
+
+.graph-container-shell[data-graph-focus="active"] .graph-shell-stat,
+.graph-container-shell[data-graph-focus="active"] .graph-shell-legend span,
+.global-graph-shell[data-graph-focus="active"] .graph-shell-stat,
+.global-graph-shell[data-graph-focus="active"] .graph-shell-legend span {
+  border-color: color-mix(in srgb, var(--tertiary) 38%, rgba(255, 255, 255, 0));
+  background: color-mix(in srgb, var(--shell-button-hover-surface) 88%, rgba(255, 255, 255, 0));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--secondary) 18%, rgba(255, 255, 255, 0));
 }
 
 .toc {
@@ -486,7 +1459,7 @@ footer {
       &:hover {
         opacity: 1;
         color: var(--dark);
-        background: rgba(255, 255, 255, 0.04);
+        background: var(--shell-hover-surface);
       }
     }
   }
@@ -542,38 +1515,113 @@ article.home-page {
   box-shadow: none;
   display: grid;
   gap: 2.7rem;
+  overflow: visible;
 
   &::before,
   &::after {
     content: "";
     position: absolute;
-    border-radius: 999px;
     pointer-events: none;
-    filter: blur(96px);
     z-index: 0;
   }
 
   &::before {
-    top: -2rem;
-    right: 8%;
-    width: 16rem;
-    height: 16rem;
-    background: rgba(185, 147, 255, 0.22);
-    animation: shell-pulse 7s ease-in-out infinite;
+    top: -8rem;
+    left: -5rem;
+    right: -5rem;
+    height: 24rem;
+    border-radius: 0 0 42% 42%;
+    background: var(--shell-home-hero-aura);
+    opacity: 0.56;
+    filter: blur(64px);
   }
 
   &::after {
-    top: 22rem;
-    left: -4rem;
-    width: 12rem;
-    height: 12rem;
-    background: rgba(255, 134, 227, 0.16);
-    animation: shell-pulse 9s ease-in-out infinite;
+    top: -5rem;
+    right: -10rem;
+    width: 48rem;
+    height: 25rem;
+    background: var(--shell-home-hero-rim);
+    opacity: 0.36;
+    filter: blur(2px);
   }
 
   > * {
     position: relative;
     z-index: 1;
+    animation: shell-rise 560ms ease both;
+  }
+
+  > section {
+    position: relative;
+    isolation: isolate;
+    --home-depth-x: 52%;
+    --home-depth-y: 42%;
+    --home-depth-opacity: 0.58;
+  }
+
+  > section::before {
+    content: "";
+    position: absolute;
+    inset: -2rem -1rem;
+    border-radius: 2.6rem;
+    background:
+      var(--shell-page-depth-glow),
+      radial-gradient(
+        28rem 14rem at var(--home-depth-x) var(--home-depth-y),
+        color-mix(in srgb, var(--secondary) 12%, rgba(255, 255, 255, 0)),
+        transparent 72%
+      );
+    opacity: var(--home-depth-opacity);
+    filter: blur(42px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  > section:nth-of-type(1) {
+    --home-depth-x: 82%;
+    --home-depth-y: 18%;
+    --home-depth-opacity: 0.36;
+  }
+
+  > section:nth-of-type(2) {
+    --home-depth-x: 18%;
+    --home-depth-y: 48%;
+    --home-depth-opacity: 0.18;
+  }
+
+  > section:nth-of-type(3) {
+    --home-depth-x: 74%;
+    --home-depth-y: 34%;
+    --home-depth-opacity: 0.18;
+  }
+
+  > section:nth-of-type(4) {
+    --home-depth-x: 30%;
+    --home-depth-y: 56%;
+    --home-depth-opacity: 0.16;
+  }
+
+  > section:nth-of-type(5) {
+    --home-depth-x: 64%;
+    --home-depth-y: 22%;
+    --home-depth-opacity: 0.16;
+  }
+
+  > *:nth-child(2) {
+    animation-delay: 80ms;
+  }
+
+  > *:nth-child(3) {
+    animation-delay: 140ms;
+  }
+
+  > *:nth-child(4) {
+    animation-delay: 200ms;
+  }
+
+  > *:nth-child(5) {
+    animation-delay: 260ms;
   }
 }
 
@@ -598,15 +1646,73 @@ article.home-page {
   padding: 0.5rem 0.85rem;
   border: 1px solid var(--shell-border);
   border-radius: 999px;
-  background:
-    radial-gradient(circle at top, rgba(255, 134, 227, 0.14), transparent 60%),
-    rgba(11, 8, 23, 0.78);
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.03),
-    0 12px 40px rgba(0, 0, 0, 0.22);
+  background: var(--shell-badge-surface);
+  box-shadow: var(--shell-badge-shadow);
   color: var(--secondary);
   font-size: 0.72rem;
   font-weight: 700;
+
+  &::before {
+    content: "";
+    width: 0.42rem;
+    height: 0.42rem;
+    border-radius: 999px;
+    background: var(--tertiary);
+    box-shadow: 0 0 0 0.24rem color-mix(in srgb, var(--tertiary) 18%, rgba(255, 255, 255, 0));
+    animation: shell-beacon 3.6s ease-in-out infinite;
+  }
+}
+
+.home-status-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+  margin-top: 1rem;
+}
+
+.home-status-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid var(--shell-border-soft);
+  border-radius: 1rem;
+  background: var(--shell-surface-alt);
+  box-shadow: var(--shell-shadow);
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 88% 50%, rgba(255, 134, 227, 0.16), transparent 28%),
+      linear-gradient(90deg, rgba(185, 147, 255, 0.12), transparent 62%);
+    opacity: 0.88;
+    pointer-events: none;
+  }
+
+  strong,
+  span {
+    position: relative;
+    z-index: 1;
+  }
+
+  strong {
+    color: var(--dark);
+    font-size: 0.86rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  span {
+    color: var(--gray);
+    font-family: var(--codeFont);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
 }
 
 .home-hero-grid {
@@ -632,13 +1738,7 @@ article.home-page {
     content: "";
     position: absolute;
     inset: 0;
-    background:
-      linear-gradient(
-        180deg,
-        rgba(255, 255, 255, 0.03),
-        rgba(255, 255, 255, 0) 28%,
-        rgba(255, 255, 255, 0.02) 100%
-      );
+    background: var(--shell-panel-sheen);
     pointer-events: none;
   }
 
@@ -651,6 +1751,11 @@ article.home-page {
 .home-hero-copy {
   padding: 1.7rem;
   border-radius: 1.7rem;
+
+  &::after {
+    inset: 0.85rem;
+    opacity: 0.3;
+  }
 
   h2 {
     margin: 0;
@@ -670,6 +1775,38 @@ article.home-page {
   }
 }
 
+.home-focus-band {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-bottom: 0.95rem;
+
+  span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.32rem 0.62rem;
+    border: 1px solid var(--shell-chip-border);
+    border-radius: 999px;
+    background: var(--shell-chip-surface);
+    color: var(--secondary);
+    font-family: var(--codeFont);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  span::before {
+    content: "";
+    width: 0.32rem;
+    height: 0.32rem;
+    border-radius: 999px;
+    background: var(--tertiary);
+    animation: shell-beacon 4s ease-in-out infinite;
+  }
+}
+
 .home-panel-code {
   margin: 0 0 0.65rem;
   color: var(--secondary);
@@ -684,47 +1821,53 @@ article.home-page {
   margin-top: 1.45rem;
 }
 
-.home-action {
+a.home-action.internal {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 3rem;
-  padding: 0.8rem 1rem;
+  padding: 0.55rem 1.1rem;
   border: 1px solid var(--shell-border);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.03);
+  border-radius: 14px;
+  background: transparent;
   color: var(--dark);
   font-family: var(--codeFont);
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   text-decoration: none;
+  line-height: normal;
   transition:
-    transform 180ms ease,
     border-color 180ms ease,
-    box-shadow 180ms ease,
-    background 180ms ease;
+    background 180ms ease,
+    box-shadow 180ms ease;
 
   &:hover {
-    transform: translateY(-1px);
-    border-color: color-mix(in srgb, var(--tertiary) 42%, rgba(255, 255, 255, 0));
-    background: rgba(255, 255, 255, 0.05);
-    box-shadow: 0 10px 28px rgba(185, 147, 255, 0.16);
+    border-color: color-mix(in srgb, var(--tertiary) 48%, transparent);
+    background: rgba(185, 147, 255, 0.08);
+    box-shadow: 0 4px 16px rgba(185, 147, 255, 0.12);
   }
-}
 
-.home-action.primary {
-  background:
-    linear-gradient(135deg, rgba(185, 147, 255, 0.3), rgba(255, 134, 227, 0.22)),
-    rgba(255, 255, 255, 0.05);
-  box-shadow: 0 14px 36px rgba(185, 147, 255, 0.18);
+  &.primary {
+    border-color: color-mix(in srgb, var(--tertiary) 36%, transparent);
+    background: rgba(185, 147, 255, 0.06);
+
+    &:hover {
+      border-color: color-mix(in srgb, var(--tertiary) 56%, transparent);
+      background: rgba(185, 147, 255, 0.12);
+      box-shadow: 0 4px 18px rgba(185, 147, 255, 0.16);
+    }
+  }
 }
 
 .home-signal {
   padding: 1.35rem;
   border-radius: 1.5rem;
   background: var(--shell-surface-alt);
+
+  &::after {
+    inset: 0.8rem;
+    opacity: 0.28;
+  }
 }
 
 .home-signal-label,
@@ -733,6 +1876,31 @@ article.home-page {
   color: var(--secondary);
   font-size: 0.74rem;
   font-weight: 700;
+}
+
+.home-signal-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.9rem;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--shell-chip-border);
+  border-radius: 999px;
+  background: var(--shell-chip-surface);
+  color: var(--gray);
+  font-family: var(--codeFont);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.home-signal-dot {
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 999px;
+  background: var(--tertiary);
+  box-shadow: 0 0 0 0.26rem color-mix(in srgb, var(--tertiary) 18%, rgba(255, 255, 255, 0));
+  animation: shell-beacon 3.4s ease-in-out infinite;
 }
 
 .home-signal-grid,
@@ -753,9 +1921,9 @@ article.home-page {
   flex-direction: column;
   gap: 0.2rem;
   padding: 0.9rem 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--shell-chip-border);
   border-radius: 1rem;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--shell-chip-surface);
   text-align: center;
 }
 
@@ -830,11 +1998,13 @@ article.home-page {
     box-shadow 180ms ease;
 
   &:hover {
-    transform: translateY(-2px);
+    transform: translateY(-4px);
     border-color: color-mix(in srgb, var(--tertiary) 34%, rgba(255, 255, 255, 0));
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.04),
-      0 30px 90px rgba(0, 0, 0, 0.28);
+    box-shadow: var(--shell-active-glow);
+  }
+
+  &:hover::after {
+    opacity: 0.46;
   }
 
   h3 {
@@ -895,6 +2065,16 @@ article.home-page {
 .home-principle {
   padding: 1.15rem 1.1rem;
   border-radius: 1.2rem;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--tertiary) 28%, rgba(255, 255, 255, 0));
+    box-shadow: var(--shell-active-glow);
+  }
 
   h3 {
     margin: 0.45rem 0 0.55rem;
@@ -925,6 +2105,7 @@ article.home-page {
     column-gap: 0.8rem;
   }
 
+  .home-status-strip,
   .home-hero-grid,
   .home-card-grid,
   .home-thread-grid,
@@ -941,6 +2122,11 @@ article.home-page {
 @media all and (max-width: 800px) {
   .page {
     padding-top: 0.75rem;
+  }
+
+  .graph > .global-graph-outer > .global-graph-shell {
+    width: 92vw;
+    height: 78vh;
   }
 
   .center > article {
@@ -974,6 +2160,10 @@ article.home-page {
     padding: 1rem;
   }
 
+  .home-status-item {
+    padding: 0.8rem 0.85rem;
+  }
+
   .home-actions {
     flex-direction: column;
   }
@@ -984,5 +2174,58 @@ article.home-page {
 
   .home-signal-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@keyframes aurora-drift {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.6;
+  }
+  33% {
+    transform: translate(140px, -100px) scale(1.18);
+    opacity: 0.9;
+  }
+  66% {
+    transform: translate(-120px, 80px) scale(1.06);
+    opacity: 0.65;
+  }
+  100% {
+    transform: translate(60px, -50px) scale(1.14);
+    opacity: 0.85;
+  }
+}
+
+@keyframes starfield-pulse {
+  0% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.04);
+  }
+  100% {
+    opacity: 0.75;
+    transform: scale(1.02);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  // 背景装饰动画不受减少动态效果影响
+  body::before,
+  body::after {
+    animation-duration: 14s !important;
+    animation-iteration-count: infinite !important;
+    animation-play-state: running !important;
   }
 }

@@ -67,7 +67,19 @@ export default ((opts?: Partial<GraphOptions>) => {
       <div class={classNames(displayClass, "graph")}>
         <h3>{i18n(cfg.locale).components.graph.title}</h3>
         <div class="graph-outer">
-          <div class="graph-container" data-cfg={JSON.stringify(localGraph)}></div>
+          <div class="graph-container-shell" data-graph-focus="idle">
+            <div class="graph-shell-meta">
+              <div class="graph-shell-stats">
+                <span class="graph-shell-stat" data-graph-stat="nodes">
+                  -- 节点
+                </span>
+                <span class="graph-shell-stat" data-graph-stat="links">
+                  -- 关系
+                </span>
+              </div>
+            </div>
+            <div class="graph-container" data-cfg={JSON.stringify(localGraph)}></div>
+          </div>
           <button class="global-graph-icon" aria-label="展开全局图谱" title="展开全局图谱">
             <svg
               version="1.1"
@@ -96,7 +108,19 @@ export default ((opts?: Partial<GraphOptions>) => {
           </button>
         </div>
         <div class="global-graph-outer">
-          <div class="global-graph-container" data-cfg={JSON.stringify(globalGraph)}></div>
+          <div class="global-graph-shell" data-graph-focus="idle">
+            <div class="graph-shell-meta graph-shell-meta-global">
+              <div class="graph-shell-stats">
+                <span class="graph-shell-stat" data-graph-stat="nodes">
+                  -- 节点
+                </span>
+                <span class="graph-shell-stat" data-graph-stat="links">
+                  -- 关系
+                </span>
+              </div>
+            </div>
+            <div class="global-graph-container" data-cfg={JSON.stringify(globalGraph)}></div>
+          </div>
         </div>
       </div>
     )

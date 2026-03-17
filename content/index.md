@@ -7,9 +7,28 @@ cssclasses:
 
 <section class="home-hero">
   <div class="home-badge">COGNITIVE NETWORK</div>
+  <div class="home-status-strip">
+    <div class="home-status-item">
+      <strong>公开层已整理</strong>
+      <span>概念 / 探索 / 引用</span>
+    </div>
+    <div class="home-status-item">
+      <strong>关系图谱在线</strong>
+      <span>局部阅读 / 全局追踪</span>
+    </div>
+    <div class="home-status-item">
+      <strong>检索优先</strong>
+      <span>关键词直接回到结构</span>
+    </div>
+  </div>
   <div class="home-hero-grid">
     <div class="home-hero-copy">
       <p class="home-panel-code">PUBLIC INDEX</p>
+      <div class="home-focus-band">
+        <span>结构优先</span>
+        <span>关系优先</span>
+        <span>持续演化</span>
+      </div>
       <h2>公开的是整理后的结构，<br>不是未经处理的自白。</h2>
       <p>
         这里记录问题之间的连接、推导过程与外部引用。
@@ -23,6 +42,10 @@ cssclasses:
     </div>
     <aside class="home-signal">
       <p class="home-signal-label">站点概况</p>
+      <div class="home-signal-status">
+        <span class="home-signal-dot"></span>
+        <span>图谱入口与阅读路径已联通</span>
+      </div>
       <div class="home-signal-grid">
         <div class="home-signal-item">
           <span class="home-signal-value">24</span>

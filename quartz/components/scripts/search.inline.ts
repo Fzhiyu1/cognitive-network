@@ -84,10 +84,13 @@ let index = new FlexSearch.Document<Item>({
 })
 
 const p = new DOMParser()
-const fetchContentCache: Map<FullSlug, Element[]> = new Map()
+const fetchContentCache: Map<FullSlug, Document> = new Map()
 const contextWindowWords = 30
 const numSearchResults = 8
 const numTagResults = 5
+const maxPreviewBlocks = 5
+const maxPreviewTags = 5
+const maxPreviewBreadcrumbs = 3
 
 const tokenizeTerm = (term: string) => {
   const tokens = term.split(/\s+/).filter((t) => t.trim() !== "")
@@ -146,45 +149,221 @@ function highlight(searchTerm: string, text: string, trim?: boolean) {
   }`
 }
 
-function highlightHTML(searchTerm: string, el: HTMLElement) {
-  const p = new DOMParser()
-  const tokenizedTerms = tokenizeTerm(searchTerm)
-  const html = p.parseFromString(el.innerHTML, "text/html")
+function escapeHTML(text: string) {
+  return text
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;")
+}
 
-  const createHighlightSpan = (text: string) => {
-    const span = document.createElement("span")
-    span.className = "highlight"
-    span.textContent = text
-    return span
-  }
+function normalizeText(text: string | null | undefined) {
+  return (text ?? "").replace(/\s+/g, " ").trim()
+}
 
-  const highlightTextNodes = (node: Node, term: string) => {
-    if (node.nodeType === Node.TEXT_NODE) {
-      const nodeText = node.nodeValue ?? ""
-      const regex = new RegExp(term.toLowerCase(), "gi")
-      const matches = nodeText.match(regex)
-      if (!matches || matches.length === 0) return
-      const spanContainer = document.createElement("span")
-      let lastIndex = 0
-      for (const match of matches) {
-        const matchIndex = nodeText.indexOf(match, lastIndex)
-        spanContainer.appendChild(document.createTextNode(nodeText.slice(lastIndex, matchIndex)))
-        spanContainer.appendChild(createHighlightSpan(match))
-        lastIndex = matchIndex + match.length
-      }
-      spanContainer.appendChild(document.createTextNode(nodeText.slice(lastIndex)))
-      node.parentNode?.replaceChild(spanContainer, node)
-    } else if (node.nodeType === Node.ELEMENT_NODE) {
-      if ((node as HTMLElement).classList.contains("highlight")) return
-      Array.from(node.childNodes).forEach((child) => highlightTextNodes(child, term))
+function renderHighlightedText(searchTerm: string, text: string, trim = false) {
+  const normalized = normalizeText(text)
+  if (!normalized) return ""
+  const safeText = escapeHTML(normalized)
+  if (searchTerm.trim() === "") return safeText
+  return highlight(searchTerm, safeText, trim)
+}
+
+function collectPreviewTokens(searchTerm: string) {
+  return tokenizeTerm(searchTerm)
+    .map((term) => term.trim().toLowerCase())
+    .filter((term) => term.length > 0)
+}
+
+function matchesPreviewTerm(searchTerm: string, text: string) {
+  const tokens = collectPreviewTokens(searchTerm)
+  if (tokens.length === 0) return false
+
+  const lower = text.toLowerCase()
+  return tokens.some((term) => lower.includes(term))
+}
+
+function appendPreviewPills(container: HTMLElement, className: string, texts: string[], prefix = "") {
+  if (texts.length === 0) return
+
+  const list = document.createElement("ul")
+  list.className = className
+
+  texts.forEach((text) => {
+    const item = document.createElement("li")
+    item.innerHTML = renderHighlightedText(currentSearchTerm, `${prefix}${text}`)
+    list.appendChild(item)
+  })
+
+  container.appendChild(list)
+}
+
+type PreviewBlock = {
+  kind: "heading" | "body" | "quote"
+  text: string
+  order: number
+  matches: boolean
+}
+
+function collectPreviewBlocks(doc: Document, searchTerm: string): PreviewBlock[] {
+  const blocks: PreviewBlock[] = []
+  const seen = new Set<string>()
+  let order = 0
+
+  const pushBlock = (node: Element) => {
+    if (node.closest("pre, table, nav, aside, footer, .breadcrumb-container, .tags, .content-meta")) {
+      return
     }
+
+    const text = normalizeText(node.textContent)
+    if (!text) return
+
+    const tagName = node.tagName.toLowerCase()
+    const kind =
+      tagName === "blockquote" ? "quote" : tagName === "h2" || tagName === "h3" ? "heading" : "body"
+    const minLength = kind === "heading" ? 8 : tagName === "li" ? 18 : 28
+    if (text.length < minLength) return
+
+    const dedupeKey = `${kind}:${text}`
+    if (seen.has(dedupeKey)) return
+    seen.add(dedupeKey)
+
+    blocks.push({
+      kind,
+      text,
+      order: order++,
+      matches: matchesPreviewTerm(searchTerm, text),
+    })
   }
 
-  for (const term of tokenizedTerms) {
-    highlightTextNodes(html.body, term)
+  const article = doc.querySelector("article.popover-hint, .popover-hint article, article")
+  article?.querySelectorAll("h2, h3, p, blockquote, li").forEach(pushBlock)
+
+  const listing = doc.querySelector(".page-listing")
+  if (blocks.length < maxPreviewBlocks) {
+    listing?.querySelectorAll("p, li").forEach(pushBlock)
   }
 
-  return html.body
+  const selected: PreviewBlock[] = []
+  const selectedText = new Set<string>()
+  const addBlock = (block: PreviewBlock | undefined) => {
+    if (!block || selectedText.has(block.text) || selected.length >= maxPreviewBlocks) return
+    selected.push(block)
+    selectedText.add(block.text)
+  }
+
+  addBlock(blocks.find((block) => block.kind === "heading"))
+
+  blocks.filter((block) => block.matches).forEach((block) => addBlock(block))
+  blocks.forEach((block) => addBlock(block))
+
+  return selected.sort((a, b) => a.order - b.order).slice(0, maxPreviewBlocks)
+}
+
+function buildPreviewShell(doc: Document, searchTerm: string) {
+  const shell = document.createElement("section")
+  shell.className = "preview-inner preview-shell"
+
+  const header = document.createElement("header")
+  header.className = "preview-shell-header"
+
+  const kicker = document.createElement("p")
+  kicker.className = "preview-shell-kicker"
+  kicker.textContent = "PREVIEW"
+  header.appendChild(kicker)
+
+  const titleText =
+    normalizeText(doc.querySelector(".article-title")?.textContent) ||
+    normalizeText(doc.querySelector("article h1, .page-listing h1, h1")?.textContent) ||
+    "未命名条目"
+
+  const title = document.createElement("h2")
+  title.className = "preview-shell-title"
+  title.innerHTML = renderHighlightedText(searchTerm, titleText)
+  header.appendChild(title)
+
+  const metaText = normalizeText(doc.querySelector(".content-meta")?.textContent)
+  if (metaText) {
+    const meta = document.createElement("p")
+    meta.className = "preview-shell-meta"
+    meta.textContent = metaText
+    header.appendChild(meta)
+  }
+
+  const breadcrumbs = [...doc.querySelectorAll(".breadcrumb-container .breadcrumb-element")]
+    .map((node) => normalizeText(node.textContent))
+    .filter(Boolean)
+    .slice(-maxPreviewBreadcrumbs)
+  appendPreviewPills(header, "preview-shell-breadcrumbs", breadcrumbs)
+
+  const tags = [
+    ...doc.querySelectorAll(".tags li p, .tags li, .tags .internal.tag-link, .tags .tag-link"),
+  ]
+    .map((node) => normalizeText(node.textContent))
+    .filter(Boolean)
+    .map((tag) => tag.replace(/^#/, ""))
+    .slice(0, maxPreviewTags)
+  appendPreviewPills(header, "preview-shell-tags", tags, "#")
+
+  const body = document.createElement("div")
+  body.className = "preview-shell-body"
+
+  const previewBlocks = collectPreviewBlocks(doc, searchTerm)
+  if (previewBlocks.length === 0) {
+    const empty = document.createElement("p")
+    empty.className = "preview-shell-empty"
+    empty.textContent = "当前条目没有可展示的摘要片段。"
+    body.appendChild(empty)
+  } else {
+    previewBlocks.forEach((block) => {
+      const blockElement = document.createElement(block.kind === "heading" ? "h3" : "p")
+      blockElement.className = "preview-shell-block"
+      blockElement.dataset.kind = block.kind
+      blockElement.innerHTML = renderHighlightedText(searchTerm, block.text, block.kind !== "heading")
+      body.appendChild(blockElement)
+    })
+  }
+
+  shell.append(header, body)
+  return shell
+}
+
+function renderSearchIdleState(
+  searchLayout: HTMLElement,
+  results: HTMLDivElement,
+  preview?: HTMLDivElement,
+) {
+  searchLayout.classList.add("display-results", "idle-state")
+  results.classList.add("idle")
+  results.innerHTML = `
+    <section class="search-idle-panel">
+      <p class="search-idle-kicker">SEARCH MODE</p>
+      <h3>输入主题、概念、人物或引用</h3>
+      <ul class="search-idle-list">
+        <li><span>正文检索</span><code>记忆</code></li>
+        <li><span>标签检索</span><code>#AI</code></li>
+        <li><span>快捷唤起</span><code>⌘K</code></li>
+      </ul>
+    </section>
+  `
+
+  if (!preview) return
+
+  preview.classList.add("idle")
+  preview.innerHTML = `
+    <section class="preview-inner preview-shell">
+      <header class="preview-shell-header">
+        <p class="preview-shell-kicker">PREVIEW</p>
+        <h2 class="preview-shell-title">搜索会返回结构化摘要，而不是整页投影。</h2>
+        <p class="preview-shell-meta">结果列表优先给出入口，右侧只保留标题、标签与关键片段。</p>
+      </header>
+      <div class="preview-shell-body">
+        <p class="preview-shell-block" data-kind="body">输入关键词后，左侧定位条目，右侧只展示可读摘要，避免出现“网页套网页”的干扰。</p>
+        <p class="preview-shell-block" data-kind="quote">支持标签模式、键盘导航与高亮匹配。</p>
+      </div>
+    </section>
+  `
 }
 
 async function setupSearch(searchElement: Element, currentSlug: FullSlug, data: ContentIndex) {
@@ -209,7 +388,6 @@ async function setupSearch(searchElement: Element, currentSlug: FullSlug, data: 
 
   const enablePreview = searchLayout.dataset.preview === "true"
   let preview: HTMLDivElement | undefined = undefined
-  let previewInner: HTMLDivElement | undefined = undefined
   const results = document.createElement("div")
   results.className = "results-container"
   appendLayout(results)
@@ -224,19 +402,23 @@ async function setupSearch(searchElement: Element, currentSlug: FullSlug, data: 
     container.classList.remove("active")
     searchBar.value = "" // clear the input when we dismiss the search
     if (sidebar) sidebar.style.zIndex = ""
+    currentSearchTerm = ""
     removeAllChildren(results)
     if (preview) {
       removeAllChildren(preview)
+      preview.classList.remove("idle")
     }
-    searchLayout.classList.remove("display-results")
+    results.classList.remove("idle")
+    searchLayout.classList.remove("display-results", "idle-state")
     searchType = "basic" // reset search type after closing
     searchButton.focus()
   }
 
   function showSearch(searchTypeNew: SearchType) {
     searchType = searchTypeNew
-    if (sidebar) sidebar.style.zIndex = "1"
+    if (sidebar) sidebar.style.zIndex = "1000"
     container.classList.add("active")
+    renderSearchIdleState(searchLayout, results, preview)
     searchBar.focus()
   }
 
@@ -374,19 +556,28 @@ async function setupSearch(searchElement: Element, currentSlug: FullSlug, data: 
   }
 
   async function displayResults(finalResults: Item[]) {
+    results.classList.remove("idle")
+    preview?.classList.remove("idle")
     removeAllChildren(results)
     if (finalResults.length === 0) {
       results.innerHTML = `<a class="result-card no-match">
-          <h3>No results.</h3>
-          <p>Try another search term?</p>
+          <h3>未找到结果</h3>
+          <p>换个词，或者试试标签模式。</p>
       </a>`
     } else {
       results.append(...finalResults.map(resultToHTML))
     }
 
     if (finalResults.length === 0 && preview) {
-      // no results, clear previous preview
-      removeAllChildren(preview)
+      preview.innerHTML = `
+        <section class="preview-inner preview-shell">
+          <header class="preview-shell-header">
+            <p class="preview-shell-kicker">PREVIEW</p>
+            <h2 class="preview-shell-title">没有找到可展示的条目。</h2>
+            <p class="preview-shell-meta">建议缩短关键词，或尝试使用 <span class="highlight">#标签</span> 检索。</p>
+          </header>
+        </section>
+      `
     } else {
       // focus on first result, then also dispatch preview immediately
       const firstChild = results.firstElementChild as HTMLElement
@@ -396,9 +587,9 @@ async function setupSearch(searchElement: Element, currentSlug: FullSlug, data: 
     }
   }
 
-  async function fetchContent(slug: FullSlug): Promise<Element[]> {
+  async function fetchContent(slug: FullSlug): Promise<Document> {
     if (fetchContentCache.has(slug)) {
-      return fetchContentCache.get(slug) as Element[]
+      return fetchContentCache.get(slug) as Document
     }
 
     const targetUrl = resolveUrl(slug).toString()
@@ -410,7 +601,7 @@ async function setupSearch(searchElement: Element, currentSlug: FullSlug, data: 
         }
         const html = p.parseFromString(contents ?? "", "text/html")
         normalizeRelativeURLs(html, targetUrl)
-        return [...html.getElementsByClassName("popover-hint")]
+        return html
       })
 
     fetchContentCache.set(slug, contents)
@@ -420,13 +611,9 @@ async function setupSearch(searchElement: Element, currentSlug: FullSlug, data: 
   async function displayPreview(el: HTMLElement | null) {
     if (!searchLayout || !enablePreview || !el || !preview) return
     const slug = el.id as FullSlug
-    const innerDiv = await fetchContent(slug).then((contents) =>
-      contents.flatMap((el) => [...highlightHTML(currentSearchTerm, el as HTMLElement).children]),
-    )
-    previewInner = document.createElement("div")
-    previewInner.classList.add("preview-inner")
-    previewInner.append(...innerDiv)
-    preview.replaceChildren(previewInner)
+    const previewShell = await fetchContent(slug).then((doc) => buildPreviewShell(doc, currentSearchTerm))
+    preview.classList.remove("idle")
+    preview.replaceChildren(previewShell)
 
     // scroll to longest
     const highlights = [...preview.getElementsByClassName("highlight")].sort(
@@ -438,8 +625,15 @@ async function setupSearch(searchElement: Element, currentSlug: FullSlug, data: 
   async function onType(e: HTMLElementEventMap["input"]) {
     if (!searchLayout || !index) return
     currentSearchTerm = (e.target as HTMLInputElement).value
-    searchLayout.classList.toggle("display-results", currentSearchTerm !== "")
     searchType = currentSearchTerm.startsWith("#") ? "tags" : "basic"
+
+    if (currentSearchTerm.trim() === "" || currentSearchTerm.trim() === "#") {
+      renderSearchIdleState(searchLayout, results, preview)
+      return
+    }
+
+    searchLayout.classList.add("display-results")
+    searchLayout.classList.remove("idle-state")
 
     let searchResults: DefaultDocumentSearchResults<Item>
     if (searchType === "tags") {
