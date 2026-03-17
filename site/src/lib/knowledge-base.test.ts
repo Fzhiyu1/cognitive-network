@@ -125,12 +125,12 @@ describe("buildKnowledgeBase", () => {
     ]);
 
     expect(data.graph.nodes.map((node) => node.title)).toContain("人工脑干原型实验");
-    expect(data.graph.edges).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ source: "主动遗忘", target: "人工脑干原型实验" }),
-        expect.objectContaining({ source: "人工脑干原型实验", target: "主动遗忘" })
-      ])
-    );
+    const normalizedPairs = data.graph.edges.map((edge) => [edge.source, edge.target].sort().join(" <-> "));
+
+    expect(normalizedPairs.filter((pair) => pair === "主动遗忘 <-> 人工脑干原型实验")).toEqual([
+      "主动遗忘 <-> 人工脑干原型实验"
+    ]);
+    expect(new Set(normalizedPairs).size).toBe(normalizedPairs.length);
   });
 
   it("returns homepage recent updates in descending modified order and excludes projects", async () => {

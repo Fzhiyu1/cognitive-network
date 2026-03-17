@@ -87,6 +87,7 @@ export async function buildKnowledgeBase(options: BuildKnowledgeBaseOptions): Pr
   const noteByTitle = new Map(notes.map((note) => [note.title, note]));
   const backlinksByTitle = new Map<string, Set<string>>();
   const graphEdges: GraphEdge[] = [];
+  const seenGraphEdges = new Set<string>();
 
   for (const note of notes) {
     for (const linkedTitle of note.links) {
@@ -96,7 +97,13 @@ export async function buildKnowledgeBase(options: BuildKnowledgeBaseOptions): Pr
         continue;
       }
 
-      graphEdges.push({ source: note.title, target: linkedNote.title });
+      const graphEdge = createUndirectedGraphEdge(note.title, linkedNote.title);
+      const edgeKey = `${graphEdge.source} <-> ${graphEdge.target}`;
+
+      if (!seenGraphEdges.has(edgeKey)) {
+        graphEdges.push(graphEdge);
+        seenGraphEdges.add(edgeKey);
+      }
 
       const backlinks = backlinksByTitle.get(linkedNote.title) ?? new Set<string>();
       backlinks.add(note.title);
@@ -239,6 +246,14 @@ function toLinkedNote(note: DraftNote): LinkedNote {
     url: note.url,
     sectionKey: note.sectionKey
   };
+}
+
+function createUndirectedGraphEdge(leftTitle: string, rightTitle: string): GraphEdge {
+  if (leftTitle.localeCompare(rightTitle, "zh-Hans-CN") <= 0) {
+    return { source: leftTitle, target: rightTitle };
+  }
+
+  return { source: rightTitle, target: leftTitle };
 }
 
 function buildRelatedNotes(

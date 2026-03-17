@@ -12,6 +12,7 @@ const {
   title,
   description = "输出驱动的个人认知网络。记录的不是信息，而是思考过程与思考产物。"
 } = Astro.props;
+const currentPath = Astro.url.pathname.endsWith("/") ? Astro.url.pathname : `${Astro.url.pathname}/`;
 
 const navigation = [
   { href: "/", label: "总览" },
@@ -21,6 +22,13 @@ const navigation = [
   { href: "/references/", label: "引用" },
   { href: "/inbox/", label: "Inbox" }
 ];
+
+function isCurrentPath(href: string) {
+  const fullHref = withBasePath(href);
+  const normalizedHref = fullHref.endsWith("/") ? fullHref : `${fullHref}/`;
+
+  return href === "/" ? currentPath === normalizedHref : currentPath.startsWith(normalizedHref);
+}
 ---
 
 <!doctype html>
@@ -29,33 +37,45 @@ const navigation = [
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    <meta name="theme-color" content="#050313" />
     <link rel="icon" type="image/svg+xml" href={withBasePath("/favicon.svg")} />
     <title>{title}</title>
   </head>
   <body>
     <div class="page-shell">
-      <div class="page-aurora page-aurora-left"></div>
-      <div class="page-aurora page-aurora-right"></div>
+      <div class="page-backdrop" aria-hidden="true">
+        <div class="page-grid"></div>
+        <div class="page-dots"></div>
+        <div class="page-noise"></div>
+        <div class="page-wave page-wave-a"></div>
+        <div class="page-wave page-wave-b"></div>
+        <div class="page-glow page-glow-a"></div>
+        <div class="page-glow page-glow-b"></div>
+      </div>
 
-      <header class="site-header">
-        <a class="brand" href={withBasePath("/")}>
-          <span class="brand-mark">CN</span>
-          <span class="brand-copy">
-            <strong>Cognitive Network</strong>
-            <small>Public Knowledge Base</small>
-          </span>
-        </a>
+      <div class="page-frame">
+        <header class="site-header">
+          <a class="brand" href={withBasePath("/")}>
+            <span class="brand-mark">CN</span>
+            <span class="brand-copy">
+              <strong>Cognitive Network</strong>
+              <small>Public Knowledge Base</small>
+            </span>
+          </a>
 
-        <nav class="site-nav">
-          {navigation.map((item) => (
-            <a href={withBasePath(item.href)}>{item.label}</a>
-          ))}
-        </nav>
-      </header>
+          <nav class="site-nav">
+            {navigation.map((item) => (
+              <a href={withBasePath(item.href)} aria-current={isCurrentPath(item.href) ? "page" : undefined}>
+                {item.label}
+              </a>
+            ))}
+          </nav>
+        </header>
 
-      <main class="site-main">
-        <slot />
-      </main>
+        <main class="site-main">
+          <slot />
+        </main>
+      </div>
     </div>
   </body>
 </html>

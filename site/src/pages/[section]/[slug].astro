@@ -32,15 +32,52 @@ const renderedBody = renderMarkdown(note.body, data.noteByTitle);
 
 <BaseLayout title={`${note.title} | Cognitive Network`} description={note.summary}>
   <div class="detail-grid">
-    <article class:list={["note-shell", note.sectionKey === "projects" && "project-note"]}>
-      <span class="eyebrow">{note.section.label}</span>
+    <article class:list={["note-shell", note.sectionKey === "projects" && "project-note"]} data-section={note.sectionKey}>
+      <div class="note-shell__header">
+        <span class="eyebrow">{note.section.label}</span>
+        <div class="note-shell__signal">
+          <span>signal density</span>
+          <strong>{note.outgoingLinks.length + note.backlinks.length}</strong>
+        </div>
+      </div>
+
       <h1>{note.title}</h1>
-      <p class="lead">{note.summary || "这篇笔记还没有摘要。"} </p>
+      <p class="lead">{note.summary || "这篇笔记还没有摘要。"}</p>
       <NoteMeta note={note} />
       <div class="note-body" set:html={renderedBody}></div>
     </article>
 
     <aside class="panel-grid">
+      <section class="link-panel link-panel--metrics">
+        <div class="link-panel__topline">
+          <h2>节点状态</h2>
+          <span>{note.tags.length} tags</span>
+        </div>
+
+        <div class="metric-list">
+          <div>
+            <span>文内出链</span>
+            <strong>{note.outgoingLinks.length}</strong>
+          </div>
+          <div>
+            <span>反向链接</span>
+            <strong>{note.backlinks.length}</strong>
+          </div>
+          <div>
+            <span>相关笔记</span>
+            <strong>{note.relatedNotes.length}</strong>
+          </div>
+        </div>
+
+        {note.tags.length > 0 && (
+          <ul class="tag-list">
+            {note.tags.map((tag) => (
+              <li>{tag}</li>
+            ))}
+          </ul>
+        )}
+      </section>
+
       <RelatedNotes title="文内出链" notes={note.outgoingLinks} />
       <RelatedNotes title="反向链接" notes={note.backlinks} />
       <RelatedNotes title="相关笔记" notes={note.relatedNotes} />

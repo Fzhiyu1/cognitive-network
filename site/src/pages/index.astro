@@ -19,18 +19,57 @@ const sectionOptions = SECTION_DEFINITIONS.map((section) => ({
 ---
 
 <BaseLayout title="Cognitive Network">
-  <section class="hero-card">
-    <span class="eyebrow">Overview</span>
-    <h1>输出驱动的个人认知网络</h1>
-    <p>
-      这个站点公开展示知识库中的概念卡片、探索文章、参考资料与 inbox 片段。它不是信息仓库，而是一张不断生长的推理网络：
-      文章、引用、反链与图谱会跟随 Markdown 内容一起更新。
-    </p>
+  <section class="hero-card hero-card--home">
+    <div class="hero-card__content">
+      <span class="eyebrow">Signal Index</span>
+      <p class="hero-kicker">Deep archive / live topology / auto-updating citations</p>
+      <h1>输出驱动的个人认知网络</h1>
+      <p>
+        这个公开站点展示概念卡片、探索文章、参考资料与 inbox 片段。它不是静态目录，而是一片持续电离的认知场：
+        Markdown 一旦更新，文章卡片、引用关系与图结构会一起变化。
+      </p>
+
+      <div class="hero-actions">
+        <a class="button-link" href={withBasePath("/graph/")}>进入图谱</a>
+        <a class="button-link button-link--ghost" href={withBasePath("/explorations/")}>查看探索</a>
+      </div>
+    </div>
+
+    <div class="hero-card__aside">
+      <div class="hero-signal-panel">
+        <span>public surface</span>
+        <strong>{home.stats.publicNotes}</strong>
+        <p>公开索引节点会与原始 Markdown 保持同频更新。</p>
+
+        <div class="hero-signal-panel__grid">
+          <div>
+            <span>默认图谱</span>
+            <strong>{defaultGraph.nodes.length}</strong>
+          </div>
+          <div>
+            <span>连边数量</span>
+            <strong>{defaultGraph.edges.length}</strong>
+          </div>
+        </div>
+      </div>
+
+      <ul class="signal-list">
+        <li>项目页默认不混入首页索引，但可以直链分享。</li>
+        <li>反向链接、相关笔记与引用卡片会自动连动。</li>
+        <li>图谱节点可以直接跳转到笔记详情页。</li>
+      </ul>
+    </div>
   </section>
 
   <div class="home-grid">
-    <section class="section-block">
-      <h2>总览</h2>
+    <section class="section-block section-block--dense">
+      <div class="section-block__header">
+        <div>
+          <span class="eyebrow eyebrow--soft">System Pulse</span>
+          <h2>网络脉搏</h2>
+        </div>
+        <p>公开表层、概念密度与探索沉积会在这里汇聚成当前快照。</p>
+      </div>
       <div class="stat-grid">
         <div class="stat-card">
           <span>全部笔记</span>
@@ -51,11 +90,17 @@ const sectionOptions = SECTION_DEFINITIONS.map((section) => ({
       </div>
     </section>
 
-    <section class="section-block">
-      <h2>入口</h2>
+    <section class="section-block section-block--dense">
+      <div class="section-block__header">
+        <div>
+          <span class="eyebrow eyebrow--soft">Entrypoints</span>
+          <h2>分区入口</h2>
+        </div>
+        <p>从不同分区切入同一张知识网络，图谱和详情页会保持同一套结构映射。</p>
+      </div>
       <div class="section-links">
         {home.sectionEntries.map((section) => (
-          <a href={withBasePath(`/${section.routeSegment}/`)}>
+          <a data-section={section.key} href={withBasePath(`/${section.routeSegment}/`)}>
             <strong>{section.label}</strong>
             <span>{section.count} 篇公开笔记</span>
           </a>
@@ -63,8 +108,14 @@ const sectionOptions = SECTION_DEFINITIONS.map((section) => ({
       </div>
     </section>
 
-    <section class="section-block">
-      <h2>Recent Updates</h2>
+    <section class="section-block section-block--dense">
+      <div class="section-block__header">
+        <div>
+          <span class="eyebrow eyebrow--soft">Recent</span>
+          <h2>最近更新</h2>
+        </div>
+        <p>优先显示公开索引面上最近变动的节点，方便快速感知知识库的最新形变。</p>
+      </div>
       <div class="note-grid">
         {home.recentUpdates.map((note) => (
           <NoteCard note={note} />
@@ -72,8 +123,14 @@ const sectionOptions = SECTION_DEFINITIONS.map((section) => ({
       </div>
     </section>
 
-    <section class="section-block">
-      <h2>Featured Threads</h2>
+    <section class="section-block section-block--dense">
+      <div class="section-block__header">
+        <div>
+          <span class="eyebrow eyebrow--soft">Featured</span>
+          <h2>高连接线程</h2>
+        </div>
+        <p>这些笔记拥有更高的出链与反链密度，往往是整张网络里的关键转接点。</p>
+      </div>
       <div class="note-grid">
         {home.featuredThreads.map((note) => (
           <NoteCard note={note} />
@@ -82,11 +139,15 @@ const sectionOptions = SECTION_DEFINITIONS.map((section) => ({
     </section>
 
     <section class="graph-teaser">
-      <span class="eyebrow">Graph</span>
-      <h2>图结构浏览</h2>
-      <p>
-        默认图谱只展示公开索引内容，不把 `3-projects` 混进首页视野。进入全屏图谱后，你可以拖拽、缩放，并点击节点进入详情页。
-      </p>
+      <div class="section-block__header">
+        <div>
+          <span class="eyebrow">Graph Field</span>
+          <h2>图结构浏览</h2>
+        </div>
+        <p>
+          首页图谱只展示公开索引内容，不把 `3-projects` 混进默认视野。进入图谱页后，你可以拖拽、缩放、过滤分区，并点击节点进入详情页。
+        </p>
+      </div>
       <KnowledgeGraph
         client:load
         defaultGraph={defaultGraph}
@@ -95,9 +156,12 @@ const sectionOptions = SECTION_DEFINITIONS.map((section) => ({
         allowProjectToggle={false}
         showFilters={false}
         height={380}
+        surface="teaser"
       />
-      <div style="margin-top: 1rem;">
-      <a class="button-link" href={withBasePath("/graph/")}>打开图谱</a>
+
+      <div class="graph-teaser__footer">
+        <span>默认视图排除 projects，仅在图谱页内显式开启。</span>
+        <a class="button-link" href={withBasePath("/graph/")}>打开图谱</a>
       </div>
     </section>
   </div>

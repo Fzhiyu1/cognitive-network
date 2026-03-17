@@ -1,6 +1,7 @@
 ---
 import KnowledgeGraph from "../../components/KnowledgeGraph";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import SectionHero from "../../components/SectionHero.astro";
 import { getGraphPayload } from "../../lib/graph-data";
 import { getKnowledgeBaseData } from "../../lib/site-store";
 import { SECTION_DEFINITIONS } from "../../lib/sections";
@@ -15,20 +16,32 @@ const sectionOptions = SECTION_DEFINITIONS.map((section) => ({
 ---
 
 <BaseLayout title="Knowledge Graph | Cognitive Network">
-  <section class="section-hero">
-    <span class="eyebrow">Graph</span>
-    <h1>知识图谱</h1>
-    <p>
-      默认视图只展示公开索引内容。你可以拖拽、缩放、过滤不同分区，并在需要时显式把 `3-projects`
-      合并进来。
-    </p>
-  </section>
-
-  <KnowledgeGraph
-    client:load
-    defaultGraph={defaultGraph}
-    fullGraph={fullGraph}
-    sectionOptions={sectionOptions}
-    initialIncludeProjects={false}
+  <SectionHero
+    eyebrow="Graph"
+    title="知识图谱"
+    description="全景图默认载入全量节点，你可以拖拽、缩放、过滤不同分区；首页预览仍然保持 projects 排除。"
+    asideEyebrow="field mode"
+    asideTitle={`${fullGraph.nodes.length} 个节点`}
+    asideDescription="这个视图面向浏览与发现，不承担首页公开索引的裁剪职责。"
   />
+
+  <section class="graph-teaser graph-teaser--full">
+    <div class="section-block__header">
+      <div>
+        <span class="eyebrow">Ion Field</span>
+        <h2>全景节点场</h2>
+      </div>
+      <p>点击节点可直接跳转详情页，过滤器用于隔离不同分区的认知簇；全景页默认载入 projects，首页预览仍保持排除。</p>
+    </div>
+
+    <KnowledgeGraph
+      client:load
+      defaultGraph={defaultGraph}
+      fullGraph={fullGraph}
+      sectionOptions={sectionOptions}
+      initialIncludeProjects={true}
+      height={680}
+      surface="immersive"
+    />
+  </section>
 </BaseLayout>
