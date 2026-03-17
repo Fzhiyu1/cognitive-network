@@ -69,8 +69,7 @@ test("graph component exposes telemetry rails for local and global views", () =>
 
   assert.match(graphComponent, /graph-shell-meta/)
   assert.match(graphComponent, /graph-shell-stats/)
-  assert.match(graphComponent, /graph-shell-legend/)
-  assert.match(graphComponent, /CTRL\/CMD \+ G/)
+  assert.match(graphComponent, /graph-container-shell/)
 })
 
 test("graph renderer strengthens hover emphasis and shell stats", () => {
@@ -152,8 +151,8 @@ test("search trigger reads like an input shell instead of a plain button", () =>
   assert.match(searchComponent, /class="search-shortcut"/)
   assert.match(styles, /\.search-shortcut\s*\{/)
   assert.match(styles, /\.search\s*\{[\s\S]*>\s*\.search-button\s*\{[\s\S]*> \.search-shortcut\s*\{/)
-  assert.match(styles, /\.left\.sidebar > \.flex-component\s*\{[\s\S]*grid-template-columns:\s*minmax\(0,\s*1fr\)\s*repeat\(2,\s*2\.7rem\)/)
-  assert.match(styles, /\.left\.sidebar > \.flex-component\s*\{[\s\S]*overflow:\s*visible;/)
+  assert.match(styles, /\.left\.sidebar > \.flex-component\s*\{[\s\S]*display:\s*flex;/)
+  assert.match(styles, /\.left\.sidebar > \.flex-component\s*\{[\s\S]*gap:\s*0\.75rem !important;/)
   assert.match(styles, /\.search\s*\{[\s\S]*min-width:\s*0;/)
   assert.match(styles, /\.search\s*\{[\s\S]*>\s*\.search-button\s*\{[\s\S]*min-width:\s*0;/)
   assert.match(styles, /\.search\s*\{[\s\S]*>\s*\.search-button\s*\{[\s\S]*> \.search-shortcut\s*\{[\s\S]*display:\s*none;/)
