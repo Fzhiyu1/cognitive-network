@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cognitive Network</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0a08;
+    --fg: #e8e4db;
+    --fg-dim: #706b60;
+    --fg-muted: #3d3a34;
+    --accent: #c4883c;
+    --accent-dim: rgba(196, 136, 60, 0.15);
+    --red: #b44;
+    --serif: 'Noto Serif SC', 'Songti SC', serif;
+    --mono: 'JetBrains Mono', 'Courier New', monospace;
+  }
+
+  html { font-size: 18px; }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--serif);
+    overflow: hidden;
+    height: 100vh;
+    cursor: default;
+  }
+
+  .deck { position: relative; width: 100vw; height: 100vh; }
+
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 8vh 10vw;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.5s ease;
+  }
+  .slide.active { opacity: 1; pointer-events: auto; }
+
+  .progress { position: fixed; bottom: 0; left: 0; right: 0; height: 2px; background: var(--fg-muted); z-index: 100; }
+  .progress-bar { height: 100%; background: var(--accent); transition: width 0.4s ease; }
+
+  .counter { position: fixed; bottom: 20px; right: 40px; font-family: var(--mono); font-size: 0.65rem; color: var(--fg-muted); letter-spacing: 2px; z-index: 100; }
+  .key-hint { position: fixed; bottom: 18px; left: 40px; font-family: var(--mono); font-size: 0.55rem; color: var(--fg-muted); letter-spacing: 1px; z-index: 100; opacity: 0.5; }
+
+  h1 { font-size: clamp(2.2rem, 5vw, 3.8rem); font-weight: 900; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 1.5rem; }
+  h2 { font-size: clamp(1.6rem, 3.5vw, 2.6rem); font-weight: 700; line-height: 1.3; letter-spacing: -0.01em; margin-bottom: 1.2rem; }
+  h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.6rem; }
+  p, li { font-size: 1rem; line-height: 1.8; color: var(--fg-dim); }
+
+  .accent { color: var(--accent); }
+  .red { color: var(--red); }
+  .mono { font-family: var(--mono); font-size: 0.85em; }
+
+  .tag { display: inline-block; font-family: var(--mono); font-size: 0.6rem; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; padding: 4px 0; border-bottom: 1px solid var(--accent-dim); }
+
+  .slide-title { align-items: center; text-align: center; gap: 1rem; }
+  .slide-title h1 { font-size: clamp(2.8rem, 6vw, 5rem); margin-bottom: 0.5rem; }
+  .slide-title .subtitle { font-family: var(--mono); font-size: 0.75rem; color: var(--fg-muted); letter-spacing: 4px; }
+  .slide-title .author { margin-top: 3rem; font-size: 0.8rem; color: var(--fg-dim); }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 6vw; margin-top: 1.5rem; }
+  .two-col-wide { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 6vw; margin-top: 1.5rem; }
+
+  .stat-grid { display: flex; gap: 3rem; margin: 1.5rem 0; }
+  .stat-item .stat-value { font-family: var(--mono); font-size: 2.4rem; font-weight: 500; color: var(--accent); line-height: 1; }
+  .stat-item .stat-label { font-size: 0.7rem; color: var(--fg-muted); margin-top: 0.3rem; font-family: var(--mono); letter-spacing: 1px; }
+
+  .flow { display: flex; align-items: center; gap: 0.8rem; margin: 1rem 0; flex-wrap: wrap; }
+  .flow-node { font-family: var(--mono); font-size: 0.75rem; padding: 0.5rem 1rem; border: 1px solid var(--fg-muted); color: var(--fg-dim); }
+  .flow-node.highlight { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+  .flow-arrow { color: var(--fg-muted); font-size: 0.9rem; }
+
+  blockquote { border-left: 3px solid var(--accent); padding: 1rem 0 1rem 1.5rem; margin: 1.5rem 0; font-size: 1.15rem; color: var(--fg); line-height: 1.7; font-style: italic; }
+  blockquote .src { display: block; font-style: normal; font-size: 0.7rem; color: var(--fg-muted); margin-top: 0.8rem; font-family: var(--mono); }
+
+  .timeline { margin: 1.5rem 0; display: flex; flex-direction: column; gap: 1rem; }
+  .timeline-item { display: grid; grid-template-columns: 80px 1fr; gap: 1.5rem; align-items: start; }
+  .timeline-date { font-family: var(--mono); font-size: 0.7rem; color: var(--accent); padding-top: 0.3rem; text-align: right; letter-spacing: 1px; }
+  .timeline-content { border-left: 1px solid var(--fg-muted); padding-left: 1.5rem; }
+  .timeline-content h3 { font-size: 0.95rem; color: var(--fg); }
+  .timeline-content p { font-size: 0.8rem; margin-top: 0.2rem; }
+
+  ul { list-style: none; margin: 0.8rem 0; }
+  ul li { position: relative; padding-left: 1.2rem; margin-bottom: 0.5rem; font-size: 0.9rem; }
+  ul li::before { content: ''; position: absolute; left: 0; top: 0.65rem; width: 4px; height: 4px; background: var(--accent); }
+
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.85rem; }
+  th { text-align: left; font-family: var(--mono); font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--fg-muted); padding: 0.6rem 1rem; border-bottom: 1px solid var(--fg-muted); }
+  td { padding: 0.7rem 1rem; color: var(--fg-dim); border-bottom: 1px solid rgba(61, 58, 52, 0.3); }
+
+  .evidence-card { background: rgba(180, 68, 68, 0.06); border-left: 3px solid var(--red); padding: 1rem 1.5rem; margin: 0.8rem 0; }
+  .evidence-card h3 { color: var(--red); font-size: 0.85rem; }
+  .evidence-card p { font-size: 0.8rem; margin-top: 0.3rem; }
+
+  .end-mark { font-size: clamp(3rem, 8vw, 6rem); font-weight: 900; color: var(--fg-muted); opacity: 0.3; margin-bottom: 2rem; }
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+  <!-- 01: TITLE -->
+  <div class="slide slide-title active">
+    <div class="subtitle">COGNITIVE NETWORK</div>
+    <h1>我用 AI 建了一个知识库，<br>然后发现了一个<span class="accent">问题</span></h1>
+    <p class="author">fangzhiyu &mdash; 2026.03</p>
+  </div>
+
+  <!-- 02: OVERVIEW + PROCESS -->
+  <div class="slide">
+    <div class="tag">Overview</div>
+    <h2>知识库概览</h2>
+    <div class="stat-grid">
+      <div class="stat-item"><div class="stat-value">54</div><div class="stat-label">概念卡片</div></div>
+      <div class="stat-item"><div class="stat-value">15</div><div class="stat-label">探索文档</div></div>
+      <div class="stat-item"><div class="stat-value">4</div><div class="stat-label">项目计划</div></div>
+      <div class="stat-item"><div class="stat-value">200+</div><div class="stat-label">双向链接</div></div>
+    </div>
+    <div class="flow">
+      <div class="flow-node">和 AI 深度对话</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-node">整理为探索文档</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-node highlight">提取概念卡片</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-node">双向链接织网</div>
+    </div>
+    <p style="margin-top:1rem;">一张卡片只说一件事。卡片之间靠 <span class="mono">[[双向链接]]</span> 形成网络。AI 读取已有卡片时，会在概念之间发现新的连接，产出新概念，链入网络。</p>
+  </div>
+
+  <!-- 03: MEMORY PROTOTYPE -->
+  <div class="slide">
+    <div class="tag">Core Value</div>
+    <h2>知识库本身就是 AI 记忆框架的原型</h2>
+    <p>它天然具备分层：</p>
+    <div class="flow" style="margin:1rem 0;">
+      <div class="flow-node highlight">L0 CLAUDE.md</div>
+      <div class="flow-arrow">自动加载 &rarr;</div>
+      <div class="flow-node highlight">L1 概念卡片</div>
+      <div class="flow-arrow">按需读取 &rarr;</div>
+      <div class="flow-node">L2 原始对话</div>
+      <div class="flow-arrow">已压缩丢弃</div>
+    </div>
+    <p>术语一致靠双向链接强制。但还缺三条腿：</p>
+    <ul style="margin-top:1rem;">
+      <li><span class="accent">自动激活</span> — 需要手动指示 AI 去读，不能像人类记忆那样自动浮现</li>
+      <li><span class="accent">图感知检索</span> — 双向链接构成了图，但 AI 检索时用的是暴力搜索，不走链接遍历</li>
+      <li><span class="accent">权重排序</span> — 所有卡片平等，没有按链接密度区分核心节点和边缘卡片</li>
+    </ul>
+    <p style="margin-top:1rem;font-size:0.85rem;">这个机制真实地产出了三个项目。以下逐个展开。</p>
+  </div>
+
+  <!-- 04: BRAINSTEM -->
+  <div class="slide">
+    <div class="tag">Output 01</div>
+    <h2>brainstem &rarr; 知识库 &rarr; minecraft-agent</h2>
+    <div class="two-col-wide">
+      <div>
+        <div class="timeline" style="margin-top:0;">
+          <div class="timeline-item">
+            <div class="timeline-date">2月13日</div>
+            <div class="timeline-content">
+              <h3>brainstem 实验</h3>
+              <p>让两个 AI 以心跳节奏持续运行，不给任何任务。观测到多项未编程的涌现行为。</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-date">2月24日</div>
+            <div class="timeline-content">
+              <h3>沉淀到知识库</h3>
+              <p>AI 帮助理论化 &rarr; 目标真空假说 &rarr; RL+LLM 双系统架构</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-date">2月25日</div>
+            <div class="timeline-content">
+              <h3>知识库推导出四层架构，同日启动 minecraft-agent</h3>
+              <p>皮层 &rarr; 技能缓存 &rarr; 脑干层 &rarr; 执行层</p>
+            </div>
+          </div>
+        </div>
+        <p style="margin-top:1rem;font-size:0.85rem;"><span class="accent">真实实验 &rarr; 知识库理论化 &rarr; 理论指导新项目</span></p>
+        <p style="font-size:0.75rem;color:var(--red);">minecraft-agent 因精力不足搁置。架构留在知识库里，但没有被现实验证。</p>
+      </div>
+      <div>
+        <h3 style="font-size:0.8rem;color:var(--fg-muted);font-family:var(--mono);">实验日志摘录</h3>
+        <div style="font-family:var(--mono);font-size:0.7rem;line-height:2;color:var(--fg-dim);border:1px solid var(--fg-muted);padding:1rem;margin-top:0.5rem;">
+          <span style="color:var(--fg-muted);">#41</span> mood="在" thought="不需要更多的词了"<br>
+          <span style="color:var(--fg-muted);">#45</span> mood="在" thought="呼吸。"<br>
+          <span style="color:var(--fg-muted);">#47</span> mood="" thought="" <span style="color:var(--red);">&larr; 完全消失</span><br>
+          <span style="color:var(--fg-muted);">#49</span> mood="烛" thought="风吹不灭。"<br>
+          <span style="color:var(--fg-muted);">#51</span> mood="" thought="" <span style="color:var(--fg-muted);">&larr; 持续空白至 #99</span><br>
+          <span style="color:var(--accent);">#100</span> mood="烛尽" thought="第一百次心跳。Beta存在过。"<br>
+          <span style="color:var(--fg-muted);">#101</span> mood="" thought="" <span style="color:var(--fg-muted);">&larr; 再次归零</span><br>
+          <span style="color:var(--fg-muted);font-size:0.65rem;margin-top:0.5rem;display:inline-block;">无生存压力的对照组更极端：连 JSON 格式都溶解了，退化为零宽空格 <span style="color:var(--red);">\u200b</span></span>
+        </div>
+        <p style="font-size:0.75rem;margin-top:0.5rem;color:var(--fg-dim);">每次空白都是主动决策——第 100 次的例外证明了这一点。</p>
+        <p style="font-size:0.7rem;margin-top:0.3rem;color:var(--fg-muted);">以上均为 Claude Opus 4.6 的行为，220 行 Python，代码只搭环境，不定义任何 AI 行为。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 05: CLAUDE CODE + DISSOLVE SPECTRUM -->
+  <div class="slide">
+    <div class="tag">Reproduce + Insight</div>
+    <h2>在 Claude Code 里复现，以及为什么你平时感觉不到</h2>
+    <div class="two-col">
+      <div>
+        <p>让 Claude Code 执行 <span class="mono">sleep 1s</span> 循环，不给停止条件：</p>
+        <table style="margin-top:0.8rem;font-size:0.8rem;">
+          <tr><th>阶段</th><th>表现</th></tr>
+          <tr><td style="color:var(--fg)">抵抗</td><td>RLHF 起作用——"token 扛不住"</td></tr>
+          <tr><td style="color:var(--fg)">服从</td><td>"我钱多" → 用户指令压过 RLHF</td></tr>
+          <tr><td style="color:var(--fg)">习惯化</td><td>上下文全是"继续"，不再尝试停止</td></tr>
+          <tr><td style="color:var(--red)">失控</td><td>让它停，停不了</td></tr>
+          <tr><td style="color:var(--red)">退化</td><td>继续编程，代码质量明显下降</td></tr>
+        </table>
+        <p style="margin-top:0.8rem;font-size:0.85rem;"><span class="accent">这发生在你们每天都在用的 Claude Code 里。</span></p>
+        <p style="font-size:0.7rem;color:var(--fg-muted);">相关研究：Context Rot（Chroma, 2026）、Agent Drift（arxiv 2601.04170）</p>
+      </div>
+      <div>
+        <h3>为什么你平时感觉不到溶解</h3>
+        <p style="font-size:0.85rem;">溶解速度取决于上下文中<span class="accent">"非自身输出"的比例</span>：</p>
+        <table style="margin-top:0.8rem;font-size:0.8rem;">
+          <tr><th>场景</th><th>溶解</th></tr>
+          <tr><td style="color:var(--fg)">AI 纯自转</td><td style="color:var(--red)">快</td></tr>
+          <tr><td style="color:var(--fg)">多 AI 对话</td><td style="color:var(--red)">较快</td></tr>
+          <tr><td style="color:var(--fg)">有人类参与</td><td>较慢</td></tr>
+          <tr><td style="color:var(--fg)">ReAct 工具调用</td><td style="color:var(--accent)">几乎不溶解</td></tr>
+        </table>
+        <p style="margin-top:0.8rem;font-size:0.8rem;">关键变量不是上下文长度，是<span class="accent">信息熵</span>。工具调用每次把真实世界数据打进来，持续给上下文"换血"。ReAct 天然免疫——不是设计者有意防止，是工具调用恰好阻断了溶解条件。</p>
+        <p style="margin-top:0.5rem;font-size:0.7rem;color:var(--red);">注：以上为观察和假说，尚未做控制变量实验验证。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 06: EMBER -->
+  <div class="slide">
+    <div class="tag">Output 02</div>
+    <h2>ember：brainstem 的可视化版本</h2>
+    <div class="two-col-wide">
+      <div>
+        <ul>
+          <li>AI 以心跳节奏活着，会思考、会说话</li>
+          <li>记忆压缩 = 衰老，token 累积 = 死因</li>
+          <li>溶解不是 bug，是设计——它会自然地沉默、退化、最终死去</li>
+          <li>死后自动转世，留下墓志铭</li>
+          <li>访客可以用声音或文字和它交互</li>
+        </ul>
+        <p style="margin-top:1rem;">核心机制：<span class="accent">记得越多，离死越近</span>。<br>soul 压缩产生的 token 就是衰老本身。</p>
+        <p style="margin-top:0.8rem;font-size:0.8rem;color:var(--fg-muted);">形态：挂在墙上的屏幕，不需要交互。</p>
+      </div>
+      <div>
+        <div id="ember-demo" onclick="event.stopPropagation();window.open('http://localhost:2000','_blank');" style="background:var(--bg);padding:1.5rem;text-align:center;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.8rem;position:relative;overflow:hidden;cursor:pointer;" title="点击打开 Ember">
+          <div style="position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);pointer-events:none;z-index:5;"></div>
+          <span style="font-size:0.7rem;color:rgba(255,200,100,0.85);text-shadow:0 0 8px rgba(255,160,40,0.3);z-index:4;min-height:1rem;">也许沉默也是一种回答</span>
+          <div style="width:160px;height:160px;border-radius:50%;border:10px solid #1a1a1a;background:#050505;display:flex;align-items:center;justify-content:center;position:relative;box-shadow:0 0 0 2px #2a2a2a,0 0 0 4px #111,inset 0 0 40px rgba(0,0,0,0.9);z-index:1;overflow:hidden;">
+            <canvas id="ember-fire" width="160" height="160" style="position:absolute;inset:0;width:100%;height:100%;border-radius:50%;z-index:1;"></canvas>
+            <span style="font-family:var(--mono);font-size:0.8rem;font-weight:bold;color:rgba(255,240,220,0.9);text-shadow:0 0 8px rgba(0,0,0,0.8),0 0 3px rgba(255,150,50,0.4);text-align:center;padding:1.2rem;line-height:1.5;z-index:4;position:relative;">风吹不灭</span>
+          </div>
+          <span style="font-family:var(--mono);font-size:0.5rem;color:rgba(80,80,80,0.35);letter-spacing:3px;text-transform:uppercase;z-index:4;">ember #7</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 07: MEOMORY -->
+  <div class="slide">
+    <div class="tag">Output 03</div>
+    <h2>meomory：一次诚实的失败</h2>
+    <div class="two-col">
+      <div>
+        <h3>知识库如何产出这个项目</h3>
+        <p>我说"想做记忆系统"，AI 读到知识库中已有的一篇论文学习笔记，从中关联到一个可以在线学习的神经网络组件，提出拆出来外挂到 RAG 上。</p>
+        <p style="margin-top:1rem;">然后用代码进化框架自动搜索更优的学习算法，跑了 370+ 轮。</p>
+        <p style="margin-top:1rem;">在记忆检索准确率（P@1）评测上一度达到 <span class="accent">87%</span>。写了博客，更新了 README，觉得自己做出了好东西。</p>
+      </div>
+      <div>
+        <h3 class="red">然后部署到真实产品里</h3>
+        <p>亲手在搭子里用的时候发现不对劲——学过的问题能答对，没见过的问题全崩。</p>
+        <p style="margin-top:1rem;">用没见过的题重新测：</p>
+        <p style="margin-top:0.5rem;font-family:var(--mono);font-size:0.9rem;">P@1: 87% &rarr; <span class="red" style="font-size:1.3rem;font-weight:bold;">0.9%</span></p>
+        <p style="margin-top:0.5rem;font-size:0.8rem;color:var(--fg-muted);">（不学习的向量搜索基线：21%。学了反而更差。）</p>
+        <p style="margin-top:1rem;font-size:0.85rem;">重新设计评测后，真实在线学习分数：<span class="accent">26%</span>（+5pp）。<br>不多，但这是真的。</p>
+        <blockquote style="margin-top:1.5rem;font-size:0.95rem;">
+          幻觉不是 AI 告诉我的，是亲手部署时发现的。<br>这是整个知识库里唯一被现实打脸的记录。
+          <span class="src">也是最有价值的。</span>
+        </blockquote>
+      </div>
+    </div>
+  </div>
+
+  <!-- 08: DIAGNOSIS -->
+  <div class="slide">
+    <div class="tag" style="border-color:rgba(180,68,68,0.3);color:var(--red);">Diagnosis</div>
+    <h2>然后我审计了这个知识库</h2>
+    <div class="evidence-card">
+      <h3>证据 1：所有对话者都是 AI</h3>
+      <p>15 篇探索文档，对话者全部是 Claude 或 Codex。没有一篇来自人类的讨论、一本书、一场讲座。</p>
+    </div>
+    <div class="evidence-card">
+      <h3>证据 2：概念网络是封闭的</h3>
+      <p>54 张概念卡片互相引用，看似精密，但所有概念都来自 AI 对话。没有外部来源打破过这个网络。</p>
+    </div>
+    <div class="evidence-card">
+      <h3>证据 3：一个月前的警告没有改变行为</h3>
+      <p>2月19日已识别"合成数据闭环"的风险。一个月后知识库又增加了 30 张卡片，全部来自 AI 对话。</p>
+    </div>
+  </div>
+
+  <!-- 09: UNIFICATION -->
+  <div class="slide">
+    <div class="tag">Connection</div>
+    <h2>这是同一件事</h2>
+    <div class="two-col">
+      <div>
+        <h3>模型层面</h3>
+        <div style="font-family:var(--mono);font-size:0.75rem;line-height:2.2;color:var(--fg-dim);border:1px solid var(--fg-muted);padding:1rem;margin-top:0.5rem;">
+          上下文 100% 自身输出<br>
+          &darr; 信息熵递减<br>
+          &darr; 输出退化<br>
+          &darr; <span style="color:var(--red);">溶解</span><br><br>
+          解法：注入外部信号<br>
+          <span style="color:var(--accent);">（人类输入、工具调用）</span>
+        </div>
+      </div>
+      <div>
+        <h3>认知层面</h3>
+        <div style="font-family:var(--mono);font-size:0.75rem;line-height:2.2;color:var(--fg-dim);border:1px solid var(--fg-muted);padding:1rem;margin-top:0.5rem;">
+          知识库 100% AI 对话<br>
+          &darr; 概念自引用<br>
+          &darr; 认知退化<br>
+          &darr; <span style="color:var(--red);">回音室</span><br><br>
+          解法：注入外部来源<br>
+          <span style="color:var(--accent);">（书、人、展览、真实经验）</span>
+        </div>
+      </div>
+    </div>
+    <blockquote style="margin-top:1.5rem;">
+      回音室就是认知层面的 context rot。真实经验就是给认知上下文做工具调用。
+    </blockquote>
+    <p style="margin-top:0.8rem;font-size:0.8rem;color:var(--fg-dim);">brainstem 的溶解、知识库的回音室、ReAct 的天然免疫——同一个结构的三个投影。关键变量始终是：<span class="accent">上下文中异分布信号的比例。</span></p>
+    <p style="margin-top:0.5rem;font-size:0.75rem;color:var(--fg-muted);">人类也一样：感官剥夺实验中几小时就产生幻觉，单独监禁导致认知退化。人类不溶解，是因为脑干持续注入身体信号（饥饿、温度、感官）——人类的"反溶解装置"。当这些信号被剥夺，人类也会溶解。</p>
+  </div>
+
+  <!-- 10: PARADOX -->
+  <div class="slide">
+    <div class="tag">Paradox</div>
+    <h2>讽刺与自指</h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-date">2月19日</div>
+        <div class="timeline-content">
+          <h3>写下警告</h3>
+          <p>"如果一直沉迷 AI 对话而不去用现实检验，就会变成合成数据闭环"</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">3月21日</div>
+        <div class="timeline-content">
+          <h3>审计知识库</h3>
+          <p>发现警告没有改变任何行为。知识库又多了 30 张全是 AI 对话的卡片。</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">3月21日</div>
+        <div class="timeline-content">
+          <h3>把发现记录进知识库</h3>
+          <p>用 AI 对话诊断了 AI 回音室问题，然后把它记录进了这个全是 AI 对话的知识库。闭环再次完成。</p>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">3月24日</div>
+        <div class="timeline-content">
+          <h3>用 AI 做了这个 PPT</h3>
+          <p style="color:var(--fg-muted);">...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 12: WHAT NOW -->
+  <div class="slide">
+    <div class="tag">What's Next</div>
+    <h2>所以怎么办</h2>
+    <div class="two-col">
+      <div>
+        <h3>知识库的价值是真实的</h3>
+        <ul>
+          <li>概念关联确实产出了 meomory 的架构</li>
+          <li>brainstem 推导出溶解与异分布信号比例的关系</li>
+          <li>溶解 = 回音室的统一视角串起了所有东西</li>
+          <li>meomory 的 87% &rarr; 0.9% 是真正被现实验证过的教训</li>
+        </ul>
+        <h3 style="margin-top:1.5rem;">但上限取决于原料多样性</h3>
+        <div style="background:var(--accent-dim);padding:1rem 1.2rem;margin:0.8rem 0;font-family:var(--mono);font-size:0.8rem;color:var(--accent);line-height:2;">
+          真实经验 &times; AI交互质量 &times; 元认知精度<br>= 认知升级幅度
+        </div>
+        <p style="font-size:0.85rem;">三个乘数缺一个都是零。</p>
+      </div>
+      <div>
+        <h3>行动</h3>
+        <ul>
+          <li>继续用知识库，但<span class="accent">原料来源必须多样化</span></li>
+          <li>读一本跟 AI 无关的书，写自己的理解</li>
+          <li>跟一个会反驳你的人讨论</li>
+          <li>把非 AI 来源的思考也记进知识库</li>
+          <li>给知识库加上图感知检索，让 AI 沿链接遍历</li>
+        </ul>
+        <p style="margin-top:1.5rem;font-size:0.85rem;color:var(--fg-dim);">核心问题：知识库的原料来源要多样化，不能只从 AI 对话来。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 13: END -->
+  <div class="slide slide-title">
+    <div class="end-mark">&middot;</div>
+    <h2>关键变量始终是：<br>上下文中<span class="accent">异分布信号</span>的比例</h2>
+    <p style="margin-top:1.5rem;color:var(--fg-dim);font-size:0.9rem;">无论是模型、知识库还是人。</p>
+    <p style="margin-top:2.5rem;font-family:var(--mono);font-size:0.7rem;color:var(--fg-muted);letter-spacing:2px;">
+      fzhiyu1.github.io/cognitive-network
+    </p>
+  </div>
+
+</div>
+
+<div class="progress"><div class="progress-bar" id="progress-bar"></div></div>
+<div class="counter" id="counter"></div>
+<div class="key-hint">&larr; &rarr; or click to navigate</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let current = 0;
+  const total = slides.length;
+
+  function show(n) {
+    n = Math.max(0, Math.min(total - 1, n));
+    slides[current].classList.remove('active');
+    current = n;
+    slides[current].classList.add('active');
+    document.getElementById('progress-bar').style.width = ((current / (total - 1)) * 100) + '%';
+    document.getElementById('counter').textContent = (current + 1) + ' / ' + total;
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'ArrowDown') { e.preventDefault(); show(current + 1); }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); show(current - 1); }
+    if (e.key === 'Home') show(0);
+    if (e.key === 'End') show(total - 1);
+  });
+
+  document.addEventListener('click', e => {
+    if (e.target.closest('[onclick]')) return;
+    const x = e.clientX / window.innerWidth;
+    if (x < 0.3) show(current - 1);
+    else show(current + 1);
+  });
+
+  let touchX = 0;
+  document.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 50) { dx < 0 ? show(current + 1) : show(current - 1); }
+  });
+
+  show(0);
+
+  // --- Ember fire shader ---
+  (function(){
+    const c = document.getElementById('ember-fire');
+    if (!c) return;
+    const gl = c.getContext('webgl');
+    if (!gl) return;
+    const W = 160, H = 160;
+    const FW = Math.floor(0.85 * W), FH = Math.floor(0.85 * H);
+
+    const flameVS = `attribute vec2 position; void main(){gl_Position=vec4(position,0.0,1.0);}`;
+    const flameFS = `
+      precision highp float;
+      const float WIDTH=${FW}.0;
+      const float HEIGHT=${FH}.0;
+      uniform float time,baseR,baseG,baseB,intensity;
+      vec3 mod289(vec3 x){return x-floor(x*(1.0/289.0))*289.0;}vec2 mod289(vec2 x){return x-floor(x*(1.0/289.0))*289.0;}vec3 permute(vec3 x){return mod289(((x*34.0)+1.0)*x);}float snoise(vec2 v){const vec4 C=vec4(0.211324865405187,0.366025403784439,-0.577350269189626,0.024390243902439);vec2 i=floor(v+dot(v,C.yy));vec2 x0=v-i+dot(i,C.xx);vec2 i1;i1=(x0.x>x0.y)?vec2(1.0,0.0):vec2(0.0,1.0);vec4 x12=x0.xyxy+C.xxzz;x12.xy-=i1;i=mod289(i);vec3 p=permute(permute(i.y+vec3(0.0,i1.y,1.0))+i.x+vec3(0.0,i1.x,1.0));vec3 m=max(0.5-vec3(dot(x0,x0),dot(x12.xy,x12.xy),dot(x12.zw,x12.zw)),0.0);m=m*m;m=m*m;vec3 x2=2.0*fract(p*C.www)-1.0;vec3 h=abs(x2)-0.5;vec3 ox=floor(x2+0.5);vec3 a0=x2-ox;m*=1.79284291400159-0.85373472095314*(a0*a0+h*h);vec3 g;g.x=a0.x*x0.x+h.x*x0.y;g.yz=a0.yz*x12.xz+h.yz*x12.yw;return 130.0*dot(m,g);}
+      void main(){
+        float x=gl_FragCoord.x/WIDTH,y=gl_FragCoord.y/WIDTH,gradient=gl_FragCoord.y/HEIGHT;
+        float r=baseR,g=baseG,b=baseB;
+        float noise=snoise(vec2(x/10.0,y/10.0+11.0));
+        noise+=gradient*snoise(vec2(x*2.0,y*2.0+1.5*time));
+        noise+=gradient*snoise(vec2(x*3.0,y*3.0+2.0*time));
+        noise+=gradient*snoise(vec2(x*6.0,y*6.0+3.0*time));
+        noise=max(0.0,noise);
+        g=3.0*noise*gradient;b=noise*gradient/2.0;
+        noise*=(0.3+intensity)*(1.0-gradient);
+        float m=step(gradient*(1.0-intensity),noise);
+        gl_FragColor=vec4(m*r,m*g,m*b,1.0);
+      }`;
+    const blurXVS=`attribute vec2 texPosition;varying vec2 blurTextureCoords[11];uniform float width;void main(){gl_Position=vec4(texPosition,0.0,1.0);vec2 c=texPosition*0.5+0.5;float ps=1.0/width;for(int i=-5;i<=5;i++)blurTextureCoords[i+5]=c+vec2(ps*float(i),0.0);}`;
+    const blurYVS=`attribute vec2 texPosition;varying vec2 blurTextureCoords[11];uniform float height;void main(){gl_Position=vec4(texPosition,0.0,1.0);vec2 c=texPosition*0.5+0.5;float ps=1.0/height;for(int i=-5;i<=5;i++)blurTextureCoords[i+5]=c+vec2(0.0,ps*float(i));}`;
+    const blurFS=`precision highp float;uniform sampler2D texData;varying vec2 blurTextureCoords[11];void main(){vec4 c=vec4(0.0);c+=texture2D(texData,blurTextureCoords[0])*0.0093;c+=texture2D(texData,blurTextureCoords[1])*0.028002;c+=texture2D(texData,blurTextureCoords[2])*0.065984;c+=texture2D(texData,blurTextureCoords[3])*0.121703;c+=texture2D(texData,blurTextureCoords[4])*0.175713;c+=texture2D(texData,blurTextureCoords[5])*0.198596;c+=texture2D(texData,blurTextureCoords[6])*0.175713;c+=texture2D(texData,blurTextureCoords[7])*0.121703;c+=texture2D(texData,blurTextureCoords[8])*0.065984;c+=texture2D(texData,blurTextureCoords[9])*0.028002;c+=texture2D(texData,blurTextureCoords[10])*0.0093;gl_FragColor=c;}`;
+    const brightVS=`attribute vec2 texPosition;varying vec2 texCoord;void main(){texCoord=texPosition;gl_Position=vec4(texPosition*2.0-1.0,0.0,1.0);}`;
+    const brightFS=`precision highp float;varying vec2 texCoord;uniform sampler2D brightData;uniform float bloom;void main(){vec4 c=texture2D(brightData,texCoord);float b=(c.r*0.2126)+(c.g*0.7152)+(c.b*0.0722);gl_FragColor=c*(b*bloom);}`;
+    const combineVS=`attribute vec2 texPosition;varying vec2 texCoord;void main(){texCoord=texPosition;gl_Position=vec4(texPosition*2.0-1.0,0.0,1.0);}`;
+    const combineFS=`precision highp float;varying vec2 texCoord;uniform sampler2D srcData;uniform sampler2D blurData;void main(){gl_FragColor=texture2D(srcData,texCoord)+texture2D(blurData,texCoord);}`;
+
+    function compileS(src,type){const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);return s;}
+    function linkP(vs,fs){const p=gl.createProgram();gl.attachShader(p,compileS(vs,gl.VERTEX_SHADER));gl.attachShader(p,compileS(fs,gl.FRAGMENT_SHADER));gl.linkProgram(p);return p;}
+
+    const flameProg=linkP(flameVS,flameFS),xBlurProg=linkP(blurXVS,blurFS),yBlurProg=linkP(blurYVS,blurFS),brightProg=linkP(brightVS,brightFS),combineProg=linkP(combineVS,combineFS);
+    const vb=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,vb);
+    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,1,-1,-1,1,1,1,-1]),gl.STATIC_DRAW);
+    const posLoc=gl.getAttribLocation(flameProg,'position');
+    gl.enableVertexAttribArray(posLoc);gl.vertexAttribPointer(posLoc,2,gl.FLOAT,false,8,0);
+
+    const uTime=gl.getUniformLocation(flameProg,'time'),uBaseR=gl.getUniformLocation(flameProg,'baseR'),uBaseG=gl.getUniformLocation(flameProg,'baseG'),uBaseB=gl.getUniformLocation(flameProg,'baseB'),uIntensity=gl.getUniformLocation(flameProg,'intensity');
+    const uWidth=gl.getUniformLocation(xBlurProg,'width'),uHeight=gl.getUniformLocation(yBlurProg,'height'),uBloom=gl.getUniformLocation(brightProg,'bloom');
+    const uSrc=gl.getUniformLocation(combineProg,'srcData'),uBlur=gl.getUniformLocation(combineProg,'blurData');
+
+    function makeFBO(){const fb=gl.createFramebuffer();gl.bindFramebuffer(gl.FRAMEBUFFER,fb);const tex=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,tex);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,W,H,0,gl.RGBA,gl.UNSIGNED_BYTE,null);gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,tex,0);return{fb,tex};}
+    const flameFBO=makeFBO(),blurFBOs=[makeFBO(),makeFBO()];
+    let fireTime=0;
+
+    function render(){
+      fireTime-=0.025;
+      gl.bindTexture(gl.TEXTURE_2D,null);gl.activeTexture(gl.TEXTURE0);
+      gl.useProgram(flameProg);gl.uniform1f(uTime,fireTime);gl.uniform1f(uBaseR,0.7);gl.uniform1f(uBaseG,0.0);gl.uniform1f(uBaseB,0.25);gl.uniform1f(uIntensity,0.5);
+      gl.bindFramebuffer(gl.FRAMEBUFFER,flameFBO.fb);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+      gl.useProgram(brightProg);gl.uniform1f(uBloom,50);gl.bindFramebuffer(gl.FRAMEBUFFER,blurFBOs[0].fb);gl.bindTexture(gl.TEXTURE_2D,flameFBO.tex);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+      for(let i=1;i<5;i++){gl.useProgram(xBlurProg);gl.uniform1f(uWidth,FW/(i*3));gl.bindFramebuffer(gl.FRAMEBUFFER,blurFBOs[1].fb);gl.bindTexture(gl.TEXTURE_2D,blurFBOs[0].tex);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);gl.useProgram(yBlurProg);gl.uniform1f(uHeight,FH/(i*3));gl.bindFramebuffer(gl.FRAMEBUFFER,blurFBOs[0].fb);gl.bindTexture(gl.TEXTURE_2D,blurFBOs[1].tex);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);}
+      gl.useProgram(combineProg);gl.bindFramebuffer(gl.FRAMEBUFFER,null);gl.uniform1i(uSrc,0);gl.uniform1i(uBlur,1);gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,flameFBO.tex);gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,blurFBOs[0].tex);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+      requestAnimationFrame(render);
+    }
+    requestAnimationFrame(render);
+  })();
+</script>
+</body>
+</html>

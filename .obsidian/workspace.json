@@ -49,7 +49,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#AI",
+                "query": "元认知",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -70,7 +70,8 @@
               "title": "书签"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -176,11 +177,23 @@
       "bases:新建数据库": false
     }
   },
-  "active": "87c88e76b2989b86",
+  "active": "4b42024966636b0c",
   "lastOpenFiles": [
+    "CLAUDE.md",
+    "content/index.md",
+    "2-explorations/AI镜像陷阱：当创造者只消费AI的产出.md",
+    "1-concepts/溶解与信息熵.md",
+    "2-explorations/AI没有脑干.md",
+    "presentation-v2.html",
+    "2-explorations/从Minecraft到技能编译：人工脑干的实现路径探索.md",
+    "2-explorations/Nested Learning 学习指南：从理解到复现Hope.md",
+    "1-concepts/目标真空假说.md",
+    "1-concepts/进化搜索记忆系统.md",
+    "1-concepts/共享矩阵干扰天花板.md",
+    "1-concepts/多层有损压缩.md",
+    "1-concepts/心跳实验D组：知情助手的溶解模式.md",
     "4-references/VCP记忆系统.md",
     "2-explorations/Claude Code认知架构：从skill系统看LLM的软控制.md",
-    "2-explorations/Nested Learning 学习指南：从理解到复现Hope.md",
     "未命名.base",
     "Nested Learning 学习指南.md",
     "tsconfig.json",
@@ -191,10 +204,8 @@
     "quartz/worker.ts",
     "quartz/util/trace.ts",
     "quartz/util/theme.ts",
-    "quartz/util/sourcemap.ts",
     "quartz/static/og-image.png",
     "quartz/static/icon.png",
-    "content/index.md",
     "1-concepts/噪声鲁棒性与天花板.md",
     "1-concepts/零膨胀陷阱.md",
     "1-concepts/DGD与基底节.md",
@@ -206,16 +217,6 @@
     "1-concepts/默认值运气.md",
     "1-concepts/工程惯性覆盖.md",
     "1-concepts/思考与生成不分.md",
-    "1-concepts/检索抑制.md",
-    "1-concepts/执行层.md",
-    "1-concepts/人工脑干.md",
-    "2-explorations/记忆不是仓库：对当前知识库记忆观的一次总结.md",
-    "1-concepts/可行动状态.md",
-    "CLAUDE.md",
-    "2-explorations/从AI到存在：一次跨域认知探索.md",
-    "1-concepts/知识库元认知.md",
-    "README.md",
-    "1-concepts/记忆写入.md",
     "site/public/favicon.svg",
     "未命名.canvas"
   ]
