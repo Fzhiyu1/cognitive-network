@@ -4,17 +4,31 @@
     "type": "split",
     "children": [
       {
-        "id": "77ccdd3cffce34d6",
+        "id": "e71a6086459ded2d",
         "type": "tabs",
         "children": [
           {
-            "id": "87c88e76b2989b86",
+            "id": "74a4f98c86154b53",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "关系图谱"
+              "type": "markdown",
+              "state": {
+                "file": "0-inbox/进化优化Skill产品设计.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "进化优化Skill产品设计"
             }
           }
         ]
@@ -70,8 +84,7 @@
               "title": "书签"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
@@ -177,8 +190,12 @@
       "bases:新建数据库": false
     }
   },
-  "active": "4b42024966636b0c",
+  "active": "74a4f98c86154b53",
   "lastOpenFiles": [
+    "1-concepts/设计还原闭环.md",
+    "2-explorations/程序化UI还原闭环：从亚像素对齐实践到方法论.md",
+    "1-concepts/进化搜索记忆系统.md",
+    "2-explorations/LLM代码进化实战：从81ms到认知边界.md",
     "CLAUDE.md",
     "content/index.md",
     "2-explorations/AI镜像陷阱：当创造者只消费AI的产出.md",
@@ -188,7 +205,6 @@
     "2-explorations/从Minecraft到技能编译：人工脑干的实现路径探索.md",
     "2-explorations/Nested Learning 学习指南：从理解到复现Hope.md",
     "1-concepts/目标真空假说.md",
-    "1-concepts/进化搜索记忆系统.md",
     "1-concepts/共享矩阵干扰天花板.md",
     "1-concepts/多层有损压缩.md",
     "1-concepts/心跳实验D组：知情助手的溶解模式.md",
@@ -214,9 +230,6 @@
     "2-explorations/从预测到自我：AI、人脑与意识的统一视角.md",
     "3-projects/Nested Learning复现计划.md",
     "1-concepts/反馈累积阈值.md",
-    "1-concepts/默认值运气.md",
-    "1-concepts/工程惯性覆盖.md",
-    "1-concepts/思考与生成不分.md",
     "site/public/favicon.svg",
     "未命名.canvas"
   ]
