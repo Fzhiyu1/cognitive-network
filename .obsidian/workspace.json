@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "0-inbox/进化优化Skill产品设计.md",
+                "file": "4-references/侯世达 - 怪圈与类比.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "进化优化Skill产品设计"
+              "title": "侯世达 - 怪圈与类比"
             }
           }
         ]
@@ -192,6 +192,7 @@
   },
   "active": "74a4f98c86154b53",
   "lastOpenFiles": [
+    "0-inbox/进化优化Skill产品设计.md",
     "1-concepts/设计还原闭环.md",
     "2-explorations/程序化UI还原闭环：从亚像素对齐实践到方法论.md",
     "1-concepts/进化搜索记忆系统.md",
@@ -229,7 +230,6 @@
     "1-concepts/拟合值与拟合原理的分离.md",
     "2-explorations/从预测到自我：AI、人脑与意识的统一视角.md",
     "3-projects/Nested Learning复现计划.md",
-    "1-concepts/反馈累积阈值.md",
     "site/public/favicon.svg",
     "未命名.canvas"
   ]
