@@ -4,6 +4,43 @@
 
 始终使用中文。
 
+---
+
+## AI 协作指引：必读索引 ★
+
+任何 AI 进入本知识库时，**必须先读以下索引文件**以获得"地形感"——这是 [[2026-04-27-kb-index-system]] 工具自动生成的多层级 schema（GraphRAG-inspired）：
+
+| 文件 | 形态 | 大小 | 何时读 |
+|---|---|---|---|
+| `TERRAIN.md` | L3 全局地形 | ~2 KB | **每次必读**（首先） |
+| `INDEX.md` | L1 每卡一行 + 摘要 + 度数 + 簇 | ~25 KB | 定位单卡时按需扫 |
+| `CLUSTERS.md` | L2 主题簇（Leiden 聚类）+ 成员 | ~9 KB | 建立链接 / 创建新卡前必读 |
+| `GRAPH.md` | 拓扑（PageRank / 桥梁 / 孤儿 / 死链）| ~5 KB | meta 分析 / 找结构问题时 |
+
+### 读取策略
+
+| 场景 | 必读 | 按需 |
+|---|---|---|
+| 闲聊 / 单卡操作 | TERRAIN.md | — |
+| 创建新卡 / 整理 inbox | TERRAIN.md | CLUSTERS.md 相关簇段落 |
+| 建立关联 / 修改 wikilink | TERRAIN.md + CLUSTERS.md | GRAPH.md |
+| meta 分析（找空洞 / 合并冗余 / 诊断）| 全读 | INDEX.md |
+
+### 索引更新
+
+- 新建 / 修改卡片后索引可能过期
+- 重新生成：`tools/kb-index/.venv/bin/kb-index update`
+- 全部产物（INDEX/CLUSTERS/GRAPH/TERRAIN.md + KB-GRAPH.html）30ms 重生成
+
+### 工具文档
+
+- spec: `3-projects/2026-04-27-kb-index-system.md`
+- 蓝图: `3-projects/2026-04-27-kb-index-system.html`
+- 视觉化: 跑 `kb-index visualize --open` 看 D3 力导向图
+- 命令清单: `kb-index --help`
+
+---
+
 ## 知识库结构
 
 ```
@@ -45,6 +82,45 @@ tags: [AI, 认知科学]
 - 新领域的内容如果现有标签不覆盖，创建新标签并更新此列表
 - 标签用于Obsidian图谱过滤，不用文件夹区分领域
 
+---
+
+## frontmatter 规范 ★
+
+每张卡（concept / exploration / project / reference）的 frontmatter **必须包含 `summary` 字段**：
+
+```yaml
+---
+tags: [AI, 认知科学]
+summary: 用一句话（≤60 中文字）总结核心观点。中文，不复述标题，不加引号，不加"这张卡讲的是…"前缀。
+---
+```
+
+### 为什么 summary 必填
+
+- 是 [[2026-04-27-kb-index-system]] 的 L1 索引输入
+- 缺失时索引降级到机械抽取（容易抓到元数据行如 `**讨论者**：…`）
+- **写卡时 AI 自行填写**——比工具事后调 API 更精准（带对话语境）
+
+### 写作要求
+
+- ≤60 中文字
+- 不复述卡片标题
+- 不加引号、不加前缀
+- 直接陈述核心观点
+- 强相关的卡可适度提及（如"对偶 [[X]]"），但不强求
+- summary 里加 `[[wikilink]]` OK——会形成"摘要级链接"，让索引自带导航
+
+### 可选字段
+
+- `summary: ...` （**必填**）
+- `tentative: true` （试探性概念，标识需未来验证；详见 [[研究路径结晶化]]）
+- `dormant: true` + `dormant_reason: "..."` （休眠卡，详见 [[substrate做梦]]）
+- `merged_into: <CardName>` （墓碑卡，已被合并）
+
+详见：[[校准的不可外包性]] 在 frontmatter 设计中的体现——AI 自动写 summary 比工具调 API 写更带语境，因为对话当下的判断不可外包。
+
+---
+
 ## 核心规则
 
 ### 1. 对话结束时自动整理
@@ -59,6 +135,11 @@ tags: [AI, 认知科学]
 ### 2. 概念卡片格式（1-concepts/）
 
 ```markdown
+---
+tags: [AI, 认知科学]
+summary: 用一句话（≤60 中文字）总结核心观点。中文，不复述标题。
+---
+
 # 概念名称
 
 **提出者**：谁提出的（fangzhiyu 或外部来源）
@@ -82,6 +163,11 @@ tags: [AI, 认知科学]
 ### 3. 探索文档格式（2-explorations/）
 
 ```markdown
+---
+tags: [AI, 方法论]
+summary: 用一句话（≤60 字）总结这次探索的核心发现。
+---
+
 # 标题
 
 **讨论者**：fangzhiyu & AI模型名称
@@ -102,6 +188,11 @@ tags: [AI, 认知科学]
 ### 4. 项目文档格式（3-projects/）
 
 ```markdown
+---
+tags: [工程, AI]
+summary: 用一句话（≤60 字）总结项目核心。
+---
+
 # 项目名称
 
 **状态**：构想阶段 / 进行中 / 已完成 / 搁置
@@ -115,6 +206,11 @@ tags: [AI, 认知科学]
 ### 5. 参考资料格式（4-references/）
 
 ```markdown
+---
+tags: [AI]
+summary: 用一句话（≤60 字）总结资料的关键内容 + 与本知识库的关系。
+---
+
 # 人物/理论/论文名称
 
 **领域**：所属领域
@@ -134,11 +230,20 @@ tags: [AI, 认知科学]
 
 当用户说"记录一下"或类似指令时：
 
-1. 先读取 `1-concepts/` 目录，了解已有概念
-2. 整理对话内容为探索文档
-3. 识别新概念 → 创建新卡片，或更新已有卡片
-4. 检查所有新文档中的 `[[]]` 链接是否指向真实存在的文件
-5. 如果链接目标不存在，创建对应的概念卡片（至少包含定义）
+1. **先读 TERRAIN.md** 获取地形感（不要直接 ls 1-concepts/——那是降级方式）
+2. 按对话主题查 CLUSTERS.md 找相关簇，确认目标新卡的"邻居"
+3. 整理对话内容为探索文档（**frontmatter 必填 summary**）
+4. 识别新概念 → 创建新卡片（**frontmatter 必填 summary，写卡时立刻填**），或更新已有卡片
+5. 检查所有新文档中的 `[[]]` 链接是否指向真实存在的文件——参照 GRAPH.md 死链段落
+6. 如果链接目标不存在，创建对应的概念卡片（至少包含定义 + summary）
+7. **入库后跑** `tools/kb-index/.venv/bin/kb-index update` 重新生成索引（30ms）
+
+### 7.5 substrate 健康指引
+
+- 写新卡前先 [[当场抽取]] 一下：这个真是新概念，还是已有卡的另一种说法？（避免 substrate bloat）
+- 试探性概念加 `tentative: true`，详见 [[研究路径结晶化]]
+- 老卡内容陈旧但不想删除时加 `dormant: true`，详见 [[substrate做梦]]
+- 警惕 [[substrate噩梦]]：AI 在长会话末尾倾向"过度自指"，发现该信号应停下来 24 小时再回看
 
 ### 8. 避免的事情
 
