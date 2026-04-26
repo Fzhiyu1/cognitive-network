@@ -1,0 +1,25 @@
+[project]
+name = "kb-index"
+version = "0.1.0"
+description = "Knowledge base index generator: 4-layer markdown digest for AI consumption"
+requires-python = ">=3.10"
+dependencies = [
+    "python-igraph>=0.11",
+    "leidenalg>=0.10",
+    "python-frontmatter>=1.1",
+    "typer>=0.12",
+]
+
+[project.optional-dependencies]
+llm = ["anthropic>=0.39"]
+
+[project.scripts]
+kb-index = "kb_index.cli:app"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["kb_index*"]

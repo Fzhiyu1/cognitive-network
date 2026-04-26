@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KB-Index · Engineering Blueprint</title>
+<style>
+/* =========================================================================
+   KB-INDEX SYSTEM — Engineering Blueprint
+   Drawing N° KB-001 | 2026-04-27 | Spec v0.1
+   ========================================================================= */
+
+:root {
+  /* Ink palette (deep blueprint blue) */
+  --ink-0: #060d18;
+  --ink-1: #0a1628;
+  --ink-2: #102236;
+  --ink-3: #18304a;
+  --line:  #2a4565;
+  --line-soft: rgba(95, 211, 197, 0.10);
+  --grid:  rgba(95, 211, 197, 0.045);
+
+  /* Paper (text) */
+  --paper:    #e6ecf2;
+  --paper-2:  #b9c8db;
+  --paper-3:  #7d96b3;
+  --paper-4:  #5a738f;
+
+  /* Accents */
+  --cyan:   #5fd3c5;
+  --cyan-d: #2da496;
+  --amber:  #f0b45c;
+  --rust:   #d77b6c;
+  --green:  #7ec795;
+  --violet: #b690e8;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'PingFang SC', 'Hiragino Sans GB', 'Source Han Sans SC',
+               -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--paper);
+  background: var(--ink-1);
+  background-image:
+    /* 蓝图网格 */
+    linear-gradient(to right, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px),
+    /* 大格 */
+    linear-gradient(to right, rgba(95,211,197,0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(95,211,197,0.07) 1px, transparent 1px),
+    /* 顶部光晕 */
+    radial-gradient(ellipse 100% 60% at 50% 0%, rgba(95, 211, 197, 0.08), transparent 70%);
+  background-size: 24px 24px, 24px 24px, 120px 120px, 120px 120px, 100% 100%;
+  background-attachment: fixed;
+  letter-spacing: 0.01em;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* 噪点叠加 */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='5'/><feColorMatrix values='0 0 0 0 0.4  0 0 0 0 0.5  0 0 0 0 0.6  0 0 0 0.06 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  opacity: 0.6;
+  mix-blend-mode: overlay;
+}
+
+main { position: relative; z-index: 2; }
+
+/* ----- Mono (technical) ----- */
+.mono, code, pre, kbd {
+  font-family: 'SF Mono', 'JetBrains Mono', Menlo, Monaco, 'Cascadia Mono',
+               'Roboto Mono', Consolas, monospace;
+  font-feature-settings: "calt" 0;
+}
+
+/* ============================================================
+   COVER PAGE
+   ============================================================ */
+
+.cover {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: 32px 64px 48px;
+  position: relative;
+  border-bottom: 1px dashed var(--line);
+}
+
+/* 蓝图角标 */
+.corner {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-color: var(--cyan);
+  border-style: solid;
+  border-width: 0;
+  opacity: 0.7;
+}
+.corner.tl { top: 16px;    left: 16px;    border-top-width: 1px;    border-left-width: 1px; }
+.corner.tr { top: 16px;    right: 16px;   border-top-width: 1px;    border-right-width: 1px; }
+.corner.bl { bottom: 16px; left: 16px;    border-bottom-width: 1px; border-left-width: 1px; }
+.corner.br { bottom: 16px; right: 16px;   border-bottom-width: 1px; border-right-width: 1px; }
+
+.cover-meta {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  font-size: 11px;
+  color: var(--paper-3);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.cover-meta .center {
+  font-family: 'SF Mono', Menlo, monospace;
+  color: var(--cyan);
+  font-size: 12px;
+}
+.cover-meta .right { text-align: right; }
+
+.cover-title {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 48px;
+  align-items: end;
+  margin-top: 80px;
+}
+
+.cover-title h1 {
+  font-size: clamp(48px, 8vw, 120px);
+  font-weight: 200;
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  color: var(--paper);
+}
+.cover-title h1 em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--cyan);
+}
+.cover-title h1 .slash {
+  display: inline-block;
+  margin: 0 0.1em;
+  color: var(--paper-4);
+  font-weight: 200;
+}
+
+.cover-subtitle {
+  font-size: 13px;
+  color: var(--paper-2);
+  line-height: 1.6;
+  max-width: 320px;
+  text-align: right;
+}
+.cover-subtitle::before {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: var(--cyan);
+  margin: 0 0 12px auto;
+}
+
+.cover-info {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+  margin-top: auto;
+  padding-top: 48px;
+  border-top: 1px solid var(--line);
+}
+.cover-info .field {
+  font-family: 'SF Mono', Menlo, monospace;
+}
+.cover-info .field .label {
+  font-size: 10px;
+  color: var(--paper-4);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.cover-info .field .value {
+  font-size: 14px;
+  color: var(--paper);
+}
+.cover-info .field .value .sep { color: var(--paper-4); margin: 0 6px; }
+
+.stamp {
+  position: absolute;
+  bottom: 80px;
+  right: 80px;
+  border: 2px solid var(--rust);
+  color: var(--rust);
+  padding: 8px 14px;
+  font-family: 'SF Mono', Menlo, monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  font-weight: 600;
+  transform: rotate(-6deg);
+  opacity: 0.85;
+}
+.stamp .sub {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  opacity: 0.7;
+  margin-top: 2px;
+}
+
+/* ============================================================
+   SECTION COMMON
+   ============================================================ */
+
+section.chapter {
+  padding: 80px 64px;
+  border-bottom: 1px dashed var(--line);
+  position: relative;
+}
+
+.chapter-head {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: 24px;
+  margin-bottom: 48px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.chapter-num {
+  font-family: 'SF Mono', Menlo, monospace;
+  font-size: 13px;
+  color: var(--cyan);
+  letter-spacing: 0.15em;
+}
+.chapter-title {
+  font-size: 28px;
+  font-weight: 300;
+  letter-spacing: -0.01em;
+}
+.chapter-title em {
+  font-style: italic;
+  color: var(--cyan);
+}
+.chapter-tag {
+  font-family: 'SF Mono', Menlo, monospace;
+  font-size: 11px;
+  color: var(--paper-3);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   §01 PROBLEM
+   ============================================================ */
+
+.problem-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 48px;
+}
+
+.problem-statement {
+  font-size: 18px;
+  line-height: 1.65;
+  color: var(--paper);
+  font-weight: 300;
+}
+.problem-statement strong {
+  color: var(--cyan);
+  font-weight: 500;
+}
+.problem-statement em {
+  font-style: italic;
+  color: var(--amber);
+}
+.problem-statement p + p { margin-top: 16px; }
+
+.problem-aside {
+  border-left: 1px solid var(--line);
+  padding-left: 32px;
+}
+.problem-aside h3 {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--paper-3);
+  margin-bottom: 16px;
+}
+.excluded {
+  list-style: none;
+  font-family: 'SF Mono', Menlo, monospace;
+  font-size: 12px;
+}
+.excluded li {
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--line);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: baseline;
+}
+.excluded li::before {
+  content: '✕';
+  color: var(--rust);
+  font-size: 11px;
+}
+.excluded li .why {
+  display: block;
+  color: var(--paper-3);
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+/* ============================================================
+   §02 ARCHITECTURE — main SVG diagram
+   ============================================================ */
+
+.diagram-frame {
+  border: 1px solid var(--line);
+  background: rgba(10, 22, 40, 0.6);
+  padding: 48px 32px 32px;
+  position: relative;
+  margin-bottom: 24px;
+}
+.diagram-frame::before {
+  content: 'FIG. ' attr(data-fig);
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  font-family: 'SF Mono', Menlo, monospace;
+  font-size: 11px;
+  color: var(--cyan);
+  letter-spacing: 0.2em;
+}
+.diagram-frame::after {
+  content: attr(data-caption);
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  font-family: 'SF Mono', Menlo, monospace;
+  font-size: 11px;
+  color: var(--paper-4);
+  letter-spacing: 0.1em;
+}
+
+.diagram-frame svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.diagram-caption {
+  font-family: 'SF Mono', Menlo, monospace;
+  font-size: 11px;
+  color: var(--paper-3);
+  text-align: center;
+  margin-top: 16px;
+  letter-spacing: 0.05em;
+}
+
+/* SVG element styles */
+.svg-text { fill: var(--paper); font-family: 'SF Mono', Menlo, monospace; font-size: 11px; }
+.svg-text-cn { fill: var(--paper); font-family: 'PingFang SC', sans-serif; font-size: 12px; }
+.svg-text-mute { fill: var(--paper-3); font-family: 'SF Mono', Menlo, monospace; font-size: 10px; }
+.svg-text-cyan { fill: var(--cyan); font-family: 'SF Mono', Menlo, monospace; font-size: 11px; }
+.svg-text-amber { fill: var(--amber); font-family: 'SF Mono', Menlo, monospace; font-size: 11px; }
+
+.box-line   { fill: rgba(16, 34, 54, 0.6); stroke: var(--line); stroke-width: 1; }
+.box-cyan   { fill: rgba(95, 211, 197, 0.05); stroke: var(--cyan); stroke-width: 1; }
+.box-amber  { fill: rgba(240, 180, 92, 0.05); stroke: var(--amber); stroke-width: 1; }
+.box-rust   { fill: rgba(215, 123, 108, 0.05); stroke: var(--rust); stroke-width: 1; }
+.box-violet { fill: rgba(182, 144, 232, 0.05); stroke: var(--violet); stroke-width: 1; }
+
+.flow-line { stroke: var(--line); stroke-width: 1; fill: none; }
+.flow-cyan { stroke: var(--cyan); stroke-width: 1.5; fill: none; }
+.flow-cyan-dash { stroke: var(--cyan); stroke-width: 1.5; fill: none; stroke-dasharray: 4 3; }
+
+@keyframes flow {
+  to { stroke-dashoffset: -50; }
+}
+.flow-anim {
+  stroke-dasharray: 4 3;
+  animation: flow 2s linear infinite;
+}
+
+.dim-line { stroke: var(--paper-4); stroke-width: 0.5; stroke-dasharray: 2 2; fill: none; }
+
+/* ============================================================
+   §04 PRODUCTS
+   ============================================================ */
+
+.products {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+.product {
+  border: 1px solid var(--line);
+  padding: 28px;
+  position: relative;
+  background: rgba(16, 34, 54, 0.4);
+  transition: all 0.25s ease;
+}
+.product::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 32px; height: 1px;
+  background: var(--cyan);
+}
+.product:hover {
+  background: rgba(16, 34, 54, 0.7);
+  transform: translateY(-2px);
+}
+.product:hover::before { width: 100%; }
+
+.product .level {
+  font-family: 'SF Mono', Menlo, monospace;
+  font-size: 11px;
+  color: var(--cyan);
+  letter-spacing: 0.2em;
+  margin-bottom: 4px;
+}
+.product .name {
+  font-family: 'SF Mono', Menlo, monospace;
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--paper);
+  margin-bottom: 16px;
+}
+.product .name .ext { color: var(--paper-4); }
+.product .desc {
+  font-size: 13px;
+  color: var(--paper-2);
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+.product .schema {
+  font-family: 'SF Mono', Menlo, monospace;
+  font-size: 11px;
+  background: var(--ink-0);
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  color: var(--paper-2);
+  white-space: pre-wrap;
+  line-height: 1.7;
+  overflow-x: auto;
+}
+.product .schema .k { color: var(--cyan); }
+.product .schema .v { color: var(--amber); }
+.product .schema .c { color: var(--paper-4); }
+.product .schema .s { color: var(--green); }
+
+/* ============================================================
+   §05 ALGORITHMS — decision matrix
+   ============================================================ */
+
+.matrix {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'SF Mono', Menlo, monospace;
+  font-size: 12px;
+}
+.matrix thead th {
+  text-align: left;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--paper-3);
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+  font-weight: 500;
+}
+.matrix tbody td {
+  padding: 14px 16px;
+  border-bottom: 1px dashed var(--line);
+  vertical-align: top;
+}
+.matrix .axis {
+  color: var(--cyan);
+  font-weight: 500;
+}
+.matrix .pick {
+  color: var(--paper);
+  font-weight: 500;
+}
+.matrix .alt {
+  color: var(--paper-4);
+}
+.matrix .why {
+  color: var(--paper-2);
+  line-height: 1.6;
+  font-family: 'PingFang SC', sans-serif;
+  font-size: 12px;
+}
+
+/* ============================================================
+   §06 PHASES
+   ============================================================ */
+
+.phases {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  position: relative;
+}
+.phase {
+  padding: 24px 24px 24px 36px;
+  border: 1px solid var(--line);
+  border-right: none;
+  position: relative;
+  background: rgba(16, 34, 54, 0.4);
+}
+.phase:last-child {
+  border-right: 1px solid var(--line);
+}
+.phase::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 50%;
+  width: 12px; height: 12px;
+  background: var(--ink-1);
+  border: 1px solid var(--cyan);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+.phase .ver {
+  font-family: 'SF Mono', Menlo, monospace;
+  font-size: 11px;
+  color: var(--cyan);
+  letter-spacing: 0.15em;
+  margin-bottom: 4px;
+}
+.phase .name {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+.phase .est {
+  font-family: 'SF Mono', Menlo, monospace;
+  font-size: 11px;
+  color: var(--paper-4);
+  margin-bottom: 14px;
+}
+.phase ul {
+  list-style: none;
+  font-size: 12px;
+  color: var(--paper-2);
+}
+.phase li {
+  padding: 4px 0;
+  padding-left: 18px;
+  position: relative;
+}
+.phase li::before {
+  content: '□';
+  position: absolute;
+  left: 0;
+  color: var(--paper-4);
+  font-size: 10px;
+}
+
+/* ============================================================
+   §07 VERIFICATION
+   ============================================================ */
+
+.verification {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.q {
+  padding: 24px;
+  border: 1px solid var(--line);
+  background: rgba(16, 34, 54, 0.4);
+  font-size: 13px;
+  position: relative;
+}
+.q .qnum {
+  position: absolute;
+  top: 12px; right: 12px;
+  font-family: 'SF Mono', Menlo, monospace;
+  font-size: 11px;
+  color: var(--cyan);
+  opacity: 0.6;
+}
+.q .qtext {
+  color: var(--paper);
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
+.q .qhow {
+  font-family: 'SF Mono', Menlo, monospace;
+  font-size: 11px;
+  color: var(--amber);
+  letter-spacing: 0.05em;
+  border-top: 1px dashed var(--line);
+  padding-top: 12px;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+
+footer {
+  padding: 48px 64px;
+  border-top: 1px dashed var(--line);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  font-family: 'SF Mono', Menlo, monospace;
+  font-size: 11px;
+  color: var(--paper-4);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+footer .center { color: var(--cyan); }
+footer .right { text-align: right; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .cover, section.chapter, footer { padding-left: 24px; padding-right: 24px; }
+  .cover { padding-top: 24px; padding-bottom: 24px; min-height: auto; }
+  .cover-title { grid-template-columns: 1fr; gap: 24px; margin-top: 32px; }
+  .cover-title h1 { font-size: 56px; }
+  .cover-subtitle { text-align: left; max-width: none; }
+  .cover-info { grid-template-columns: 1fr 1fr; gap: 16px; padding-top: 24px; }
+  .stamp { bottom: 24px; right: 24px; }
+  .problem-grid { grid-template-columns: 1fr; gap: 24px; }
+  .problem-aside { border-left: none; border-top: 1px solid var(--line); padding-left: 0; padding-top: 24px; }
+  .products { grid-template-columns: 1fr; }
+  .phases { grid-template-columns: 1fr; }
+  .phase { border-right: 1px solid var(--line); border-bottom: none; }
+  .phase:not(:last-child) { border-bottom: none; }
+  .verification { grid-template-columns: 1fr 1fr; }
+}
+
+/* ============================================================
+   FADE-IN ON SCROLL
+   ============================================================ */
+
+.reveal { opacity: 0; transform: translateY(12px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+</style>
+</head>
+<body>
+
+<main>
+
+<!-- ============================================================
+     COVER
+     ============================================================ -->
+
+<section class="cover">
+  <span class="corner tl"></span>
+  <span class="corner tr"></span>
+  <span class="corner bl"></span>
+  <span class="corner br"></span>
+
+  <header class="cover-meta">
+    <span>方治宇 · Personal Knowledge Lab</span>
+    <span class="center">DRAWING N° KB-001</span>
+    <span class="right">Engineering Blueprint</span>
+  </header>
+
+  <div>
+    <div class="cover-title">
+      <h1>
+        KB<span class="slash">·</span>Index<br>
+        <em>知识库索引系统</em>
+      </h1>
+      <div class="cover-subtitle">
+        让任意 AI 在每次对话中，<br>
+        于 200 行 markdown 内<br>
+        重建 80+ 张概念卡的<strong style="color:var(--cyan)"> 地形感</strong>。
+      </div>
+    </div>
+    <div class="stamp">
+      DRAFT · v0.1
+      <span class="sub">2026.04.27</span>
+    </div>
+  </div>
+
+  <div class="cover-info">
+    <div class="field">
+      <div class="label">Date</div>
+      <div class="value">2026<span class="sep">·</span>04<span class="sep">·</span>27</div>
+    </div>
+    <div class="field">
+      <div class="label">Status</div>
+      <div class="value">设计中 / DESIGN</div>
+    </div>
+    <div class="field">
+      <div class="label">Form</div>
+      <div class="value">Python · ~250 LOC</div>
+    </div>
+    <div class="field">
+      <div class="label">Paradigm</div>
+      <div class="value">GraphRAG-inspired</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     §01 PROBLEM
+     ============================================================ -->
+
+<section class="chapter">
+  <div class="chapter-head">
+    <span class="chapter-num">§01</span>
+    <h2 class="chapter-title"><em>问题</em>陈述 / The Problem</h2>
+    <span class="chapter-tag">RAG · Tacit Topology</span>
+  </div>
+
+  <div class="problem-grid">
+    <div class="problem-statement">
+      <p>
+        知识库已有 <strong>80+ 张卡片</strong>，分布在 5 个目录，用 Obsidian-style
+        <code style="color:var(--cyan)">[[wikilink]]</code> 互联。但 AI 每次进入对话时
+        <em>看不到全貌</em>——只能 <code>ls</code> 看文件名、<code>grep</code> 找几张相关卡，
+        <strong>永远不知道漏掉了什么</strong>。
+      </p>
+      <p>
+        本质上这是 <strong>RAG 的根本短板</strong>：检索是 query-time 的，
+        但人类思考时是<em>全图常驻</em>的。任何记忆系统的全图都不可能完整加载——
+        这是物理限制。能加载的是<em>关于全图的高层摘要</em>。
+      </p>
+      <p>
+        所以正确目标不是"让 AI 看到全图"，而是<strong>让 AI 在每次对话中重建那种地形感</strong>。
+      </p>
+    </div>
+
+    <aside class="problem-aside">
+      <h3>已排除的路径</h3>
+      <ul class="excluded">
+        <li>
+          <span></span>
+          <span>
+            <span class="mono">LangChain · Mem0 · vector DB</span>
+            <span class="why">query-time 检索 + 语义相似 ≠ 概念结构关联</span>
+          </span>
+        </li>
+        <li>
+          <span></span>
+          <span>
+            <span class="mono">Letta / MemGPT</span>
+            <span class="why">为 agent 自主累积设计；与"用户手写、AI 协作"动机相反</span>
+          </span>
+        </li>
+        <li>
+          <span></span>
+          <span>
+            <span class="mono">obsidian-cli (npm)</span>
+            <span class="why">GUI 自动化工具；不解决索引问题</span>
+          </span>
+        </li>
+        <li>
+          <span></span>
+          <span>
+            <span class="mono">Smart Connections / Dataview</span>
+            <span class="why">索引在 Obsidian GUI 进程内，CLI 拿不到</span>
+          </span>
+        </li>
+        <li>
+          <span></span>
+          <span>
+            <span class="mono">Microsoft GraphRAG</span>
+            <span class="why">已有 [[link]] 不需 LLM 抽实体；产物 SQLite ≠ markdown</span>
+          </span>
+        </li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<!-- ============================================================
+     §02 ARCHITECTURE DIAGRAM
+     ============================================================ -->
+
+<section class="chapter">
+  <div class="chapter-head">
+    <span class="chapter-num">§02</span>
+    <h2 class="chapter-title">架构 <em>/ System Architecture</em></h2>
+    <span class="chapter-tag">FIG.01 · 4 LAYERS · 4 CONSUMERS</span>
+  </div>
+
+  <div class="diagram-frame" data-fig="01" data-caption="SCALE 1:1 · DETAIL VIEW">
+    <svg viewBox="0 0 1100 540" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+      <defs>
+        <marker id="arr-cyan" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#5fd3c5"/>
+        </marker>
+        <marker id="arr-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#f0b45c"/>
+        </marker>
+        <marker id="arr-line" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#5a738f"/>
+        </marker>
+      </defs>
+
+      <!-- ===== LANE 1 : VAULT ===== -->
+      <text x="40" y="36" class="svg-text-mute">A — INPUT</text>
+      <line x1="40" y1="44" x2="180" y2="44" class="dim-line"/>
+      <text x="190" y="48" class="svg-text-cyan">VAULT (knowledge-base/)</text>
+
+      <!-- 5 个目录 -->
+      <g>
+        <rect x="40" y="60" width="160" height="50" class="box-line"/>
+        <text x="56" y="82" class="svg-text">0-inbox/</text>
+        <text x="56" y="98" class="svg-text-mute">未整理草稿 · 4 张</text>
+
+        <rect x="220" y="60" width="160" height="50" class="box-line"/>
+        <text x="236" y="82" class="svg-text">1-concepts/</text>
+        <text x="236" y="98" class="svg-text-mute">原子卡 · 61 张</text>
+
+        <rect x="400" y="60" width="160" height="50" class="box-line"/>
+        <text x="416" y="82" class="svg-text">2-explorations/</text>
+        <text x="416" y="98" class="svg-text-mute">长文 · 13 篇</text>
+
+        <rect x="580" y="60" width="160" height="50" class="box-line"/>
+        <text x="596" y="82" class="svg-text">3-projects/</text>
+        <text x="596" y="98" class="svg-text-mute">项目 · 5 个</text>
+
+        <rect x="760" y="60" width="160" height="50" class="box-line"/>
+        <text x="776" y="82" class="svg-text">4-references/</text>
+        <text x="776" y="98" class="svg-text-mute">参考 · 10 项</text>
+      </g>
+
+      <!-- vault → pipeline 的虚线 -->
+      <path d="M 480 110 L 480 160" class="flow-cyan-dash flow-anim" marker-end="url(#arr-cyan)"/>
+
+      <!-- 测量标注 -->
+      <text x="950" y="84" class="svg-text-mute">[[wikilink]]</text>
+      <text x="950" y="100" class="svg-text-amber">234 edges</text>
+
+      <!-- ===== LANE 2 : PIPELINE ===== -->
+      <text x="40" y="166" class="svg-text-mute">B — PIPELINE (kb-index)</text>
+      <line x1="40" y1="174" x2="220" y2="174" class="dim-line"/>
+
+      <rect x="40" y="180" width="1020" height="80" class="box-cyan"/>
+
+      <!-- 6 阶段 -->
+      <g transform="translate(60, 200)">
+        <rect width="130" height="44" class="box-line"/>
+        <text x="65" y="20" text-anchor="middle" class="svg-text-cyan">scan</text>
+        <text x="65" y="34" text-anchor="middle" class="svg-text-mute">mtime · sha</text>
+
+        <rect x="150" width="130" height="44" class="box-line"/>
+        <text x="215" y="20" text-anchor="middle" class="svg-text-cyan">parse</text>
+        <text x="215" y="34" text-anchor="middle" class="svg-text-mute">FM · link</text>
+
+        <rect x="300" width="130" height="44" class="box-line"/>
+        <text x="365" y="20" text-anchor="middle" class="svg-text-cyan">graph</text>
+        <text x="365" y="34" text-anchor="middle" class="svg-text-mute">igraph</text>
+
+        <rect x="450" width="130" height="44" class="box-line"/>
+        <text x="515" y="20" text-anchor="middle" class="svg-text-cyan">cluster</text>
+        <text x="515" y="34" text-anchor="middle" class="svg-text-mute">leiden</text>
+
+        <rect x="600" width="130" height="44" class="box-line"/>
+        <text x="665" y="20" text-anchor="middle" class="svg-text-cyan">topo</text>
+        <text x="665" y="34" text-anchor="middle" class="svg-text-mute">PageRank</text>
+
+        <rect x="750" width="130" height="44" class="box-line"/>
+        <text x="815" y="20" text-anchor="middle" class="svg-text-cyan">summary</text>
+        <text x="815" y="34" text-anchor="middle" class="svg-text-mute">机械 / LLM</text>
+
+        <rect x="900" width="130" height="44" class="box-line"/>
+        <text x="965" y="20" text-anchor="middle" class="svg-text-cyan">render</text>
+        <text x="965" y="34" text-anchor="middle" class="svg-text-mute">.md ×4</text>
+
+        <!-- 阶段间小箭头 -->
+        <line x1="130" y1="22" x2="150" y2="22" class="flow-cyan" marker-end="url(#arr-cyan)"/>
+        <line x1="280" y1="22" x2="300" y2="22" class="flow-cyan" marker-end="url(#arr-cyan)"/>
+        <line x1="430" y1="22" x2="450" y2="22" class="flow-cyan" marker-end="url(#arr-cyan)"/>
+        <line x1="580" y1="22" x2="600" y2="22" class="flow-cyan" marker-end="url(#arr-cyan)"/>
+        <line x1="730" y1="22" x2="750" y2="22" class="flow-cyan" marker-end="url(#arr-cyan)"/>
+        <line x1="880" y1="22" x2="900" y2="22" class="flow-cyan" marker-end="url(#arr-cyan)"/>
+      </g>
+
+      <!-- cache 旁路 -->
+      <path d="M 60 244 Q 60 290 200 290 L 1000 290 Q 1060 290 1060 244" class="flow-line" marker-end="url(#arr-line)" stroke-dasharray="3 3"/>
+      <text x="540" y="305" text-anchor="middle" class="svg-text-mute">.kb-index/cache.json — 增量缓存（mtime + sha 比对，仅重算变更子图）</text>
+
+      <!-- pipeline → products 箭头 -->
+      <path d="M 550 320 L 550 370" class="flow-cyan-dash flow-anim" marker-end="url(#arr-cyan)"/>
+
+      <!-- ===== LANE 3 : PRODUCTS ===== -->
+      <text x="40" y="338" class="svg-text-mute">C — OUTPUT (4 markdown files at vault root)</text>
+      <line x1="40" y1="346" x2="380" y2="346" class="dim-line"/>
+
+      <g>
+        <!-- L3 -->
+        <rect x="40" y="370" width="240" height="100" class="box-amber"/>
+        <text x="56" y="392" class="svg-text-amber">L3 · TERRAIN.md</text>
+        <text x="56" y="412" class="svg-text-mute">全局地形 · 一句话总览</text>
+        <text x="56" y="426" class="svg-text-mute">簇地图 · 标签分布</text>
+        <text x="56" y="440" class="svg-text-mute">~1.5 KB</text>
+        <text x="56" y="460" class="svg-text-cyan">⟵ AI 入场首读</text>
+
+        <!-- L2 -->
+        <rect x="300" y="370" width="240" height="100" class="box-cyan"/>
+        <text x="316" y="392" class="svg-text-cyan">L2 · CLUSTERS.md</text>
+        <text x="316" y="412" class="svg-text-mute">9 个主题簇</text>
+        <text x="316" y="426" class="svg-text-mute">核心节点 + 摘要 + 成员</text>
+        <text x="316" y="440" class="svg-text-mute">~8 KB</text>
+        <text x="316" y="460" class="svg-text-cyan">⟵ 建立链接时</text>
+
+        <!-- GRAPH -->
+        <rect x="560" y="370" width="240" height="100" class="box-cyan"/>
+        <text x="576" y="392" class="svg-text-cyan">GRAPH.md</text>
+        <text x="576" y="412" class="svg-text-mute">PageRank Top · 桥梁</text>
+        <text x="576" y="426" class="svg-text-mute">孤岛 · 死链 · 度数分布</text>
+        <text x="576" y="440" class="svg-text-mute">~4 KB</text>
+        <text x="576" y="460" class="svg-text-cyan">⟵ 拓扑分析时</text>
+
+        <!-- L1 -->
+        <rect x="820" y="370" width="240" height="100" class="box-line"/>
+        <text x="836" y="392" class="svg-text">L1 · INDEX.md</text>
+        <text x="836" y="412" class="svg-text-mute">每卡一行 · 摘要 · 度数</text>
+        <text x="836" y="426" class="svg-text-mute">所属 cluster · 标签</text>
+        <text x="836" y="440" class="svg-text-mute">~30 KB</text>
+        <text x="836" y="460" class="svg-text-mute">⟵ 按需扫读</text>
+      </g>
+
+      <!-- ===== LANE 4 : CONSUMERS ===== -->
+      <path d="M 160 470 L 160 500" class="flow-line" marker-end="url(#arr-line)"/>
+      <path d="M 420 470 L 420 500" class="flow-line" marker-end="url(#arr-line)"/>
+      <path d="M 680 470 L 680 500" class="flow-line" marker-end="url(#arr-line)"/>
+      <path d="M 940 470 L 940 500" class="flow-line" marker-end="url(#arr-line)"/>
+
+      <text x="540" y="514" text-anchor="middle" class="svg-text-cyan">CONSUMERS</text>
+      <text x="540" y="530" text-anchor="middle" class="svg-text-mute">Claude / 任意 AI（CLAUDE.md 指引）  ·  Obsidian (图谱 · Dataview)  ·  Quartz (网站发布)</text>
+    </svg>
+    <div class="diagram-caption">
+      VAULT → PIPELINE → 4 PRODUCTS → CONSUMERS · 单向数据流 · 无写回 vault
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     §03 DATA FLOW DETAIL
+     ============================================================ -->
+
+<section class="chapter">
+  <div class="chapter-head">
+    <span class="chapter-num">§03</span>
+    <h2 class="chapter-title">数据<em>流向</em>详解 / Data Flow</h2>
+    <span class="chapter-tag">FIG.02 · INCREMENTAL UPDATE</span>
+  </div>
+
+  <div class="diagram-frame" data-fig="02" data-caption="INCREMENTAL · CACHE-AWARE">
+    <svg viewBox="0 0 1100 480" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arr-cyan2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#5fd3c5"/>
+        </marker>
+        <marker id="arr-amber2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#f0b45c"/>
+        </marker>
+        <marker id="arr-rust2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+          <path d="M0,0 L10,5 L0,10 z" fill="#d77b6c"/>
+        </marker>
+      </defs>
+
+      <!-- 起点 -->
+      <rect x="20" y="200" width="120" height="60" class="box-line"/>
+      <text x="80" y="226" text-anchor="middle" class="svg-text">vault/*.md</text>
+      <text x="80" y="244" text-anchor="middle" class="svg-text-mute">88 files</text>
+
+      <!-- scan -->
+      <path d="M 140 230 L 200 230" class="flow-cyan flow-anim" marker-end="url(#arr-cyan2)"/>
+      <text x="170" y="222" text-anchor="middle" class="svg-text-mute">scan</text>
+
+      <!-- diamond: changed? -->
+      <polygon points="200,230 240,200 280,230 240,260" class="box-amber"/>
+      <text x="240" y="226" text-anchor="middle" class="svg-text-amber">changed</text>
+      <text x="240" y="240" text-anchor="middle" class="svg-text-amber">?</text>
+
+      <!-- yes branch (top) -->
+      <path d="M 240 200 L 240 130 L 320 130" class="flow-cyan" marker-end="url(#arr-cyan2)"/>
+      <text x="250" y="160" class="svg-text-cyan">yes</text>
+
+      <!-- no branch (bottom) -->
+      <path d="M 240 260 L 240 330 L 320 330" class="flow-line" marker-end="url(#arr-line)"/>
+      <text x="250" y="300" class="svg-text-mute">no</text>
+
+      <!-- parse -->
+      <rect x="320" y="100" width="130" height="60" class="box-cyan"/>
+      <text x="385" y="126" text-anchor="middle" class="svg-text-cyan">parse</text>
+      <text x="385" y="144" text-anchor="middle" class="svg-text-mute">FM + [[link]]</text>
+
+      <!-- cache (no path) -->
+      <rect x="320" y="300" width="130" height="60" class="box-line" stroke-dasharray="3 3"/>
+      <text x="385" y="326" text-anchor="middle" class="svg-text">cache hit</text>
+      <text x="385" y="344" text-anchor="middle" class="svg-text-mute">skip</text>
+
+      <!-- merge -->
+      <path d="M 450 130 L 510 130 L 510 230" class="flow-cyan" />
+      <path d="M 450 330 L 510 330 L 510 230" class="flow-line" stroke-dasharray="3 3"/>
+
+      <!-- graph build -->
+      <rect x="510" y="200" width="140" height="60" class="box-cyan"/>
+      <text x="580" y="222" text-anchor="middle" class="svg-text-cyan">build graph</text>
+      <text x="580" y="240" text-anchor="middle" class="svg-text-mute">node + edge</text>
+
+      <!-- arrow to cluster -->
+      <path d="M 650 230 L 700 230" class="flow-cyan flow-anim" marker-end="url(#arr-cyan2)"/>
+
+      <!-- cluster (Leiden) -->
+      <rect x="700" y="200" width="140" height="60" class="box-amber"/>
+      <text x="770" y="222" text-anchor="middle" class="svg-text-amber">leiden</text>
+      <text x="770" y="240" text-anchor="middle" class="svg-text-mute">community</text>
+
+      <!-- topology -->
+      <path d="M 770 200 L 770 150 L 880 150" class="flow-cyan" marker-end="url(#arr-cyan2)"/>
+      <rect x="880" y="120" width="140" height="60" class="box-cyan"/>
+      <text x="950" y="142" text-anchor="middle" class="svg-text-cyan">PageRank</text>
+      <text x="950" y="160" text-anchor="middle" class="svg-text-mute">topology</text>
+
+      <!-- summary -->
+      <path d="M 770 260 L 770 310 L 880 310" class="flow-cyan flow-anim" marker-end="url(#arr-cyan2)"/>
+      <rect x="880" y="280" width="140" height="60" class="box-amber"/>
+      <text x="950" y="302" text-anchor="middle" class="svg-text-amber">summary</text>
+      <text x="950" y="320" text-anchor="middle" class="svg-text-mute">machine | LLM</text>
+
+      <!-- LLM 旁路 -->
+      <rect x="700" y="380" width="140" height="50" class="box-violet"/>
+      <text x="770" y="404" text-anchor="middle" style="fill:#b690e8" class="mono">claude haiku 4.5</text>
+      <text x="770" y="420" text-anchor="middle" class="svg-text-mute">opt-in · 簇变更才调用</text>
+      <path d="M 770 380 L 770 350 L 880 340" class="flow-cyan" stroke-dasharray="3 3" marker-end="url(#arr-cyan2)"/>
+
+      <!-- merge & render -->
+      <path d="M 1020 150 L 1060 150 L 1060 230" class="flow-cyan"/>
+      <path d="M 1020 310 L 1060 310 L 1060 230" class="flow-cyan"/>
+
+      <!-- render -->
+      <rect x="990" y="200" width="100" height="60" class="box-rust"/>
+      <text x="1040" y="222" text-anchor="middle" style="fill:#d77b6c" class="mono">render</text>
+      <text x="1040" y="240" text-anchor="middle" class="svg-text-mute">.md × 4</text>
+
+      <!-- write back to vault -->
+      <path d="M 1040 260 L 1040 440 L 80 440 L 80 260" class="flow-cyan-dash flow-anim" marker-end="url(#arr-cyan2)"/>
+      <text x="540" y="455" text-anchor="middle" class="svg-text-cyan">写回 vault 根目录：INDEX.md · CLUSTERS.md · GRAPH.md · TERRAIN.md</text>
+
+      <!-- annotation: cache write -->
+      <text x="1040" y="290" text-anchor="middle" class="svg-text-mute">+ cache.json</text>
+    </svg>
+    <div class="diagram-caption">
+      节流：仅变更文件重 parse；簇成员未动则跳过 LLM；图重建增量 / 5% 触发全量
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     §04 PRODUCTS DETAIL
+     ============================================================ -->
+
+<section class="chapter">
+  <div class="chapter-head">
+    <span class="chapter-num">§04</span>
+    <h2 class="chapter-title">产物 <em>/ Four Markdowns</em></h2>
+    <span class="chapter-tag">L1 · L2 · L3 · TOPOLOGY</span>
+  </div>
+
+  <div class="products">
+    <div class="product">
+      <div class="level">L1 · CARD ROSTER</div>
+      <div class="name">INDEX<span class="ext">.md</span></div>
+      <div class="desc">每张卡片一行：标题 · 一句话摘要 · 入度/出度 · 标签 · 所属簇。AI 按需扫读，定位单卡。</div>
+      <pre class="schema">
+<span class="c"># 知识库索引（L1）</span>
+
+## 1-concepts/ (61 张)
+
+<span class="k">- [[AI镜像效应]]</span> :: <span class="v">AI 产出本质上是用户自身想法的镜像反射</span>
+  :: <span class="s">in=8 out=3</span> :: #AI #哲学 :: cluster=<span class="s">C-AI镜像效应</span>
+
+<span class="k">- [[校准的不可外包性]]</span> :: <span class="v">品味通过"接受/拒绝/修改"积累...</span>
+  :: <span class="s">in=2 out=4</span> :: #AI #认知科学 :: cluster=<span class="s">C-AI镜像效应</span>
+...</pre>
+    </div>
+
+    <div class="product">
+      <div class="level">L2 · TOPIC CLUSTERS</div>
+      <div class="name">CLUSTERS<span class="ext">.md</span></div>
+      <div class="desc">Leiden 算法识别的主题簇。每簇含核心节点 (PageRank top) · 主题摘要 · 成员列表。建立新链接时必读。</div>
+      <pre class="schema">
+<span class="c"># 知识库聚类（L2）</span>
+
+## C-AI镜像效应：AI 与人类协作簇 (8 张)
+
+<span class="k">核心节点</span>：[[AI镜像效应]] [[校准的不可外包性]]
+
+<span class="k">主题</span>：人在 AI 时代的认知校准、品味形成、协作陷阱。
+
+<span class="k">成员</span>：
+- [[AI镜像效应]] (PR=<span class="v">0.042</span>)
+- [[校准的不可外包性]] (PR=<span class="v">0.018</span>)
+...</pre>
+    </div>
+
+    <div class="product">
+      <div class="level">TOPOLOGY · GRAPH ANALYSIS</div>
+      <div class="name">GRAPH<span class="ext">.md</span></div>
+      <div class="desc">中心节点 · 桥梁卡 · 孤岛 · 死链 · 度数分布。识别"动到中心节点"或"链接断裂"时使用。</div>
+      <pre class="schema">
+<span class="c"># 知识库拓扑</span>
+
+## 中心节点 (PageRank Top 15)
+| 卡片            | PR      | in | out |
+|-----------------|---------|----|----|
+| <span class="k">[[AI镜像效应]]</span>   | <span class="v">0.0421</span>  | 8  | 3  |
+| <span class="k">[[多层有损压缩]]</span>  | <span class="v">0.0378</span>  | 4  | 2  |
+
+## 桥梁卡片
+- <span class="k">[[知识即结构]]</span>：连接 C1 + C5
+- <span class="k">[[自由能原理]]</span>：连接 C1 + C3 + C7
+
+## 孤岛 / 死链
+...</pre>
+    </div>
+
+    <div class="product">
+      <div class="level">L3 · GLOBAL TERRAIN</div>
+      <div class="name">TERRAIN<span class="ext">.md</span></div>
+      <div class="desc">最高层级地形图。AI 入场首读。一句话总览 + 簇地图 + 结构观察 + 标签分布。~1.5 KB，永远塞得进上下文。</div>
+      <pre class="schema">
+<span class="c"># 知识库地形图（L3）</span>
+
+## 一句话总览
+<span class="v">87 张卡片，9 个主题簇，密度 0.062，模块度 0.71。
+主流：AI 与认知 38% · 记忆系统 24% · 工程 18%。</span>
+
+## 结构观察
+- <span class="k">密度过高</span>：C1 内部链接密集，可能存在概念冗余
+- <span class="k">密度过低</span>：C4 大量孤儿卡，需补关联
+- <span class="k">关键桥梁</span>：[[知识即结构]] [[自由能原理]]
+- <span class="k">新增热区</span>：C2 近 30 天 +5 张
+...</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     §05 ALGORITHM DECISIONS
+     ============================================================ -->
+
+<section class="chapter">
+  <div class="chapter-head">
+    <span class="chapter-num">§05</span>
+    <h2 class="chapter-title">算法<em>选择</em> / Decision Matrix</h2>
+    <span class="chapter-tag">8 KEY CHOICES</span>
+  </div>
+
+  <table class="matrix">
+    <thead>
+      <tr>
+        <th style="width: 16%">维度 / Axis</th>
+        <th style="width: 18%">选择 / Pick</th>
+        <th style="width: 22%">备选 / Alternatives</th>
+        <th>理由 / Rationale</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="axis">聚类算法</td>
+        <td class="pick">Leiden</td>
+        <td class="alt">Louvain · Label Propagation · 谱聚类 · 连通分量</td>
+        <td class="why">Leiden（Traag 2019）是 Louvain 改进版，保证社区内连通性，避免"badly connected community"问题。80+ 节点毫秒级完成。</td>
+      </tr>
+      <tr>
+        <td class="axis">图库</td>
+        <td class="pick">python-igraph</td>
+        <td class="alt">networkx · graph-tool</td>
+        <td class="why">igraph 性能远好于 networkx；leidenalg 是 igraph 生态原生包；安装无 C++ 编译开销。</td>
+      </tr>
+      <tr>
+        <td class="axis">摘要生成</td>
+        <td class="pick">机械 + 可选 LLM</td>
+        <td class="alt">仅机械 · 仅 LLM</td>
+        <td class="why">默认零依赖（卡摘 = 第一段；簇摘 = top-3 节点标题）；<code>--with-llm</code> 模式用 Claude Haiku 4.5 增强，~10 簇 × 1 调用 ≈ ¥0.001/次。</td>
+      </tr>
+      <tr>
+        <td class="axis">产物格式</td>
+        <td class="pick">Markdown × 4</td>
+        <td class="alt">JSON · SQLite · parquet</td>
+        <td class="why">人类 + AI + Obsidian + Quartz 多端可读。AI 不需要查询语言，肉眼+正则即可。</td>
+      </tr>
+      <tr>
+        <td class="axis">产物位置</td>
+        <td class="pick">vault 根目录</td>
+        <td class="alt">.kb-index/ 隐藏目录</td>
+        <td class="why">让 Obsidian 图谱能索引到、Quartz 能发布。零侵入 Obsidian 工作流。</td>
+      </tr>
+      <tr>
+        <td class="axis">簇命名</td>
+        <td class="pick">PageRank 顶点锚定</td>
+        <td class="alt">C1/C2 序号 · UUID</td>
+        <td class="why">重跑稳定（簇号 = <code>C-AI镜像效应</code>），避免每次跑 Leiden 后 C1↔C2 洗牌。可作为知识库内的稳定 ID。</td>
+      </tr>
+      <tr>
+        <td class="axis">触发方式</td>
+        <td class="pick">手动 + git hook</td>
+        <td class="alt">watch · 实时索引 · 服务进程</td>
+        <td class="why">简单可靠。git pre-commit 提交时自动更新索引并 stage 4 个产物文件。</td>
+      </tr>
+      <tr>
+        <td class="axis">语言 / 运行时</td>
+        <td class="pick">Python 3.11+</td>
+        <td class="alt">Node · Rust · Go</td>
+        <td class="why">用户已有 Python 生态（meomory）。leidenalg / igraph / anthropic SDK 全 Python 一等公民。</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================================================
+     §06 PHASES
+     ============================================================ -->
+
+<section class="chapter">
+  <div class="chapter-head">
+    <span class="chapter-num">§06</span>
+    <h2 class="chapter-title">实施<em>阶段</em> / Implementation Phases</h2>
+    <span class="chapter-tag">3 ITERATIONS · ~3 DAYS</span>
+  </div>
+
+  <div class="phases">
+    <div class="phase">
+      <div class="ver">V0.1</div>
+      <div class="name">最小可用</div>
+      <div class="est">≈ 1 day · ~150 LOC</div>
+      <ul>
+        <li>解析 + 图构建</li>
+        <li>Leiden 聚类</li>
+        <li>4 个 .md 机械生成</li>
+        <li>CLI: build / update</li>
+        <li>全量模式</li>
+      </ul>
+    </div>
+    <div class="phase">
+      <div class="ver">V0.2</div>
+      <div class="name">增量 + LLM</div>
+      <div class="est">≈ 1 day · +80 LOC</div>
+      <ul>
+        <li>cache.json 增量</li>
+        <li>LLM 摘要（簇 + 全局）</li>
+        <li>--with-llm / doctor</li>
+        <li>CLAUDE.md 协作指引</li>
+      </ul>
+    </div>
+    <div class="phase">
+      <div class="ver">V0.3</div>
+      <div class="name">体感打磨</div>
+      <div class="est">≈ 1 day · +20 LOC</div>
+      <ul>
+        <li>git pre-commit hook</li>
+        <li>用真实 Claude 跑验证</li>
+        <li>调整摘要格式 / 字段</li>
+      </ul>
+    </div>
+    <div class="phase">
+      <div class="ver">V1.0</div>
+      <div class="name">稳定</div>
+      <div class="est">— · 格式冻结</div>
+      <ul>
+        <li>4 产物格式冻结</li>
+        <li>文档完整</li>
+        <li>跨 vault 跑通</li>
+        <li>kb-consolidation 验证</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     §07 VERIFICATION
+     ============================================================ -->
+
+<section class="chapter">
+  <div class="chapter-head">
+    <span class="chapter-num">§07</span>
+    <h2 class="chapter-title">体感<em>验证</em> / Acceptance</h2>
+    <span class="chapter-tag">FULL CONTEXT TEST</span>
+  </div>
+
+  <p style="margin-bottom: 28px; color: var(--paper-2); font-size: 14px; line-height: 1.7;">
+    最关键的不是单元测试，而是<strong style="color:var(--cyan)">体感验证</strong>：
+    让一个全新对话的 Claude 进入知识库，<em style="color:var(--amber)">只读 TERRAIN.md + INDEX.md</em>，
+    回答以下 4 个问题。<strong>4 题中至少 3 题正确</strong>，且不需要再 grep / ls 才能答出——
+    通过。
+  </p>
+
+  <div class="verification">
+    <div class="q">
+      <div class="qnum">Q1</div>
+      <div class="qtext">"知识库里和『AI 镜像效应』相关的卡片有哪些？"</div>
+      <div class="qhow">→ 应能正确列出 C-AI镜像效应 簇成员</div>
+    </div>
+    <div class="q">
+      <div class="qnum">Q2</div>
+      <div class="qtext">"我想加一张关于『品味的不可外包性』的卡，会和已有什么卡片冲突或重复？"</div>
+      <div class="qhow">→ 应能识别 [[校准的不可外包性]]</div>
+    </div>
+    <div class="q">
+      <div class="qnum">Q3</div>
+      <div class="qtext">"知识库里哪片最稀疏，需要补充？"</div>
+      <div class="qhow">→ 应从 TERRAIN §结构观察 答出</div>
+    </div>
+    <div class="q">
+      <div class="qnum">Q4</div>
+      <div class="qtext">"[[多层有损压缩]] 删除会断哪些链？"</div>
+      <div class="qhow">→ 应从 GRAPH 答出 backlinks</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     §08 RISKS
+     ============================================================ -->
+
+<section class="chapter">
+  <div class="chapter-head">
+    <span class="chapter-num">§08</span>
+    <h2 class="chapter-title">风险<em>与权衡</em> / Risks &amp; Tradeoffs</h2>
+    <span class="chapter-tag">5 IDENTIFIED · MITIGATED</span>
+  </div>
+
+  <table class="matrix">
+    <thead>
+      <tr>
+        <th style="width: 30%">风险 / Risk</th>
+        <th style="width: 18%">影响 / Impact</th>
+        <th>缓解 / Mitigation</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="axis">Leiden 簇号洗牌</td>
+        <td class="alt">AI 看到的 cluster ID 跨次不一致</td>
+        <td class="why">簇号锚定 PageRank 顶点的卡片名（<code>C-AI镜像效应</code>），不用 C1/C2 序号。重跑稳定。</td>
+      </tr>
+      <tr>
+        <td class="axis">LLM 摘要漂移</td>
+        <td class="alt">TERRAIN.md 风格跨次不一致</td>
+        <td class="why">摘要 hash 比对：簇成员未变 + 输入 hash 未变 → 跳过 LLM 调用，复用上次结果。</td>
+      </tr>
+      <tr>
+        <td class="axis">产物被 Quartz 公网发布</td>
+        <td class="alt">隐私泄漏（如有内部卡片）</td>
+        <td class="why">TERRAIN.md frontmatter 加 <code>draft: true</code>，或加入 quartz <code>ignorePatterns</code>。</td>
+      </tr>
+      <tr>
+        <td class="axis">卡片量到 500+ 时 INDEX 超长</td>
+        <td class="alt">AI 上下文塞不下</td>
+        <td class="why">按 cluster 拆分 INDEX_*.md，AI 按需读分片；TERRAIN 永远精简（&lt; 2 KB）。</td>
+      </tr>
+      <tr>
+        <td class="axis">Wikilink 写法不一致</td>
+        <td class="alt">死链误报、链接漏算</td>
+        <td class="why">解析器规范化：支持 <code>[[A]]</code> · <code>[[A.md]]</code> · <code>[[A|alias]]</code> · <code>[[A#section]]</code>。</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+
+<footer>
+  <span>方治宇 · Personal Knowledge Lab</span>
+  <span class="center">END OF DRAWING · KB-001 · v0.1</span>
+  <span class="right">2026.04.27 · DRAFT</span>
+</footer>
+
+</main>
+
+<script>
+// 进入视口时 fade-in
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add('visible');
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('section.chapter, .product, .phase, .q').forEach(el => {
+  el.classList.add('reveal');
+  io.observe(el);
+});
+</script>
+
+</body>
+</html>

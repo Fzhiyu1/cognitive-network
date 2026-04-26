@@ -10,3 +10,11 @@ tsconfig.tsbuildinfo
 private/
 .replit
 replit.nix
+
+# kb-index 工具相关
+tools/kb-index/.venv/
+tools/kb-index/**/__pycache__/
+tools/kb-index/**/*.egg-info/
+tools/kb-index/build/
+tools/kb-index/dist/
+.kb-index/
