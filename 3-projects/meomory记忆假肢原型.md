@@ -1,5 +1,8 @@
 ---
-tags: [AI, 工程]
+tags:
+- AI
+- 工程
+summary: DGD矩阵从Nested Learning拆出做被动激活记忆模块，进化暴露[[适应度幻觉]]，搭子集成验证窄定位
 ---
 
 # meomory 记忆假肢原型

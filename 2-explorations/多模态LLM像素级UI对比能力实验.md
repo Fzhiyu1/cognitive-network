@@ -1,11 +1,15 @@
 ---
-tags: [AI, 工程, 实验]
+tags:
+- AI
+- 工程
+- 实验
 date: 2026-04-07
 status: completed
-related: 
-  - "[[Claude Code认知架构：从skill系统看LLM的软控制]]"
-  - "[[可观测性]]"
-  - "[[噪声鲁棒性与天花板]]"
+related:
+- '[[Claude Code认知架构：从skill系统看LLM的软控制]]'
+- '[[可观测性]]'
+- '[[噪声鲁棒性与天花板]]'
+summary: 多模态能感知差异存在与变化趋势，但方向判断不可靠，无法替代人工像素对齐。
 ---
 
 # 多模态 LLM 像素级 UI 对比能力实验

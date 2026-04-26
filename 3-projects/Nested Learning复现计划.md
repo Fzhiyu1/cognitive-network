@@ -1,3 +1,7 @@
+---
+summary: Mac 上六阶段复现 Hope 架构的项目卡，双轨：完整论文复现 vs 应用优先（CMS+Titans 做记忆激活层）。
+---
+
 # Nested Learning 复现计划
 
 **状态**：未开始

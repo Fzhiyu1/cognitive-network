@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "4-references/侯世达 - 怪圈与类比.md",
+                "file": "1-concepts/超级个体公式.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,10 +28,35 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "侯世达 - 怪圈与类比"
+              "title": "超级个体公式"
+            }
+          },
+          {
+            "id": "ffb1a453df9a698c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "0-inbox/进化优化Skill产品设计.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "进化优化Skill产品设计"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -63,7 +88,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "元认知",
+                "query": "压缩",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -190,46 +215,45 @@
       "bases:新建数据库": false
     }
   },
-  "active": "74a4f98c86154b53",
+  "active": "ffb1a453df9a698c",
   "lastOpenFiles": [
-    "0-inbox/进化优化Skill产品设计.md",
-    "1-concepts/设计还原闭环.md",
-    "2-explorations/程序化UI还原闭环：从亚像素对齐实践到方法论.md",
-    "1-concepts/进化搜索记忆系统.md",
-    "2-explorations/LLM代码进化实战：从81ms到认知边界.md",
-    "CLAUDE.md",
-    "content/index.md",
-    "2-explorations/AI镜像陷阱：当创造者只消费AI的产出.md",
-    "1-concepts/溶解与信息熵.md",
-    "2-explorations/AI没有脑干.md",
-    "presentation-v2.html",
-    "2-explorations/从Minecraft到技能编译：人工脑干的实现路径探索.md",
-    "2-explorations/Nested Learning 学习指南：从理解到复现Hope.md",
-    "1-concepts/目标真空假说.md",
-    "1-concepts/共享矩阵干扰天花板.md",
-    "1-concepts/多层有损压缩.md",
-    "1-concepts/心跳实验D组：知情助手的溶解模式.md",
+    "0-inbox/2026-04-27-末段AI主体感偏离观察.md",
+    "4-references/Nested Learning_ The Illusion of Deep Learning Architectures.pdf",
+    "1-concepts/级联爆发.md",
+    "2-explorations/事件驱动的substrate：从时间投射到反应式代谢.md",
+    "1-concepts/substrate噩梦.md",
+    "1-concepts/潜伏层.md",
+    "2-explorations/六面归一：5个项目其实是1个项目.md",
+    "1-concepts/研究路径结晶化.md",
+    "1-concepts/substrate做梦.md",
+    "2-explorations/substrate会做梦：从整体诊断认出记忆巩固机制.md",
+    "tools/kb-index/kb_index/llm.py",
+    "KB-GRAPH.html",
+    "tools/kb-index/kb_index/__pycache__/visualize.cpython-314.pyc",
+    "tools/kb-index/kb_index/visualize.py",
+    "1-concepts/知识库飞轮.md",
+    "1-concepts/显式化爆发.md",
+    "1-concepts/涌现接力.md",
+    "1-concepts/当场抽取.md",
+    "1-concepts/校准的不可外包性.md",
+    "2-explorations/涌现的解剖：meomory诞生考古.md",
+    "4-references/Harry - cogg 设计者.md",
+    "4-references/DeepSeek Engram - 条件记忆.md",
+    "4-references/Engram - Conditional Memory via Scalable Lookup.pdf",
+    "2-explorations/从知乎私信到 cogg 完整复现.md",
+    "1-concepts/短期实验误导.md",
+    "4-references/Think-No-Think 范式与检索抑制.md",
+    "4-references/Karl Friston - 自由能原理.md",
+    "4-references/Joseph LeDoux - 恐惧双通路.md",
+    "4-references/联想记忆谱系.md",
     "4-references/VCP记忆系统.md",
-    "2-explorations/Claude Code认知架构：从skill系统看LLM的软控制.md",
+    "1-concepts/多层有损压缩.md",
+    "presentation-v2.html",
     "未命名.base",
-    "Nested Learning 学习指南.md",
     "tsconfig.json",
     "site/src/lib/graph-theme.ts",
-    "site/src/lib/graph-theme.test.ts",
-    "site/src/lib/graph-focus.ts",
-    "site/src/lib/graph-focus.test.ts",
-    "quartz/worker.ts",
-    "quartz/util/trace.ts",
-    "quartz/util/theme.ts",
     "quartz/static/og-image.png",
     "quartz/static/icon.png",
-    "1-concepts/噪声鲁棒性与天花板.md",
-    "1-concepts/零膨胀陷阱.md",
-    "1-concepts/DGD与基底节.md",
-    "1-concepts/CMS实现辨析.md",
-    "1-concepts/拟合值与拟合原理的分离.md",
-    "2-explorations/从预测到自我：AI、人脑与意识的统一视角.md",
-    "3-projects/Nested Learning复现计划.md",
     "site/public/favicon.svg",
     "未命名.canvas"
   ]

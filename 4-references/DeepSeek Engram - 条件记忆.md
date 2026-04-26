@@ -1,5 +1,8 @@
 ---
-tags: [AI, 工程]
+tags:
+- AI
+- 工程
+summary: Engram 论文的工程结论——异步预取/多级缓存/上下文门控，从纯工程路径独立验证 [[前意识激活层]]。
 ---
 
 # DeepSeek Engram — 条件记忆

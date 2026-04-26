@@ -1,5 +1,9 @@
 ---
-tags: [AI, 实验, 愿景]
+tags:
+- AI
+- 实验
+- 愿景
+summary: 把 Ember 改造为 LLM 进化可读行为代码的 ALife 生态，点击任意生物可透视它的代码 DNA
 ---
 
 # LLM 驱动的人工生命

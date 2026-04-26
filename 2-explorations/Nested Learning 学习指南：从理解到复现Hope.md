@@ -1,5 +1,10 @@
 ---
-tags: [AI, 工程, 记忆, 复现]
+tags:
+- AI
+- 工程
+- 记忆
+- 复现
+summary: Hope 架构的工程级复现指南：DGD/CMS/自修改 Titans 五个核心概念 + Mac 上 100M 内的复现路线图。
 ---
 
 # Nested Learning 学习指南：从理解到复现 Hope

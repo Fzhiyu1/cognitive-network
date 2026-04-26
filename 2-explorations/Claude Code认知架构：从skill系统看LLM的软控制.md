@@ -1,5 +1,9 @@
 ---
-tags: [AI, 认知科学, 工程]
+tags:
+- AI
+- 认知科学
+- 工程
+summary: 从 skill 系统的两层加载机制反推 LLM 软控制本质，落到"没有前额叶的皮层"的结构性诊断。
 ---
 
 # Claude Code认知架构：从skill系统看LLM的软控制

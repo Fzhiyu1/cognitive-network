@@ -1,5 +1,8 @@
 ---
-tags: [AI, 工程]
+tags:
+- AI
+- 工程
+summary: 图拓扑+脉冲传播路线的 Agent 记忆实现，AgentDream 睡眠巩固已落地；可与 meomory DGD 互补叠加。
 ---
 
 # VCP 记忆系统

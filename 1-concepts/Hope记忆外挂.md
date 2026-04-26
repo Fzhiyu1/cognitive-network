@@ -1,5 +1,8 @@
 ---
-tags: [AI, 工程]
+tags:
+- AI
+- 工程
+summary: 给冻结的主 LLM 外接小型 Hope 模型当海马体，用 DGD 在线学习做会越用越准的激活层。
 ---
 
 # Hope 记忆外挂
