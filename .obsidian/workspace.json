@@ -37,7 +37,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "0-inbox/进化优化Skill产品设计.md",
+                "file": "2-explorations/AI没有脑干.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -52,7 +52,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "进化优化Skill产品设计"
+              "title": "AI没有脑干"
             }
           }
         ],
@@ -88,7 +88,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "压缩",
+                "query": "tag:认知科学",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -109,7 +109,8 @@
               "title": "书签"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -215,8 +216,24 @@
       "bases:新建数据库": false
     }
   },
-  "active": "ffb1a453df9a698c",
+  "active": "4b42024966636b0c",
   "lastOpenFiles": [
+    "2-explorations/lens-wake首次运行-元认知循环的实例化.md",
+    "1-concepts/失败可见性.md",
+    "3-projects/形状记忆系统.md",
+    "3-projects/SAE特征激活观测实验.md",
+    "2-explorations/人工脑干：从目标真空到RL+LLM双系统架构.md",
+    "1-concepts/自由能原理.md",
+    "1-concepts/多层有损压缩.md",
+    "2-explorations/从Token轨迹到工作状态：AI原生工作流的三口径观察.md",
+    "2-explorations/从探索工作流到AI记忆系统：外置工作记忆的一个原型.md",
+    "2-explorations/从记忆理论到状态恢复：meomory原型的设计基础.md",
+    "2-explorations/程序化UI还原闭环：从亚像素对齐实践到方法论.md",
+    "4-references/VCP记忆系统.md",
+    "1-concepts/元进化.md",
+    "CLUSTERS.md",
+    "GRAPH.md",
+    "0-inbox/进化优化Skill产品设计.md",
     "0-inbox/2026-04-27-末段AI主体感偏离观察.md",
     "4-references/Nested Learning_ The Illusion of Deep Learning Architectures.pdf",
     "1-concepts/级联爆发.md",
@@ -232,22 +249,7 @@
     "tools/kb-index/kb_index/__pycache__/visualize.cpython-314.pyc",
     "tools/kb-index/kb_index/visualize.py",
     "1-concepts/知识库飞轮.md",
-    "1-concepts/显式化爆发.md",
-    "1-concepts/涌现接力.md",
-    "1-concepts/当场抽取.md",
-    "1-concepts/校准的不可外包性.md",
-    "2-explorations/涌现的解剖：meomory诞生考古.md",
-    "4-references/Harry - cogg 设计者.md",
-    "4-references/DeepSeek Engram - 条件记忆.md",
     "4-references/Engram - Conditional Memory via Scalable Lookup.pdf",
-    "2-explorations/从知乎私信到 cogg 完整复现.md",
-    "1-concepts/短期实验误导.md",
-    "4-references/Think-No-Think 范式与检索抑制.md",
-    "4-references/Karl Friston - 自由能原理.md",
-    "4-references/Joseph LeDoux - 恐惧双通路.md",
-    "4-references/联想记忆谱系.md",
-    "4-references/VCP记忆系统.md",
-    "1-concepts/多层有损压缩.md",
     "presentation-v2.html",
     "未命名.base",
     "tsconfig.json",
