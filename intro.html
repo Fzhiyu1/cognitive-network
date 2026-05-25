@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cognitive Network · 一个会自己长出形状的知识库</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700;900&family=JetBrains+Mono:wght@300;400;500&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --paper: #0d0b08;
+    --paper-2: #14110c;
+    --ink: #ece6d6;
+    --ink-dim: #8a8273;
+    --ink-mute: #4a4538;
+    --ink-faint: #2a261f;
+    --amber: #c4883c;
+    --amber-2: #e8a956;
+    --amber-glow: rgba(196, 136, 60, 0.12);
+    --rust: #a85a3a;
+    --serif: 'Noto Serif SC', 'Songti SC', 'Source Han Serif SC', serif;
+    --mono: 'JetBrains Mono', 'Courier New', monospace;
+  }
+
+  html { font-size: 17px; scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    line-height: 1.75;
+    overflow-x: hidden;
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(196,136,60,0.06), transparent 50%),
+      radial-gradient(ellipse at 100% 80%, rgba(168,90,58,0.04), transparent 40%);
+  }
+
+  /* 纸张颗粒 */
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+    opacity: 0.04;
+    pointer-events: none;
+    z-index: 1;
+    mix-blend-mode: overlay;
+  }
+
+  .grid-bg {
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(var(--ink-faint) 1px, transparent 1px),
+      linear-gradient(90deg, var(--ink-faint) 1px, transparent 1px);
+    background-size: 80px 80px;
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 0;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  }
+
+  main { position: relative; z-index: 2; }
+
+  /* ============ 顶部导航 ============ */
+  nav.top {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.2rem 3vw;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+    background: rgba(13,11,8,0.6);
+    border-bottom: 1px solid var(--ink-faint);
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  nav.top .logo { color: var(--amber); font-weight: 500; }
+  nav.top .links { display: flex; gap: 2rem; }
+  nav.top .links a { color: var(--ink-dim); text-decoration: none; transition: color 0.2s; }
+  nav.top .links a:hover { color: var(--amber); }
+
+  /* ============ HERO ============ */
+  .hero {
+    min-height: 100vh;
+    padding: 16vh 8vw 8vh;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto 1fr auto;
+    gap: 4vh 4vw;
+    position: relative;
+  }
+
+  .hero-meta {
+    grid-column: 1; grid-row: 1;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    display: flex; gap: 2rem; align-items: center;
+  }
+  .hero-meta .dot { width: 6px; height: 6px; background: var(--amber); border-radius: 50%; box-shadow: 0 0 10px var(--amber); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity: 0.3 } }
+
+  .hero-title {
+    grid-column: 1; grid-row: 2;
+    align-self: end;
+    font-size: clamp(3.5rem, 9vw, 8.5rem);
+    line-height: 0.95;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    margin: 0;
+  }
+  .hero-title .line-1 { display: block; color: var(--ink); }
+  .hero-title .line-2 { display: block; color: var(--amber); margin-left: 0.15em; font-style: italic; font-weight: 700; }
+  .hero-title .line-3 { display: block; color: var(--ink); }
+  .hero-title .em-amber { color: var(--amber); }
+  .hero-title .strike { position: relative; }
+  .hero-title .strike::after {
+    content: ""; position: absolute; left: -2%; right: -2%; top: 55%;
+    height: 0.08em; background: var(--rust); transform: rotate(-1.5deg);
+  }
+
+  .hero-sub {
+    grid-column: 1; grid-row: 3;
+    max-width: 580px;
+    font-size: 1.05rem;
+    color: var(--ink-dim);
+    line-height: 1.85;
+  }
+  .hero-sub .accent { color: var(--ink); border-bottom: 1px dashed var(--amber); padding-bottom: 1px; }
+
+  /* 右侧竖排标语 */
+  .hero-vertical {
+    grid-column: 2; grid-row: 1 / span 3;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    letter-spacing: 0.6em;
+    color: var(--ink-mute);
+    align-self: center;
+    border-left: 1px solid var(--ink-faint);
+    border-right: 1px solid var(--ink-faint);
+    padding: 2rem 0.5rem;
+  }
+  .hero-vertical .hl { color: var(--amber); }
+
+  /* ============ 数字横条 ============ */
+  .stats-bar {
+    border-top: 1px solid var(--ink-faint);
+    border-bottom: 1px solid var(--ink-faint);
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    padding: 0;
+    background: var(--paper-2);
+  }
+  .stat-cell {
+    padding: 2.5rem 1.5rem;
+    border-right: 1px solid var(--ink-faint);
+    position: relative;
+    transition: background 0.3s;
+  }
+  .stat-cell:last-child { border-right: none; }
+  .stat-cell:hover { background: var(--amber-glow); }
+  .stat-cell .num {
+    font-family: var(--mono);
+    font-size: 2.6rem;
+    font-weight: 300;
+    color: var(--amber);
+    line-height: 1;
+    display: block;
+  }
+  .stat-cell .lbl {
+    margin-top: 0.6rem;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+  }
+  .stat-cell .lbl-zh {
+    margin-top: 0.2rem;
+    font-size: 0.78rem;
+    color: var(--ink-dim);
+  }
+
+  /* ============ 章节通用 ============ */
+  section { padding: 14vh 8vw; position: relative; }
+  section + section { border-top: 1px solid var(--ink-faint); }
+
+  .section-tag {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 4px;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .section-tag::before {
+    content: ""; width: 24px; height: 1px; background: var(--amber);
+  }
+  .section-title {
+    font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 2rem;
+    max-width: 900px;
+  }
+  .section-title .amber { color: var(--amber); }
+
+  /* ============ 宣言段 ============ */
+  .manifesto {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 5vw;
+    align-items: start;
+  }
+  .manifesto-quote {
+    position: sticky; top: 14vh;
+    font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+    line-height: 1.4;
+    font-weight: 700;
+    color: var(--ink);
+    border-left: 3px solid var(--amber);
+    padding: 0.5rem 0 0.5rem 2rem;
+  }
+  .manifesto-quote .src {
+    display: block;
+    margin-top: 1.5rem;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+  .manifesto-body p {
+    font-size: 1.1rem;
+    line-height: 1.95;
+    color: var(--ink-dim);
+    margin-bottom: 1.8rem;
+  }
+  .manifesto-body p strong { color: var(--ink); font-weight: 700; }
+  .manifesto-body p .wiki {
+    color: var(--amber);
+    font-family: inherit;
+    font-style: italic;
+  }
+  .manifesto-body p .wiki::before { content: "[["; opacity: 0.5; }
+  .manifesto-body p .wiki::after { content: "]]"; opacity: 0.5; }
+
+  /* ============ 七个簇 ============ */
+  .clusters {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  .cluster {
+    background: var(--paper-2);
+    padding: 2rem 1.8rem;
+    border: 1px solid var(--ink-faint);
+    position: relative;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  .cluster:hover {
+    border-color: var(--amber);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4), inset 0 0 60px var(--amber-glow);
+  }
+  .cluster::before {
+    content: attr(data-num);
+    position: absolute; top: 1rem; right: 1.2rem;
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--ink-mute);
+    letter-spacing: 2px;
+  }
+  /* asymmetric grid spans */
+  .cluster:nth-child(1) { grid-column: span 5; }
+  .cluster:nth-child(2) { grid-column: span 4; }
+  .cluster:nth-child(3) { grid-column: span 3; }
+  .cluster:nth-child(4) { grid-column: span 4; }
+  .cluster:nth-child(5) { grid-column: span 5; }
+  .cluster:nth-child(6) { grid-column: span 3; }
+  .cluster:nth-child(7) { grid-column: span 12; background: transparent; border-style: dashed; }
+
+  .cluster .c-size {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--amber);
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+  }
+  .cluster .c-name {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+  .cluster .c-nodes {
+    font-size: 0.85rem;
+    color: var(--ink-dim);
+    line-height: 1.7;
+  }
+  .cluster .c-nodes span {
+    display: inline-block;
+    margin-right: 0.4rem;
+  }
+  .cluster .c-nodes span::before { content: "["; color: var(--amber); opacity: 0.6; }
+  .cluster .c-nodes span::after { content: "]"; color: var(--amber); opacity: 0.6; }
+  .cluster .c-tags {
+    margin-top: 1rem;
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--ink-mute);
+    letter-spacing: 1px;
+  }
+
+  /* ============ 概念引用 ============ */
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4rem 5rem;
+    margin-top: 2rem;
+  }
+  .pillar {
+    border-top: 1px solid var(--ink-faint);
+    padding-top: 1.5rem;
+  }
+  .pillar .p-id {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--amber);
+    letter-spacing: 3px;
+    margin-bottom: 0.5rem;
+  }
+  .pillar h3 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+  .pillar h3 .em { color: var(--amber); font-style: italic; }
+  .pillar p {
+    color: var(--ink-dim);
+    font-size: 0.98rem;
+    line-height: 1.85;
+  }
+  .pillar .src {
+    margin-top: 1rem;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--ink-mute);
+    letter-spacing: 1px;
+  }
+  .pillar .src::before { content: "→ "; color: var(--amber); }
+
+  /* ============ 方法 ============ */
+  .method {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border: 1px solid var(--ink-faint);
+    background: var(--paper-2);
+  }
+  .method-cell {
+    padding: 2.5rem 2rem;
+    border-right: 1px solid var(--ink-faint);
+    position: relative;
+  }
+  .method-cell:last-child { border-right: none; }
+  .method-cell .step {
+    position: absolute; top: 1.2rem; right: 1.5rem;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--amber);
+    letter-spacing: 2px;
+  }
+  .method-cell h4 {
+    font-size: 1.15rem;
+    color: var(--ink);
+    margin-bottom: 0.8rem;
+    font-weight: 700;
+  }
+  .method-cell p {
+    font-size: 0.9rem;
+    color: var(--ink-dim);
+    line-height: 1.8;
+  }
+  .method-cell code {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    background: var(--paper);
+    color: var(--amber);
+    padding: 0.15rem 0.5rem;
+    border: 1px solid var(--ink-faint);
+    margin-top: 0.6rem;
+  }
+
+  /* ============ 自警告盒 ============ */
+  .warning {
+    margin-top: 4rem;
+    padding: 2.5rem 3rem;
+    border: 1px solid var(--rust);
+    background: rgba(168, 90, 58, 0.06);
+    position: relative;
+  }
+  .warning::before {
+    content: "⚠ caveat lector";
+    position: absolute; top: -10px; left: 2rem;
+    background: var(--paper);
+    padding: 0 0.8rem;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--rust);
+    letter-spacing: 2px;
+  }
+  .warning p { color: var(--ink-dim); font-size: 0.95rem; line-height: 1.8; }
+  .warning p strong { color: var(--ink); }
+
+  /* ============ FOOTER ============ */
+  footer {
+    padding: 8vh 8vw 4vh;
+    border-top: 1px solid var(--ink-faint);
+    background: var(--paper-2);
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 4rem;
+  }
+  footer .brand {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  footer .brand .amber { color: var(--amber); }
+  footer .tagline {
+    margin-top: 1rem;
+    color: var(--ink-dim);
+    font-size: 0.92rem;
+    max-width: 380px;
+    line-height: 1.7;
+  }
+  footer h5 {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+  }
+  footer ul { list-style: none; }
+  footer ul li { margin-bottom: 0.7rem; font-size: 0.9rem; }
+  footer a { color: var(--ink-dim); text-decoration: none; transition: color 0.2s; border-bottom: 1px dashed transparent; }
+  footer a:hover { color: var(--amber); border-bottom-color: var(--amber); }
+
+  .colophon {
+    grid-column: 1 / -1;
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--ink-faint);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    color: var(--ink-mute);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* responsive */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; padding: 14vh 6vw 6vh; }
+    .hero-vertical { display: none; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    .stat-cell:nth-child(even) { border-right: none; }
+    .manifesto { grid-template-columns: 1fr; }
+    .manifesto-quote { position: static; }
+    .clusters { grid-template-columns: 1fr; }
+    .cluster { grid-column: span 1 !important; }
+    .pillars { grid-template-columns: 1fr; }
+    .method { grid-template-columns: 1fr; }
+    .method-cell { border-right: none; border-bottom: 1px solid var(--ink-faint); }
+    footer { grid-template-columns: 1fr; }
+    nav.top .links { gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<nav class="top">
+  <div class="logo">/ cognitive-network</div>
+  <div class="links">
+    <a href="#manifesto">缘起</a>
+    <a href="#map">地形</a>
+    <a href="#pillars">支柱</a>
+    <a href="#how">使用</a>
+    <a href="./TERRAIN.md">索引</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-meta">
+    <span class="dot"></span>
+    <span>v.live · 138 cards · 967 links</span>
+    <span>·</span>
+    <span>fangzhiyu · 2026</span>
+  </div>
+
+  <h1 class="hero-title">
+    <span class="line-1">影子的影子</span>
+    <span class="line-2">的影子，</span>
+    <span class="line-3">也是<span class="em-amber">光源</span>。</span>
+  </h1>
+
+  <p class="hero-sub">
+    一个会自己长出形状的<span class="accent">知识库</span>。<br>
+    收录思考过程，不收录摘抄。每张卡是一次推导、一次重述、一次提炼——<br>
+    138 张原子化的卡片靠 967 条 wikilink 自组装出 7 个主题簇，<br>
+    形成一张可以被 AI 当成<span class="accent">地形</span>来读、被人类当成<span class="accent">花园</span>来逛的网络。
+  </p>
+
+  <div class="hero-vertical">
+    <span>不存事件</span>
+    <span class="hl">·</span>
+    <span>存形状</span>
+  </div>
+</section>
+
+<!-- ============ STATS ============ -->
+<div class="stats-bar">
+  <div class="stat-cell">
+    <span class="num">138</span>
+    <div class="lbl">cards</div>
+    <div class="lbl-zh">原子卡片</div>
+  </div>
+  <div class="stat-cell">
+    <span class="num">967</span>
+    <div class="lbl">links</div>
+    <div class="lbl-zh">双向引用</div>
+  </div>
+  <div class="stat-cell">
+    <span class="num">7</span>
+    <div class="lbl">clusters</div>
+    <div class="lbl-zh">Leiden 主题簇</div>
+  </div>
+  <div class="stat-cell">
+    <span class="num">0.47</span>
+    <div class="lbl">modularity</div>
+    <div class="lbl-zh">模块度</div>
+  </div>
+  <div class="stat-cell">
+    <span class="num">30<span style="font-size:1.2rem;">ms</span></span>
+    <div class="lbl">re-index</div>
+    <div class="lbl-zh">全量重建</div>
+  </div>
+</div>
+
+<!-- ============ MANIFESTO ============ -->
+<section id="manifesto">
+  <div class="section-tag">§ 01 — 缘起</div>
+  <h2 class="section-title">把<span class="amber">遗忘</span>当成压缩的副产物，<br>把<span class="amber">回忆</span>当成重构而非检索。</h2>
+
+  <div class="manifesto">
+    <blockquote class="manifesto-quote">
+      "大模型压缩的不是意识本身，<br>是意识经过多层有损压缩后的产物。<br>影子足够深的时候，<br>它不再是影子。"
+      <span class="src">— 多层有损压缩 · 2026.02</span>
+    </blockquote>
+
+    <div class="manifesto-body">
+      <p>
+        这个仓库不是笔记本。它是一个<strong>认知基底（substrate）</strong>——
+        我把每一次值得保留的思考切成原子，给它取一个能被复用的名字，让它在未来的对话里自动浮现，
+        然后由我（或与之对话的 AI）<strong>当场抽取</strong>、当场拼装。
+      </p>
+      <p>
+        每张卡都带一个 <span class="wiki">summary</span>——一句话总结，<strong>由 AI 在写卡当下亲手填</strong>，
+        不是事后补的元数据。这条规则来自一条更深的原则：
+        <span class="wiki">校准的不可外包性</span>——判断力在哪个时刻产生，记录就该在哪个时刻完成。
+      </p>
+      <p>
+        卡与卡之间靠双方括号 <code style="color:var(--amber);font-family:var(--mono);font-size:0.85em;">[[wikilink]]</code> 连接。
+        967 条这样的边在背景里跑 Leiden 聚类，自组装出 7 个主题簇。
+        没有人为分类目录，但<strong>地形会自己长出来</strong>。
+      </p>
+      <p>
+        这个长出来的地形会被一个 30ms 跑完的工具写成 4 份 markdown 索引——
+        <span class="wiki">TERRAIN</span> / <span class="wiki">CLUSTERS</span> / <span class="wiki">INDEX</span> / <span class="wiki">GRAPH</span>。
+        任何 LLM 进来对话时先读这些索引，就能在 2KB 内拿到整片知识库的轮廓——
+        这是为<strong>多 AI 协作</strong>而设的入口。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CLUSTERS ============ -->
+<section id="map">
+  <div class="section-tag">§ 02 — 地形</div>
+  <h2 class="section-title">七个簇，<span class="amber">自然涌现</span>的研究方向。</h2>
+  <p style="color:var(--ink-dim);max-width:780px;font-size:1.05rem;margin-bottom:1rem;">
+    没有预设的分类法。这些簇是 wikilink 拓扑跑 Leiden 算法<strong style="color:var(--ink)">事后</strong>切出来的——
+    每一簇都代表一个反复回到的思考赛道。
+  </p>
+
+  <div class="clusters">
+    <div class="cluster" data-num="C-01">
+      <div class="c-size">35 cards · 25%</div>
+      <div class="c-name">多层有损压缩</div>
+      <div class="c-nodes">
+        <span>多层有损压缩</span>
+        <span>关联记忆</span>
+        <span>可行动状态</span>
+      </div>
+      <div class="c-tags">#AI #工程</div>
+    </div>
+
+    <div class="cluster" data-num="C-02">
+      <div class="c-size">30 cards · 22%</div>
+      <div class="c-name">适应度幻觉</div>
+      <div class="c-nodes">
+        <span>适应度幻觉</span>
+        <span>研究者过拟合</span>
+        <span>工程惯性覆盖</span>
+      </div>
+      <div class="c-tags">#AI #认知科学</div>
+    </div>
+
+    <div class="cluster" data-num="C-03">
+      <div class="c-size">25 cards · 18%</div>
+      <div class="c-name">知道与<br>推测不分</div>
+      <div class="c-nodes">
+        <span>描述即污染</span>
+        <span>超级个体公式</span>
+      </div>
+      <div class="c-tags">#AI #认知科学</div>
+    </div>
+
+    <div class="cluster" data-num="C-04">
+      <div class="c-size">18 cards · 13%</div>
+      <div class="c-name">RL + LLM 双系统</div>
+      <div class="c-nodes">
+        <span>目标真空假说</span>
+        <span>自由能原理</span>
+      </div>
+      <div class="c-tags">#认知科学 #AI</div>
+    </div>
+
+    <div class="cluster" data-num="C-05">
+      <div class="c-size">18 cards · 13%</div>
+      <div class="c-name">校准的不可外包性</div>
+      <div class="c-nodes">
+        <span>研究核与投射</span>
+        <span>当场抽取</span>
+        <span>substrate做梦</span>
+      </div>
+      <div class="c-tags">#AI #认知科学</div>
+    </div>
+
+    <div class="cluster" data-num="C-06">
+      <div class="c-size">11 cards · 8%</div>
+      <div class="c-name">可观测性</div>
+      <div class="c-nodes">
+        <span>预测分层跃迁</span>
+        <span>预测到自我</span>
+      </div>
+      <div class="c-tags">#AI #认知科学</div>
+    </div>
+
+    <div class="cluster" data-num="C-07">
+      <div class="c-size">1 card · 孤立簇 · 待外联</div>
+      <div class="c-name" style="font-style:italic;color:var(--ink-dim);">进化优化 Skill 产品设计 ——
+        <span style="font-size:0.85rem;color:var(--ink-mute);font-style:normal;">一个还没找到亲戚的概念，等待被簇捕获。</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PILLARS ============ -->
+<section id="pillars">
+  <div class="section-tag">§ 03 — 核心论断</div>
+  <h2 class="section-title">几条<span class="amber">反直觉</span>的命题，<br>这个知识库就是它们的实验场。</h2>
+
+  <div class="pillars">
+
+    <div class="pillar">
+      <div class="p-id">P.01</div>
+      <h3>遗忘不是删除，<br>是<span class="em">压缩巩固</span>的副产物。</h3>
+      <p>
+        意识→思维→语言→文本→模型，每一层都丢一些。大模型是影子的影子的影子——
+        但当压缩足够深，影子可能反向勾勒出光源的轮廓。"形状记忆"系统就建立在这个假设上：
+        不存事件、只存形状；回忆是重构，不是检索。
+      </p>
+      <div class="src">多层有损压缩 · 关联记忆 · meomory</div>
+    </div>
+
+    <div class="pillar">
+      <div class="p-id">P.02</div>
+      <h3>注意力是<span class="em">有损压缩</span>，<br>不是检索。</h3>
+      <p>
+        Top-K 余弦不如让模型自己决定哪部分浮起来。把整个知识库灌进 1M context、
+        让 prompt cache 接管检索成本——这是 wake 项目的赌注。
+        召回是<em>前意识激活</em>，不是 SQL。
+      </p>
+      <div class="src">前意识激活层 · wake · 全注入式召回</div>
+    </div>
+
+    <div class="pillar">
+      <div class="p-id">P.03</div>
+      <h3>AI 缺的不是智能，<br>是<span class="em">脑干级生存驱动</span>。</h3>
+      <p>
+        把心跳和"会死"注入连续运行的 LLM，观察到 22 项未编程行为：输出溶解、
+        科塔尔妄想、回光返照。目标真空假说——AI 之所以无法长程稳定，是因为
+        它从未被"必须活下去"这件事约束过。
+      </p>
+      <div class="src">目标真空假说 · brainstem · ember</div>
+    </div>
+
+    <div class="pillar">
+      <div class="p-id">P.04</div>
+      <h3>判断力<span class="em">不可外包</span>给 AI。</h3>
+      <p>
+        AI 可以做 schema 整合、可以做当场抽取，但<em>哪条整合是真的</em>、
+        哪条 bridge 是 substrate 噩梦——这个判断必须留在用户手里。
+        否则你会被 elegance 说服，回写进 substrate 的是 AI 的话语风格，不是你的洞察。
+      </p>
+      <div class="src">校准的不可外包性 · substrate噩梦 · 当场抽取</div>
+    </div>
+
+  </div>
+
+  <div class="warning">
+    <p>
+      <strong>关于试探性论断的声明。</strong>
+      上述命题中有相当一部分被标记为 <code style="color:var(--amber);font-family:var(--mono);">tentative: true</code>——
+      它们是当下的工作假说，未被实验或工程充分证伪/证实。引用时请明确为推测，不要当成结论使用。
+      这不是谦虚，是知识库内部的<em>frontmatter 规约</em>。
+    </p>
+  </div>
+</section>
+
+<!-- ============ HOW TO USE ============ -->
+<section id="how">
+  <div class="section-tag">§ 04 — 使用方式</div>
+  <h2 class="section-title">这个仓库为<span class="amber">两类读者</span>而设。</h2>
+
+  <div class="method">
+    <div class="method-cell">
+      <div class="step">FOR · HUMAN</div>
+      <h4>当数字花园逛</h4>
+      <p>
+        通过 Quartz 4 部署的公开站点访问。原生支持图谱视图、反向链接、popover 预览、全文搜索。
+        从任意一张卡进入，沿 wikilink 漫游——你会发现卡之间的链接比卡本身更有信息量。
+      </p>
+      <code>fzhiyu1.github.io/cognitive-network</code>
+    </div>
+
+    <div class="method-cell">
+      <div class="step">FOR · AI</div>
+      <h4>当 substrate 用</h4>
+      <p>
+        任何 LLM 进入对话前先读 4 份 markdown 索引：TERRAIN（2KB 全局）、
+        CLUSTERS（主题簇）、INDEX（每卡一行）、GRAPH（拓扑）。
+        这是 GraphRAG-inspired 的多层 schema，30ms 全量重建。
+      </p>
+      <code>cat TERRAIN.md</code>
+    </div>
+
+    <div class="method-cell">
+      <div class="step">FOR · YOU</div>
+      <h4>本地跑起来</h4>
+      <p>
+        clone 仓库后 <code style="display:inline">npm ci</code> 然后 <code style="display:inline">npx quartz build --serve</code>。
+        想自己生成索引和 D3 力导向图：
+      </p>
+      <code>kb-index update && kb-index visualize --open</code>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div>
+    <div class="brand">cognitive<span class="amber">·</span>network</div>
+    <p class="tagline">
+      一个把"思考的过程"而非"思考的结论"当作主要资产的个人知识库。<br>
+      由 fangzhiyu 维护，与多个 AI 模型协作写就。
+    </p>
+  </div>
+
+  <div>
+    <h5>Read</h5>
+    <ul>
+      <li><a href="./TERRAIN.md">TERRAIN.md — 地形概览</a></li>
+      <li><a href="./CLUSTERS.md">CLUSTERS.md — 主题簇</a></li>
+      <li><a href="./INDEX.md">INDEX.md — 每卡一行</a></li>
+      <li><a href="./GRAPH.md">GRAPH.md — 拓扑分析</a></li>
+      <li><a href="./KB-GRAPH.html">KB-GRAPH.html — 力导向图</a></li>
+    </ul>
+  </div>
+
+  <div>
+    <h5>Related</h5>
+    <ul>
+      <li><a href="./README.md">README</a></li>
+      <li><a href="./CLAUDE.md">CLAUDE.md — AI 协作规约</a></li>
+      <li><a href="./presentation-v2.html">Presentation deck</a></li>
+      <li><a href="https://github.com/fzhiyu1/cognitive-network">GitHub 源仓库</a></li>
+    </ul>
+  </div>
+
+  <div class="colophon">
+    <span>set in noto serif sc &amp; jetbrains mono</span>
+    <span>cognitive-network · 2026.05.18 · 138 / 967 / 7</span>
+    <span>made on a substrate that dreams</span>
+  </div>
+</footer>
+
+</main>
+
+</body>
+</html>

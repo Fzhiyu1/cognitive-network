@@ -37,7 +37,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "2-explorations/AI没有脑干.md",
+                "file": "2-explorations/记忆不是仓库：对当前知识库记忆观的一次总结.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -52,11 +52,35 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "AI没有脑干"
+              "title": "记忆不是仓库：对当前知识库记忆观的一次总结"
+            }
+          },
+          {
+            "id": "3a8aba71191d120d",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "CLAUDE.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "CLAUDE"
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -88,7 +112,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:认知科学",
+                "query": "推测",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -109,8 +133,7 @@
               "title": "书签"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
@@ -216,35 +239,36 @@
       "bases:新建数据库": false
     }
   },
-  "active": "4b42024966636b0c",
+  "active": "3a8aba71191d120d",
   "lastOpenFiles": [
-    "1-concepts/塑型源的多样性.md",
-    "1-concepts/联想的双层架构.md",
-    "1-concepts/注入的石子灰尘针叶调味料模型.md",
-    "2-explorations/lens-wake首次运行-元认知循环的实例化.md",
-    "1-concepts/失败可见性.md",
-    "3-projects/形状记忆系统.md",
-    "3-projects/SAE特征激活观测实验.md",
-    "2-explorations/人工脑干：从目标真空到RL+LLM双系统架构.md",
-    "1-concepts/自由能原理.md",
-    "1-concepts/多层有损压缩.md",
-    "2-explorations/从Token轨迹到工作状态：AI原生工作流的三口径观察.md",
-    "2-explorations/从探索工作流到AI记忆系统：外置工作记忆的一个原型.md",
-    "2-explorations/从记忆理论到状态恢复：meomory原型的设计基础.md",
-    "2-explorations/程序化UI还原闭环：从亚像素对齐实践到方法论.md",
-    "4-references/VCP记忆系统.md",
-    "1-concepts/元进化.md",
-    "CLUSTERS.md",
-    "GRAPH.md",
-    "0-inbox/进化优化Skill产品设计.md",
-    "0-inbox/2026-04-27-末段AI主体感偏离观察.md",
-    "4-references/Nested Learning_ The Illusion of Deep Learning Architectures.pdf",
-    "1-concepts/级联爆发.md",
-    "2-explorations/事件驱动的substrate：从时间投射到反应式代谢.md",
+    "INDEX.md",
     "1-concepts/substrate噩梦.md",
+    "1-concepts/三口径Token观.md",
+    "CLAUDE.md",
+    "1-concepts/三管子架构.md",
     "1-concepts/潜伏层.md",
-    "2-explorations/六面归一：5个项目其实是1个项目.md",
-    "1-concepts/研究路径结晶化.md",
+    "1-concepts/评分即解题.md",
+    "4-references/Think-No-Think 范式与检索抑制.md",
+    "3-projects/脑干实验ABC对照.md",
+    "1-concepts/知识库飞轮.md",
+    "TERRAIN.md",
+    "GRAPH.md",
+    "CLUSTERS.md",
+    "0-inbox/2026-05-12-工具门控vs描述塑型.md",
+    "intro.html",
+    "2-explorations/2026-05-14-压力链闭环：从分子到模拟宇宙.md",
+    "1-concepts/预测极限即模拟.md",
+    "1-concepts/压力-搜索-产物链.md",
+    "1-concepts/金融钟先行.md",
+    "1-concepts/判断力位全成本.md",
+    "2-explorations/2026-05-13-AI决策的反向能力.md",
+    "1-concepts/期权式外推.md",
+    "1-concepts/借来的权威.md",
+    "1-concepts/单向决策系统.md",
+    "1-concepts/知道与推测不分.md",
+    "1-concepts/超级个体公式.md",
+    "1-concepts/描述即污染.md",
+    "4-references/Nested Learning_ The Illusion of Deep Learning Architectures.pdf",
     "tools/kb-index/kb_index/llm.py",
     "KB-GRAPH.html",
     "tools/kb-index/kb_index/__pycache__/visualize.cpython-314.pyc",
@@ -253,7 +277,6 @@
     "presentation-v2.html",
     "未命名.base",
     "tsconfig.json",
-    "site/src/lib/graph-theme.ts",
     "quartz/static/og-image.png",
     "quartz/static/icon.png",
     "site/public/favicon.svg",
