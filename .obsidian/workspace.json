@@ -61,7 +61,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CLAUDE.md",
+                "file": "3-projects/SAE特征激活观测实验.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -76,7 +76,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "CLAUDE"
+              "title": "SAE特征激活观测实验"
             }
           }
         ],
@@ -241,10 +241,11 @@
   },
   "active": "3a8aba71191d120d",
   "lastOpenFiles": [
+    "4-references/Nested Learning_ The Illusion of Deep Learning Architectures.pdf",
+    "CLAUDE.md",
     "INDEX.md",
     "1-concepts/substrate噩梦.md",
     "1-concepts/三口径Token观.md",
-    "CLAUDE.md",
     "1-concepts/三管子架构.md",
     "1-concepts/潜伏层.md",
     "1-concepts/评分即解题.md",
@@ -267,8 +268,6 @@
     "1-concepts/单向决策系统.md",
     "1-concepts/知道与推测不分.md",
     "1-concepts/超级个体公式.md",
-    "1-concepts/描述即污染.md",
-    "4-references/Nested Learning_ The Illusion of Deep Learning Architectures.pdf",
     "tools/kb-index/kb_index/llm.py",
     "KB-GRAPH.html",
     "tools/kb-index/kb_index/__pycache__/visualize.cpython-314.pyc",
