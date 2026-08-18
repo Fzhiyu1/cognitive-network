@@ -8,60 +8,12 @@
         "type": "tabs",
         "children": [
           {
-            "id": "74a4f98c86154b53",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "1-concepts/超级个体公式.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "超级个体公式"
-            }
-          },
-          {
-            "id": "ffb1a453df9a698c",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "2-explorations/记忆不是仓库：对当前知识库记忆观的一次总结.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "记忆不是仓库：对当前知识库记忆观的一次总结"
-            }
-          },
-          {
             "id": "3a8aba71191d120d",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "3-projects/SAE特征激活观测实验.md",
+                "file": "4-references/Think-No-Think 范式与检索抑制.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -76,11 +28,23 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "SAE特征激活观测实验"
+              "title": "Think-No-Think 范式与检索抑制"
+            }
+          },
+          {
+            "id": "50abc2568a00f563",
+            "type": "leaf",
+            "state": {
+              "type": "bases",
+              "state": {
+                "file": "未命名 1.base",
+                "viewName": "表格"
+              },
+              "icon": "lucide-table",
+              "title": "未命名 1"
             }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
@@ -100,7 +64,9 @@
               "type": "file-explorer",
               "state": {
                 "sortOrder": "alphabetical",
-                "autoReveal": false
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
               },
               "icon": "lucide-folder-closed",
               "title": "文件列表"
@@ -241,7 +207,29 @@
   },
   "active": "3a8aba71191d120d",
   "lastOpenFiles": [
+    "4-references/VCP记忆系统.md",
     "4-references/Nested Learning_ The Illusion of Deep Learning Architectures.pdf",
+    "1-concepts/产品场景匹配.md",
+    "0-inbox/进化优化Skill产品设计.md",
+    "1-concepts/单向决策系统.md",
+    "1-concepts/动态适应度.md",
+    "1-concepts/进化搜索记忆系统.md",
+    "1-concepts/目标真空假说.md",
+    "1-concepts/领先指标迁移.md",
+    "1-concepts/描述即污染.md",
+    "content/index.md",
+    "4-references/真需求-梁宁.pdf",
+    "node_modules/node-addon-api/README.md",
+    "2-explorations/记忆不是仓库：对当前知识库记忆观的一次总结.md",
+    "node_modules/balanced-match/README.md",
+    "1-concepts/超级个体公式.md",
+    "未命名 1.base",
+    "未命名.canvas",
+    "4-references/Joseph LeDoux - 恐惧双通路.md",
+    "4-references/Engram - Conditional Memory via Scalable Lookup.pdf",
+    "4-references/侯世达 - 怪圈与类比.md",
+    "4-references/真需求 - 梁宁.md",
+    "3-projects/SAE特征激活观测实验.md",
     "CLAUDE.md",
     "INDEX.md",
     "1-concepts/substrate噩梦.md",
@@ -250,35 +238,14 @@
     "1-concepts/潜伏层.md",
     "1-concepts/评分即解题.md",
     "4-references/Think-No-Think 范式与检索抑制.md",
-    "3-projects/脑干实验ABC对照.md",
-    "1-concepts/知识库飞轮.md",
-    "TERRAIN.md",
-    "GRAPH.md",
-    "CLUSTERS.md",
-    "0-inbox/2026-05-12-工具门控vs描述塑型.md",
     "intro.html",
-    "2-explorations/2026-05-14-压力链闭环：从分子到模拟宇宙.md",
-    "1-concepts/预测极限即模拟.md",
-    "1-concepts/压力-搜索-产物链.md",
-    "1-concepts/金融钟先行.md",
-    "1-concepts/判断力位全成本.md",
-    "2-explorations/2026-05-13-AI决策的反向能力.md",
-    "1-concepts/期权式外推.md",
-    "1-concepts/借来的权威.md",
-    "1-concepts/单向决策系统.md",
-    "1-concepts/知道与推测不分.md",
-    "1-concepts/超级个体公式.md",
     "tools/kb-index/kb_index/llm.py",
     "KB-GRAPH.html",
     "tools/kb-index/kb_index/__pycache__/visualize.cpython-314.pyc",
     "tools/kb-index/kb_index/visualize.py",
-    "4-references/Engram - Conditional Memory via Scalable Lookup.pdf",
     "presentation-v2.html",
-    "未命名.base",
-    "tsconfig.json",
     "quartz/static/og-image.png",
     "quartz/static/icon.png",
-    "site/public/favicon.svg",
-    "未命名.canvas"
+    "site/public/favicon.svg"
   ]
 }
